@@ -26,6 +26,9 @@ Optional items are:
 - Record search
 - Detail view (wishlist/collection/buying/selling)
 
+A view of the flow:
+![Login and start view](https://github.com/Bakenbraad/mprog_final/blob/master/doc/activity%20flow.PNG)
+
 ####Login
 Allowing the user to authenticate using firebase. Directs through login to the menu, user can also navigate to registering.
 
@@ -119,7 +122,9 @@ the ids should be crossreferenced with the marketplace to give a viable result.
 ####Music Asynctask
 Does the api background processing.
 
-
+Interactions of the data structure:
+An view of the flow:
+![Login and start view](https://github.com/Bakenbraad/mprog_final/blob/master/doc/data%20structure.PNG)
 
 
 
