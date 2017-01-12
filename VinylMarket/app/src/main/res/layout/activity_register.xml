@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
@@ -16,5 +17,104 @@
         android:layout_height="match_parent"
         android:src="@drawable/background"
         android:scaleType = "centerCrop"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:layout_margin="3dp"
+        android:hint="E-mail address"
+        android:gravity="center"
+        android:textColor="@color/colorAccent"
+        android:padding="5dp"
+        android:background="@color/colorAccent"
+        android:layout_centerVertical="true"
+        android:id="@+id/regEmail"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Username"
+        android:layout_margin="3dp"
+        android:textColor="@color/colorAccent"
+        android:padding="5dp"
+        android:background="@color/colorAccent"
+        android:ems="10"
+        android:layout_above="@+id/regEmail"
+        android:id="@+id/regUsername"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:textAlignment="center" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:hint="Password"
+        android:layout_margin="3dp"
+        android:gravity="center"
+        android:textColor="@color/colorAccent"
+        android:padding="5dp"
+        android:background="@color/colorAccent"
+        android:layout_below="@+id/regEmail"
+        android:id="@+id/regPass"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_margin="3dp"
+        android:textColor="@color/colorAccent"
+        android:padding="5dp"
+        android:background="@color/colorAccent"
+        android:layout_below="@+id/regPass"
+        android:id="@+id/regPassComp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:hint="Repeat password"
+        android:gravity="center"/>
+
+    <Button
+        android:text="Sing up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/regPassComp"
+        android:id="@+id/button4"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:alpha="0.8"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="vinyl countdown"
+        android:gravity="center"
+        android:textSize="45dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/textView"
+        android:textColor="@color/softWhite"
+        android:layout_alignStart="@+id/regUsername"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/regUsername" />
+
+    <Button
+        android:text="Back to Login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button3"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:alpha="0.8"
+        android:layout_below="@+id/button4"
+        android:layout_alignEnd="@+id/regPassComp"
+        android:layout_alignStart="@+id/regPassComp" />
 
 </RelativeLayout>

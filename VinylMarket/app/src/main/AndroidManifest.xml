@@ -16,7 +16,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".MarketSearchActivity" />
+        <activity android:name=".SaleSearchActivity" />
+        <activity android:name=".CollectionActivity" />
+        <activity android:name=".WishlistActivity" />
+        <activity android:name=".SaleActivity" />
+        <activity android:name=".BuyActivity" />
+        <activity android:name=".WishlistSearchActivity" />
+        <activity android:name=".CollectionSearchActivity" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
