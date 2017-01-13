@@ -62,26 +62,23 @@ public class UserRegistrator {
                     if ((password.matches(".*\\d+.*"))){
                         if (username.length() > 4){
 
-                            // This part checks for username availability. The snapshot returns something if the name is taken.
-                            final ValueEventListener userListener = new ValueEventListener() {
+                            // This part checks for username availability. The reference exists means that username is taken.
+                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+                            ValueEventListener usernameListener = new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.child("users").hasChild(username)){
-                                        // This specific child (username) exists, username is taken.
-                                        Toast.makeText(c, "Username is taken", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        // Username does not exist so go on and register.
+                                    // Get  object and use the values to update the UI
+                                    if (!dataSnapshot.hasChild(username)){
                                         Register();
                                     }
                                 }
+
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                    // Check was not completed.
-                                    Toast.makeText(c, "Unable to check username availability", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(c, R.string.inv_con, Toast.LENGTH_SHORT).show();
                                 }
                             };
-                            mUsersReference.addListenerForSingleValueEvent(userListener);
+                            userRef.addValueEventListener(usernameListener);
 
                         } else {
                             Toast.makeText(c, R.string.inv_username, Toast.LENGTH_SHORT).show();
@@ -104,6 +101,7 @@ public class UserRegistrator {
     // Registers the user after the userdata is validated.
     public void Register(){
 
+        mAuth = FirebaseAuth.getInstance();
         // Try to create the user.
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {

@@ -60,6 +60,17 @@ public class RegisterActivity extends AppCompatActivity {
         // Register the user using the user registrator class.
         userRegistrator = new UserRegistrator(email, password, passwordComp, username, this);
         userRegistrator.ValidateRegistration();
+        forward();
 
+    }
+
+    public void goToLogin(View view) {
+        forward();
+    }
+
+    public void forward(){
+        Intent goToLogin = new Intent(this, LoginActivity.class);
+        startActivity(goToLogin);
+        finish();
     }
 }

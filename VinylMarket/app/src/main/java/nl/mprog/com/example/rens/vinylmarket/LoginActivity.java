@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
+        goToMain();
     }
 
     // Logs the user in.

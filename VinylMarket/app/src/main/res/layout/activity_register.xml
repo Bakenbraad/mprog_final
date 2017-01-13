@@ -10,13 +10,8 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     tools:context="nl.mprog.com.example.rens.vinylmarket.RegisterActivity"
-    android:addStatesFromChildren="false">
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/background"
-        android:scaleType = "centerCrop"/>
+    android:addStatesFromChildren="false"
+    android:background="@drawable/background">
 
     <EditText
         android:layout_width="wrap_content"
@@ -26,7 +21,7 @@
         android:layout_margin="3dp"
         android:hint="E-mail address"
         android:gravity="center"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/softWhite"
         android:padding="5dp"
         android:background="@color/colorAccent"
         android:layout_centerVertical="true"
@@ -40,7 +35,7 @@
         android:inputType="textPersonName"
         android:hint="Username"
         android:layout_margin="3dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/softWhite"
         android:padding="5dp"
         android:background="@color/colorAccent"
         android:ems="10"
@@ -58,7 +53,7 @@
         android:hint="Password"
         android:layout_margin="3dp"
         android:gravity="center"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/softWhite"
         android:padding="5dp"
         android:background="@color/colorAccent"
         android:layout_below="@+id/regEmail"
@@ -72,7 +67,7 @@
         android:inputType="textPassword"
         android:ems="10"
         android:layout_margin="3dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/softWhite"
         android:padding="5dp"
         android:background="@color/colorAccent"
         android:layout_below="@+id/regPass"
@@ -88,23 +83,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/regPassComp"
         android:id="@+id/button4"
+        android:onClick="signUp"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:alpha="0.8"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="vinyl countdown"
-        android:gravity="center"
-        android:textSize="45dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:id="@+id/textView"
-        android:textColor="@color/softWhite"
-        android:layout_alignStart="@+id/regUsername"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/regUsername" />
 
     <Button
         android:text="Back to Login"
@@ -113,8 +96,24 @@
         android:id="@+id/button3"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:alpha="0.8"
+        android:onClick="goToLogin"
         android:layout_below="@+id/button4"
-        android:layout_alignEnd="@+id/regPassComp"
-        android:layout_alignStart="@+id/regPassComp" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="vinyl countdown"
+        android:gravity="center"
+        android:textSize="45dp"
+        android:padding="15dp"
+        android:alpha="0.8"
+        android:background="@color/softWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/regUsername" />
 
 </RelativeLayout>

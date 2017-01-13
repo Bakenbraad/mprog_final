@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Vinyl Market</string>
+    <string name="app_name">Vinyl\nCountdown</string>
     <string name="invalid_reg">Registration not successful</string>
     <string name="invalid_pas">Password must be 6 characters</string>
     <string name="invalid_login_pas">Enter a valid password</string>
@@ -13,4 +13,7 @@
     <string name="inv_pass_comp">Passwords don\'t match</string>
     <string name="inv_email">Invalid email address</string>
     <string name="verify_mail">Please verify your account through your email.</string>
+    <string name="inv_check">Unable to check username availability</string>
+    <string name="inv_usertaken">Username is taken</string>
+    <string name="inv_con">No connection</string>
 </resources>
