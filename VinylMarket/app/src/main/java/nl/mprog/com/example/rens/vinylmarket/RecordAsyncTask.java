@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -22,6 +23,7 @@ public class RecordAsyncTask extends AsyncTask<Void, Void, List<RecordInfo>> {
     private String query;
     private List<RecordInfo> searchResults;
     private Activity context;
+
 
     public RecordAsyncTask(Activity c, String query){
 
@@ -50,8 +52,8 @@ public class RecordAsyncTask extends AsyncTask<Void, Void, List<RecordInfo>> {
         ListView lv = (ListView) context.findViewById(R.id.saleResult);
         if (searchResults != null){
             CustomAlbumAdapter customAlbumAdapter = new CustomAlbumAdapter(context, R.layout.record_layout, searchResults);
-            customAlbumAdapter.notifyDataSetChanged();
             lv.setAdapter(customAlbumAdapter);
+            customAlbumAdapter.notifyDataSetChanged();
         }
     }
 }

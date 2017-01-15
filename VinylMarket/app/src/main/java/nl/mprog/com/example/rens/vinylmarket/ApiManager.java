@@ -39,7 +39,11 @@ public class ApiManager {
 
             // This gets the data for each album and returns a recordinfo object, this is added to an array of these objects,
             // also known as the search results!
-            searchResults.add(recordSearch(albumIDs.get(i)));
+            String mbid = albumIDs.get(i);
+            RecordInfo recordInfo = recordSearch(mbid);
+            if (recordInfo != null){
+                searchResults.add(recordInfo);
+            }
         }
 
         // Returns the search results!
@@ -84,7 +88,7 @@ public class ApiManager {
         query = query.replace(" ", "%20");
 
         // Create the url string.
-        String albumURL = "http://ws.audioscrobbler.com/2.0/?method=album.search&album=" + query + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
+        String albumURL = "http://ws.audioscrobbler.com/2.0/?method=album.search&limit=15&album=" + query + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
 
         // Try to create the input stream.
         try (InputStream is = new URL(albumURL).openStream()) {
@@ -94,15 +98,20 @@ public class ApiManager {
             String jsonText = readAll(rd);
             JSONObject json = new JSONObject(jsonText);
 
+            String resultCount = json.getJSONObject("results").getString("opensearch:totalResults");
             // If results are found, the mbids are extracted from the matches and added to a list.
-            if (!json.getJSONObject("results").getString("opensearch:totalResults").equals("0")){
-                JSONArray albums = json.getJSONObject("results").getJSONObject("albummatches").getJSONArray("albums");
+            if (!resultCount.equals("0")){
+                JSONObject results = json.getJSONObject("results");
+                JSONObject albumMatches = results.getJSONObject("albummatches");
+                JSONArray albums = albumMatches.getJSONArray("album");
 
                 for (int i = 0; i < albums.length(); i++){
 
                     // Extract id from each album object.
                     JSONObject album = albums.getJSONObject(i);
-                    albumIDs.add(album.getString("mbid"));
+                    if (!album.getString("mbid").equals("")){
+                        albumIDs.add(album.getString("mbid"));
+                    }
                 }
             }
         } catch (JSONException | IOException e) {
@@ -121,7 +130,7 @@ public class ApiManager {
         query = query.replace(" ", "%20");
 
         // Create the url string for artist search.
-        String artistURL = "http://ws.audioscrobbler.com/2.0/?method=artist.search&artist=" + query + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
+        String artistURL = "http://ws.audioscrobbler.com/2.0/?method=artist.search&limit=4&artist=" + query + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
 
         // Try to create the input stream.
         try (InputStream is = new URL(artistURL).openStream()) {
@@ -133,14 +142,16 @@ public class ApiManager {
 
             // If results are found, the mbids for the artist are extracted from the matches and added to a list.
             if (!json.getJSONObject("results").getString("opensearch:totalResults").equals("0")){
-                JSONArray albums = json.getJSONObject("results").getJSONObject("artistmatches").getJSONArray("artists");
+                JSONArray artists = json.getJSONObject("results").getJSONObject("artistmatches").getJSONArray("artist");
 
                 // Go over each match and get the artists' mbids.
-                for (int i = 0; i < albums.length(); i++){
+                for (int i = 0; i < artists.length(); i++){
 
                     // Extract id from each album object.
-                    JSONObject album = albums.getJSONObject(i);
-                    artistIDs.add(album.getString("mbid"));
+                    JSONObject album = artists.getJSONObject(i);
+                    if (!album.getString("mbid").equals("")){
+                        artistIDs.add(album.getString("mbid"));
+                    }
                 }
             }
         } catch (JSONException | IOException e) {
@@ -151,7 +162,7 @@ public class ApiManager {
             String mbidQuery = artistIDs.get(i);
 
             // Create the url string for the mbid query.
-            String artistMbidURL = "http://ws.audioscrobbler.com/2.0/?method=artist.getTopAlbums&mbid=" + mbidQuery + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
+            String artistMbidURL = "http://ws.audioscrobbler.com/2.0/?method=artist.getTopAlbums&limit=5&mbid=" + mbidQuery + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
 
             // For each id found in the artist query get their top albums.
             try (InputStream is = new URL(artistMbidURL).openStream()) {
@@ -169,7 +180,10 @@ public class ApiManager {
 
                     // Extract mbid from each album object and add it to the list.
                     JSONObject album = albums.getJSONObject(i);
-                    albumIDs.add(album.getString("mbid"));
+                    String mbid = album.getString("mbid");
+                    if (!mbid.equals("")){
+                        albumIDs.add(mbid);
+                    }
                 }
             } catch (JSONException | IOException e) {
                 e.printStackTrace();
@@ -179,8 +193,10 @@ public class ApiManager {
 
     private RecordInfo recordSearch(String mbid){
 
+        RecordInfo recordInfo = new RecordInfo("unknown","unknown","unknown","unknown","unknown","unknown","unknown");
+
         // Create the url string for method album.getinfo
-        String albumUrl = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=53ed794c5c41de92a71525c6e303cf19&mbid=" + mbid + "63b3a8ca-26f2-4e2b-b867-647a6ec2bebd&format=json";
+        String albumUrl = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=53ed794c5c41de92a71525c6e303cf19&mbid=" + mbid + "&format=json";
 
         // Try data retrieval
         try (InputStream is = new URL(albumUrl).openStream()) {
@@ -189,29 +205,36 @@ public class ApiManager {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
             JSONObject json = new JSONObject(jsonText);
+            JSONObject album = json.getJSONObject("album");
 
             // Create an object, recordinfo, and add the data.
             // Get the items from the json seperately for clarities sake.
-            String title = json.getJSONObject("album").getString("name");
-            String artist = json.getJSONObject("album").getString("artist");
-            String published = json.getJSONObject("album").getJSONObject("wiki").getString("published");
-            String imgLinkmed = json.getJSONObject("album").getJSONArray("image").getJSONObject(1).getString("#text");
-            String imgLinklarge = json.getJSONObject("album").getJSONArray("image").getJSONObject(2).getString("#text");
-            String summary = json.getJSONObject("album").getJSONObject("wiki").getString("summary");
+            String title = album.getString("name");
+            String artist = album.getString("artist");
+            String published = album.getJSONObject("wiki").getString("published");
+            String imgLinkmed = album.getJSONArray("image").getJSONObject(1).getString("#text");
+            String imgLinklarge = album.getJSONArray("image").getJSONObject(2).getString("#text");
+            String summary = album.getJSONObject("wiki").getString("summary");
 
-            RecordInfo recordInfo = new RecordInfo(title, artist, published, imgLinkmed, imgLinklarge, summary, mbid);
+            recordInfo = new RecordInfo(title, artist, published, imgLinkmed, imgLinklarge, summary, mbid);
 
             // Tracks need iteration so is done seperately:
-            JSONArray tracks = json.getJSONObject("album").getJSONObject("tracks").getJSONArray("track");
-            for (int i = 0; i < tracks.length(); i++){
+            JSONArray tracks = album.getJSONObject("tracks").getJSONArray("track");
+            int trackCount = tracks.length();
 
-                // Get the trackname and duration for each track.
-                String trackname = tracks.getJSONObject(i).getString("name");
-                String trackduration = tracks.getJSONObject(i).getString("duration");
-
-                // Add the track to the recordinfo object.
-                recordInfo.addTrack(trackname, trackduration);
-            }
+//            for (int i = 0; i < trackCount; i++){
+//
+//                // Get the trackname and duration for each track.
+//                String trackname = tracks.getJSONObject(i).getString("name");
+//                String trackduration = tracks.getJSONObject(i).getString("duration");
+//
+//                if (trackname != null || trackduration != null){
+//                    // Add the track to the recordinfo object.
+//                    recordInfo.addTrack(trackname, trackduration);
+//                }
+//                // Add the track to the recordinfo object.
+//
+//            }
 
             // Finally return the object with all info.
             return recordInfo;
@@ -219,6 +242,6 @@ public class ApiManager {
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return recordInfo;
     }
 }
