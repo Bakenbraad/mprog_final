@@ -10,4 +10,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="nl.mprog.com.example.rens.vinylmarket.SaleSearchActivity">
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text=""
+        android:hint="Search album, artist..."
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/searchSaleED" />
+
+    <Button
+        android:text="Go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button18"
+        android:onClick="searchMusic"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/searchSaleED" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/button18"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/saleResult"/>
 </RelativeLayout>

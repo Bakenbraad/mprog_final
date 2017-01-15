@@ -22,14 +22,38 @@ import java.util.List;
 
 public class ApiManager {
 
-    // A list of all albums that correspond to the search query.
+    private String rawquery;
+
+    // Constructor to put in query.
+    public List<RecordInfo> Search(String query) {
+
+        // Set the query to make it readable for other functions.
+        this.rawquery = query;
+
+        // Find all matching album ids these are automatically put in a list for recordSearch to use.
+        musicSearch();
+
+        // Get all data from these albums and put them in the generated list.
+        List<RecordInfo> searchResults = null;
+        for (int i = 0; i < albumIDs.size(); i++){
+
+            // This gets the data for each album and returns a recordinfo object, this is added to an array of these objects,
+            // also known as the search results!
+            searchResults.add(recordSearch(albumIDs.get(i)));
+        }
+
+        // Returns the search results!
+        return searchResults;
+    }
+
+    // Creates a list of all album ids that correspond to the search query.
     private List<String> albumIDs = new ArrayList<>();
 
     // Search for any albums/artists albums that correspond to the query.
-    public List<String> albumSearch(String query){
+    private void musicSearch(){
 
         // Split the query if multiple are submitted (comma seperated).
-        List<String> queryList = Arrays.asList(query.split(","));
+        List<String> queryList = Arrays.asList(rawquery.split(","));
 
         // Try to get results with each entered query treated as album and artist.
         for (int i = 0; i < queryList.size(); i++){
@@ -40,8 +64,6 @@ public class ApiManager {
                 e.printStackTrace();
             }
         }
-        // Return all album matches.
-        return albumIDs;
     }
 
 
@@ -89,7 +111,7 @@ public class ApiManager {
     }
 
     // This is a two step api request, you get the artists id first and then retrieve their albums using
-    // the artist search and artist gettopalbums method.
+    // the artist search and artist getTopAlbums method.
     private void getArtistsAlbumIDs(String query) throws IOException {
 
         // Initialize the artist id list. This is used for retrieving albums from artists.
@@ -155,4 +177,48 @@ public class ApiManager {
         }
     }
 
+    private RecordInfo recordSearch(String mbid){
+
+        // Create the url string for method album.getinfo
+        String albumUrl = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=53ed794c5c41de92a71525c6e303cf19&mbid=" + mbid + "63b3a8ca-26f2-4e2b-b867-647a6ec2bebd&format=json";
+
+        // Try data retrieval
+        try (InputStream is = new URL(albumUrl).openStream()) {
+
+            // Get input and turn it to a JSONObject.
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            JSONObject json = new JSONObject(jsonText);
+
+            // Create an object, recordinfo, and add the data.
+            // Get the items from the json seperately for clarities sake.
+            String title = json.getJSONObject("album").getString("name");
+            String artist = json.getJSONObject("album").getString("artist");
+            String published = json.getJSONObject("album").getJSONObject("wiki").getString("published");
+            String imgLinkmed = json.getJSONObject("album").getJSONArray("image").getJSONObject(1).getString("#text");
+            String imgLinklarge = json.getJSONObject("album").getJSONArray("image").getJSONObject(2).getString("#text");
+            String summary = json.getJSONObject("album").getJSONObject("wiki").getString("summary");
+
+            RecordInfo recordInfo = new RecordInfo(title, artist, published, imgLinkmed, imgLinklarge, summary, mbid);
+
+            // Tracks need iteration so is done seperately:
+            JSONArray tracks = json.getJSONObject("album").getJSONObject("tracks").getJSONArray("track");
+            for (int i = 0; i < tracks.length(); i++){
+
+                // Get the trackname and duration for each track.
+                String trackname = tracks.getJSONObject(i).getString("name");
+                String trackduration = tracks.getJSONObject(i).getString("duration");
+
+                // Add the track to the recordinfo object.
+                recordInfo.addTrack(trackname, trackduration);
+            }
+
+            // Finally return the object with all info.
+            return recordInfo;
+
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

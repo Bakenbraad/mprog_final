@@ -1,5 +1,8 @@
 package nl.mprog.com.example.rens.vinylmarket;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Rens on 11/01/2017.
  */
@@ -9,9 +12,21 @@ public class RecordInfo {
     String title;
     String artist;
     String published;
-    String imgLink;
+    String imgLinkmed;
+    String imgLinklarge;
     String summary;
     String mbID;
+    Map<String, String> tracks;
+
+    public RecordInfo(String title, String artist, String published, String imgLinkmed, String imgLinklarge, String summary, String mbID){
+        setArtist(artist);
+        setImgLinkmed(imgLinkmed);
+        setImgLinklarge(imgLinklarge);
+        setMbid(mbID);
+        setPublished(published);
+        setSummary(summary);
+        setTitle(title);
+    }
 
     // Getters for all fields
     public String getMbid() {
@@ -22,10 +37,13 @@ public class RecordInfo {
         return artist;
     }
 
-    public String getImgLink() {
-        return imgLink;
+    public String getImgLinkmed() {
+        return imgLinkmed;
     }
 
+    public String getImgLinklarge(){
+        return imgLinklarge;
+    }
     public String getPublished() {
         return published;
     }
@@ -38,6 +56,10 @@ public class RecordInfo {
         return title;
     }
 
+    public Map<String, String> getTracks() {
+        return tracks;
+    }
+
     // Set all fields.
     public void setMbid(String mbID) {
         this.mbID = mbID;
@@ -47,8 +69,12 @@ public class RecordInfo {
         this.artist = artist;
     }
 
-    public void setImgLink(String imgLink) {
-        this.imgLink = imgLink;
+    public void setImgLinkmed(String imgLinkmed) {
+        this.imgLinkmed = imgLinkmed;
+    }
+
+    public void setImgLinklarge(String imgLinklarge) {
+        this.imgLinklarge = imgLinklarge;
     }
 
     public void setPublished(String published) {
@@ -61,5 +87,9 @@ public class RecordInfo {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void addTrack(String title, String duration){
+        tracks.put(title,duration);
     }
 }
