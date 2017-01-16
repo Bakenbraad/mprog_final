@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Vinyl\nCountdown</string>
+    <string name="invalid_reg">Registration not successful</string>
+    <string name="invalid_pas">Password must be 6 characters</string>
+    <string name="invalid_login_pas">Enter a valid password</string>
+    <string name="invalid_login">Password or email is incorrect</string>
+    <string name="invalid_login_mail">Enter a valid email address</string>
+    <string name="valid_reg">Thanks for registering!</string>
+    <string name="invalid_con">Connection invalid</string>
+    <string name="inv_username">Username must be at least 4 characters</string>
+    <string name="inv_pass_num">Password must at least contain 1 number</string>
+    <string name="inv_pass_len">Password must be at least 4 characters</string>
+    <string name="inv_pass_comp">Passwords don\'t match</string>
+    <string name="inv_email">Invalid email address</string>
+    <string name="verify_mail">Please verify your account through your email.</string>
+    <string name="inv_check">Unable to check username availability</string>
+    <string name="inv_usertaken">Username is taken</string>
+    <string name="inv_con">No connection</string>
+</resources>

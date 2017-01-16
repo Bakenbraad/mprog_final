@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.1"
     defaultConfig {
         applicationId "nl.mprog.com.example.rens.vinylmarket"
-        minSdkVersion 23
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
