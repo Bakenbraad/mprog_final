@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="menuOptions" >
+        <item>Menu</item>
+        <item>Sell</item>
+        <item>Buy</item>
+        <item>Profile</item>
+        <item>Collection</item>
+        <item>Wishlist</item>
+        <item>Logout</item>
+    </array>
+</resources>

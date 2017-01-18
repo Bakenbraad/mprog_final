@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nl.mprog.rens.vinylcountdown">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,7 +12,7 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity android:name=".BuyActivity" />
         <activity android:name=".CollectionActivity" />
-        <activity android:name="nl.mprog.rens.vinylcountdown.LoginActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +27,9 @@
         <activity android:name=".SaleSearchActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".WishlistActivity" />
-        <activity android:name=".WishlistSearchActivity"></activity>
+        <activity android:name=".WishlistSearchActivity" />
+        <activity android:name=".SaleDetail"
+            android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog"></activity>
     </application>
 
 </manifest>

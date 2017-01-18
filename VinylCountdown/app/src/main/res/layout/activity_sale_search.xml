@@ -4,36 +4,63 @@
     android:id="@+id/activity_sale_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+
     tools:context="nl.mprog.rens.vinylcountdown.SaleSearchActivity">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text=""
-        android:hint="Search album, artist..."
-        android:ems="10"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/searchSaleED" />
-
-    <Button
-        android:text="Go"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button18"
-        android:onClick="searchMusic"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/searchSaleED" />
-
-    <ListView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/button18"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/saleResult"/>
+        >
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchSaleED"
+            android:imeOptions="actionSearch"
+            android:layout_margin="15dp"
+            android:inputType="text"
+            android:padding="5dp"
+            android:background="@drawable/drawable"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Switch
+                android:textOff="Searhmode: Album"
+                android:textOn="Searhmode: Artist"
+                android:text="Album/Artist"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:id="@+id/switch1"
+                android:paddingRight="24dp"
+                android:layout_marginLeft="10dp"
+                android:gravity=""
+                android:layout_weight="0.29" />
+
+            <Button
+                android:text="Search"
+                android:onClick="onSearchClick"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button14"
+                android:layout_weight="1"
+                style="@android:style/Widget.DeviceDefault.Light.Button.Inset" />
+        </LinearLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/saleResult"
+            android:paddingLeft="15dp" />
+
+    </LinearLayout>
+
 </RelativeLayout>

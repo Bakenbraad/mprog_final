@@ -2,6 +2,7 @@ package nl.mprog.rens.vinylcountdown;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.widget.EditText;
@@ -73,6 +74,9 @@ public class UserRegistrator {
                                         // Username available, get on with registering
                                         register(email, password);
                                     }
+                                    else {
+                                        Toast.makeText(c, R.string.inv_usertaken, Toast.LENGTH_SHORT).show();
+                                    }
                                 }
 
                                 @Override
@@ -127,6 +131,7 @@ public class UserRegistrator {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            Toast.makeText(c, R.string.inv_emailtaken, Toast.LENGTH_SHORT).show();
                         }
                         else{
                             // Final step of registeration, this adds the current user with name to the database
@@ -158,6 +163,9 @@ public class UserRegistrator {
                             // Let the user know that registration was successful and return.
                             Toast.makeText(c, R.string.valid_reg, Toast.LENGTH_SHORT).show();
                             user.sendEmailVerification();
+                            Intent goToLogin = new Intent(activity.getApplicationContext(), LoginActivity.class);
+                            c.startActivity(goToLogin);
+
                         } else {
                             // Username registration was not successful.
                             Toast.makeText(c, R.string.invalid_reg, Toast.LENGTH_SHORT).show();

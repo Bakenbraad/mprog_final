@@ -16,4 +16,5 @@
     <string name="inv_check">Unable to check username availability</string>
     <string name="inv_usertaken">Username is taken</string>
     <string name="inv_con">No connection</string>
+    <string name="inv_emailtaken">Email address is taken</string>
 </resources>
