@@ -1,9 +1,15 @@
 package nl.mprog.rens.vinylcountdown;
 
+import android.content.Intent;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -11,6 +17,9 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.concurrent.ExecutionException;
 
@@ -20,6 +29,19 @@ public class SaleSearchActivity extends AppCompatActivity {
     Switch switchMethod;
     int currentMethod;
     String query;
+
+    // Authenticator:
+    // The authenticator for firebase.
+    private FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
+    DatabaseReference mDatabase;
+
+    // Initiate drawer modules:
+    DrawerLayout drawerLayout;
+    ListView drawers;
+    String[] navigations;
+    Button menuButton;
+    String methodCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +54,11 @@ public class SaleSearchActivity extends AppCompatActivity {
 
         switchMethod = (Switch) findViewById(R.id.switch1);
 
-        // Set the initial method:
+        // Set the initial method (and get current call):
         currentMethod = 1;
+        Intent intent = getIntent();
+        Bundle recordBundle = intent.getExtras();
+        methodCall = recordBundle.getString("method");
 
         // Change the method when its clicked.
         switchMethod.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -68,6 +93,76 @@ public class SaleSearchActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // Navigation drawer from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
+        navigations = getResources().getStringArray(R.array.menuOptions);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawers = (ListView) findViewById(R.id.sale_drawer);
+
+        // Set the adapter for the list view
+        drawers.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_layout, navigations));
+        // Set the list's click listener
+        drawers.setOnItemClickListener(new SaleSearchActivity.DrawerItemClickListener());
+    }
+
+    // Redirects the user to their profile.
+    public void goToProfile() {
+        Intent goToProfile = new Intent(this, ProfileActivity.class);
+        startActivity(goToProfile);
+        finish();
+    }
+
+    // Redirects the user to where they can search possible records they can sell.
+    public void goToSaleSearch() {
+        methodCall = "saleSearch";
+    }
+    public void goToBuySearch(){
+        methodCall = "buySearch";
+    }
+
+    // Redirects the user to the login screen and logs them out.
+    public void goToLogin() {
+        Intent goToLogin = new Intent(this, LoginActivity.class);
+        mAuth.getCurrentUser();
+        mAuth.signOut();
+        startActivity(goToLogin);
+        finish();
+    }
+
+    public void openDrawer(View view) {
+        drawerLayout.openDrawer(drawers);
+    }
+
+    // onclicklistener for the drawer, manages navigation.
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    /** Swaps fragments in the main content view */
+    private void selectItem(int position) {
+        // Get the right position and go to the right activity.
+        String[] menuOptions = getResources().getStringArray(R.array.menuOptions);
+        switch (menuOptions[position]){
+            case ("Menu"):
+                break;
+            case ("Sell"):
+                goToSaleSearch();
+                break;
+            case ("Buy"):
+                goToBuySearch();
+                break;
+            case ("Profile"):
+                goToProfile();
+                break;
+            case ("Logout"):
+                goToLogin();
+                break;
+        }
+        drawerLayout.closeDrawer(drawers);
     }
 
     public void searchMusic(int method) throws ExecutionException, InterruptedException {
@@ -78,7 +173,12 @@ public class SaleSearchActivity extends AppCompatActivity {
             searchViewED.setError("Invalid search");
         } else {
             query = searchViewED.getText().toString();
-            new RecordAsyncTask(this, query, method).execute();
+            if (methodCall.equals("buySearch")){
+                new MarketAsyncTask(this, query, method).execute();
+            }
+            else if (methodCall.equals("saleSearch")){
+                new RecordAsyncTask(this, query, method).execute();
+            }
         }
     }
 

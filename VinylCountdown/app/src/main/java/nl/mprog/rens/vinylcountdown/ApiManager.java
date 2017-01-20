@@ -192,7 +192,7 @@ public class ApiManager {
         return albumIDs;
     }
 
-    private RecordInfo recordInfoSearch(String mbid){
+    public RecordInfo recordInfoSearch(String mbid){
 
         // Create the url string for method album.getinfo
         String albumUrl = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=53ed794c5c41de92a71525c6e303cf19&mbid=" + mbid + "&format=json";

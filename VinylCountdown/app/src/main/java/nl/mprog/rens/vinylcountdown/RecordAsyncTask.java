@@ -85,7 +85,7 @@ public class RecordAsyncTask extends AsyncTask<Void, Void, List<RecordInfo>> imp
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View arg1,
                                         int arg2, long arg3) {
-                    Intent goToSaleDetail = new Intent(context, SaleActivity.class);
+                    Intent goToSale = new Intent(context, SaleDetail.class);
                     RecordInfo recordInfo = (RecordInfo) lv.getItemAtPosition(arg2);
 
                     // Get all the values from the record info.
@@ -97,15 +97,15 @@ public class RecordAsyncTask extends AsyncTask<Void, Void, List<RecordInfo>> imp
                     Map<String, String> tracks = recordInfo.getTracks();
 
                     // Put the values into the next activity.
-                    goToSaleDetail.putExtra("title", title);
-                    goToSaleDetail.putExtra("artist", artist);
-                    goToSaleDetail.putExtra("summary", summary);
-                    goToSaleDetail.putExtra("imgLink", imgLink);
-                    goToSaleDetail.putExtra("mbid", mbid);
-                    goToSaleDetail.putExtra("tracks", (Serializable) tracks);
+                    goToSale.putExtra("title", title);
+                    goToSale.putExtra("artist", artist);
+                    goToSale.putExtra("summary", summary);
+                    goToSale.putExtra("imgLink", imgLink);
+                    goToSale.putExtra("mbid", mbid);
+                    goToSale.putExtra("tracks", (Serializable) tracks);
 
                     // Start the activity
-                    context.startActivity(goToSaleDetail);
+                    context.startActivity(goToSale);
                 }
             });
         }

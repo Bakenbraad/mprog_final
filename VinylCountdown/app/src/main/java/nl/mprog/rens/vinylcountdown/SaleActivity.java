@@ -20,8 +20,7 @@ public class SaleActivity extends AppCompatActivity {
     String artist;
     String title;
     String summary;
-    String imgLink;
-    String mbid;
+
     Map<String,String> tracks = new HashMap<>();
 
     @Override
@@ -36,13 +35,7 @@ public class SaleActivity extends AppCompatActivity {
         artist = recordBundle.getString("artist");
         title = recordBundle.getString("title");
         summary = recordBundle.getString("summary");
-        imgLink = recordBundle.getString("imgLink");
-        mbid = recordBundle.getString("mbid");
         tracks = (Map<String, String>) recordBundle.getSerializable("tracks");
-
-        // Set basic record info
-        ImageView imageView = (ImageView) findViewById(R.id.largeImage);
-        new DownloadImageTask(imageView).execute(imgLink);
 
         TextView artistTV = (TextView) findViewById(R.id.artistSell);
         artistTV.setText(artist);
@@ -62,19 +55,5 @@ public class SaleActivity extends AppCompatActivity {
         TrackAdapter trackAdapter = new TrackAdapter(tracks);
         ListView listView = (ListView) findViewById(R.id.rightTracks);
         listView.setAdapter(trackAdapter);
-    }
-
-    public void goToSaleDetail(View view){
-
-        Intent goToSaleDetail = new Intent(this, SaleDetail.class);
-
-        // Put the values into the next activity.
-        goToSaleDetail.putExtra("title", title);
-        goToSaleDetail.putExtra("artist", artist);
-        goToSaleDetail.putExtra("summary", summary);
-        goToSaleDetail.putExtra("imgLink", imgLink);
-        goToSaleDetail.putExtra("mbid", mbid);
-
-        startActivity(goToSaleDetail);
     }
 }

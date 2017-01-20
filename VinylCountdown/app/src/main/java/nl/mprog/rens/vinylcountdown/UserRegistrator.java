@@ -31,6 +31,7 @@ public class UserRegistrator {
     final String username;
     final Context c;
     final Activity activity;
+    final String location;
 
     // The authenticator for firebase.
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -46,6 +47,7 @@ public class UserRegistrator {
         this.username = username;
         this.c = c;
         this.activity = activity;
+        location = "default";
     }
 
 
@@ -69,7 +71,7 @@ public class UserRegistrator {
                             ValueEventListener usernameListener = new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    // Get  object and use the values to update the UI
+                                    // Set a boolean to prevent username checking after registeration
                                     if (!dataSnapshot.hasChild(username)){
                                         // Username available, get on with registering
                                         register(email, password);
@@ -85,7 +87,7 @@ public class UserRegistrator {
                                 }
 
                             };
-                            userRef.addValueEventListener(usernameListener);
+                            userRef.addListenerForSingleValueEvent(usernameListener);
 
                         } else {
                             Toast.makeText(c, R.string.inv_username, Toast.LENGTH_SHORT).show();
@@ -120,7 +122,7 @@ public class UserRegistrator {
     }
 
 
-    private void register(String email, String password){
+    private void register(final String email, final String password){
 
         FirebaseAuth mAuthRegister = FirebaseAuth.getInstance();
         mAuthRegister.createUserWithEmailAndPassword(email, password)
@@ -147,7 +149,9 @@ public class UserRegistrator {
     // Registers the user after the userdata is validated.
     private void registerUsername(){
 
+        mAuth.signInWithEmailAndPassword(email,password);
         final FirebaseUser user = mAuth.getCurrentUser();
+
         // Set the users display/user name and update the profile.
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
         user.updateProfile(profileUpdates)
@@ -159,6 +163,7 @@ public class UserRegistrator {
                             // If profile is updated add user to users database in a username : id structure.
                             mUsersReference = FirebaseDatabase.getInstance().getReference();
                             mUsersReference.child("users").child(username).setValue(user.getUid());
+                            mUsersReference.child("users").child(user.getUid()).setValue(new UserProfile(username, email,location));
 
                             // Let the user know that registration was successful and return.
                             Toast.makeText(c, R.string.valid_reg, Toast.LENGTH_SHORT).show();
