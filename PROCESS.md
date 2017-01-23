@@ -1,0 +1,25 @@
+## Week 1
+### Monday
+Wrote proposal, created basic design for main activities. Description of basic flow of activities and code design. Can be found in README.md.
+### Tuesday
+Wrote design in detail. This is found in DESIGN.md, the MVP is specified here, all activities managers and classes are explained thouroughly.
+The file is accompanied by a flow diagram to get a picture of the activities and how to navigate between them. Another diagram
+shows how different sections influence each other and how managers maintain the data in each section. 
+### Wednesday
+The proposal should be edited slightly to match developments as a result of the design stage. Some extra activities are needed for the app
+but won't affect the overall functionality, merely optimize it. The project is created and added to github and firebase.
+The classes for users and records are created and firebase is implemented in the gradle files as well as the google-services file.
+### Thursday
+Not much progress on the technical part, stuck on API processing, main files for the design are created and set up. Asynctask was chosen for searching for records.
+### Friday - Sunday
+Api manager can now parse requests into a listview with the images for records being seperately loaded. Layout has been boosted a lot.
+## Week 2
+### Monday
+Authentication is being buggy took a whole day to fix internal errors, however a large bug remains. The google play version is not updatable yet, project may have to be downgraded as a whole (Postponed).
+### Tuesday
+The authentication works with unique usernames, email, email verivication and all toasts/error pop ups are in place for the user to properly register an account. From the search results you can now create an offer with a nice layout, this is not yet written to firebase.
+### Wednesday
+The entire project had to be downgraded in order for firebase to work. This took a while, however everything seems to work fine now and navigation has been moved to a drawer object. The offers created are now written to the firebase.
+### Thursday
+The user is finally properly welcomed in the main activity. The offers can now also be queried in the marketplace in correspondence to the original api query. The offers are displayed in a nice layout through an adapter.
+## Week 3
