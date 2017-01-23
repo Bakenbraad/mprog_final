@@ -41,7 +41,6 @@ public class SaleSearchActivity extends AppCompatActivity {
     ListView drawers;
     String[] navigations;
     Button menuButton;
-    String methodCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,23 +53,15 @@ public class SaleSearchActivity extends AppCompatActivity {
 
         switchMethod = (Switch) findViewById(R.id.switch1);
 
-        // Set the initial method (and get current call):
-        currentMethod = 1;
-        Intent intent = getIntent();
-        Bundle recordBundle = intent.getExtras();
-        methodCall = recordBundle.getString("method");
-
         // Change the method when its clicked.
         switchMethod.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     // method is search artists
-                    currentMethod = 1;
                     searchViewED.setHint("Enter Artist");
                     Toast.makeText(getApplicationContext(),"Artist mode", Toast.LENGTH_SHORT).show();
                 } else {
                     // method is search albums
-                    currentMethod = 2;
                     searchViewED.setHint("Enter Album");
                     Toast.makeText(getApplicationContext(),"Album mode", Toast.LENGTH_SHORT).show();
                 }
@@ -84,7 +75,7 @@ public class SaleSearchActivity extends AppCompatActivity {
 
                     // On search action send query to asynctask
                     try {
-                        searchMusic(currentMethod);
+                        searchMusic();
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -115,10 +106,13 @@ public class SaleSearchActivity extends AppCompatActivity {
 
     // Redirects the user to where they can search possible records they can sell.
     public void goToSaleSearch() {
-        methodCall = "saleSearch";
+
     }
+
     public void goToBuySearch(){
-        methodCall = "buySearch";
+        Intent goToBuySeach = new Intent(this, BuySearchActivity.class);
+        startActivity(goToBuySeach);
+        finish();
     }
 
     // Redirects the user to the login screen and logs them out.
@@ -165,7 +159,7 @@ public class SaleSearchActivity extends AppCompatActivity {
         drawerLayout.closeDrawer(drawers);
     }
 
-    public void searchMusic(int method) throws ExecutionException, InterruptedException {
+    public void searchMusic() throws ExecutionException, InterruptedException {
 
         // Search for music if the query is long enough, otherwise let the user know of their mistakes.
         if (searchViewED.getText().toString().length() < 2){
@@ -173,16 +167,16 @@ public class SaleSearchActivity extends AppCompatActivity {
             searchViewED.setError("Invalid search");
         } else {
             query = searchViewED.getText().toString();
-            if (methodCall.equals("buySearch")){
-                new MarketAsyncTask(this, query, method).execute();
+            if (switchMethod.isChecked()){
+                new RecordAsyncTask(this, query, 1).execute();
             }
-            else if (methodCall.equals("saleSearch")){
-                new RecordAsyncTask(this, query, method).execute();
+            else {
+                new RecordAsyncTask(this, query, 2).execute();
             }
         }
     }
 
     public void onSearchClick(View view) throws ExecutionException, InterruptedException {
-        searchMusic(currentMethod);
+        searchMusic();
     }
 }

@@ -140,4 +140,8 @@ public class SaleDetail extends AppCompatActivity {
 
 
     }
+
+    public void backToSearch(View view) {
+        finish();
+    }
 }

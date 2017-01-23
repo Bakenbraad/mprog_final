@@ -10,7 +10,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".BuyActivity" />
         <activity android:name=".CollectionActivity" />
         <activity android:name=".LoginActivity">
@@ -24,13 +23,15 @@
         <activity android:name=".BuySearchActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".SaleActivity"
-            android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog"/>
+        <activity
+            android:name=".SaleActivity"
+            android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
         <activity android:name=".SaleSearchActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".WishlistActivity" />
-        <activity android:name=".WishlistSearchActivity" />
-        <activity android:name=".SaleDetail"/>
+        <activity android:name=".SaleDetail" />
+        <activity android:name=".NewsActivity"
+            android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog"></activity>
     </application>
 
 </manifest>

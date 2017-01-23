@@ -116,7 +116,6 @@ public class MarketAsyncTask extends AsyncTask<Void, Void, List<RecordInfo>> imp
             }
             CustomMarketAdapter customMarketAdapter = new CustomMarketAdapter(context, R.layout.record_sale_layout, recordSaleInfoList);
             lv.setAdapter(customMarketAdapter);
-            customMarketAdapter.notifyDataSetChanged();
 
             // Set a listener, this is used to send record info to the selling details.
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -144,6 +143,7 @@ public class MarketAsyncTask extends AsyncTask<Void, Void, List<RecordInfo>> imp
                     context.startActivity(goToBuy);
                 }
             });
+            customMarketAdapter.notifyDataSetChanged();
         }
     }
 }

@@ -10,14 +10,14 @@
 
     <TextView
         android:text="Title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:id="@+id/titleDetail"
         android:textSize="20sp"
         android:layout_above="@+id/artistDetail"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/imageDetail" />
+        android:layout_alignStart="@+id/textView9"
+        android:layout_toStartOf="@+id/imageButton" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -143,5 +143,17 @@
         android:textSize="18sp"
         android:layout_alignBottom="@+id/imageDetail"
         android:layout_alignStart="@+id/titleDetail" />
+
+    <Button
+        android:text="Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/button5"
+        android:layout_toEndOf="@+id/ratingBar"
+        style="@android:style/Widget.DeviceDefault.Button.Inset"
+        android:textSize="12sp"
+        android:onClick="backToSearch" />
 
 </RelativeLayout>

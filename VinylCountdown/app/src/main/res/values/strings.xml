@@ -17,4 +17,11 @@
     <string name="inv_usertaken">Username is taken</string>
     <string name="inv_con">No connection</string>
     <string name="inv_emailtaken">Email address is taken</string>
+    <string name="title_activity_nav_activity">Nav_activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main_nav">MainActivityNav</string>
 </resources>

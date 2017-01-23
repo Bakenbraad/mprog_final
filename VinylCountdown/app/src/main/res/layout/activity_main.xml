@@ -5,9 +5,72 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="@drawable/vinylbc"
     tools:context="nl.mprog.rens.vinylcountdown.MainActivity">
 
+    <TextView
+        android:text=""
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textUser"
+        android:gravity="center"
+        android:textSize="35dp"
+        android:textColor="@color/softWhite"
+        android:background="@color/colorPrimaryDark"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
+    <nl.mprog.rens.vinylcountdown.MyTextView
+        android:text="Vinyl Countdown"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textColor="@color/softWhite"
+        android:background="@color/drawerBc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/menubutton"
+        android:layout_above="@+id/drawer_layout" />
+
+    <Button
+        android:text="+"
+        android:textSize="36sp"
+        android:textColor="@color/softWhite"
+        android:background="@color/drawerBc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/menubutton"
+        android:onClick="openDrawer"
+        android:elevation="0dp"
+        style="@style/Widget.AppCompat.Button.Small"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Welcome,"
+        android:textSize="25dp"
+        android:textColor="@color/softWhite"
+        android:background="@color/colorPrimaryDark"
+        android:paddingTop="16dp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/textView6"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/menubutton"
+        android:layout_alignParentStart="true"
+        android:id="@+id/news_list"
+        android:padding="20dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="50.0sp"
+        android:layout_below="@+id/textUser" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -20,7 +83,7 @@
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
         </FrameLayout>
         <!-- The navigation drawer -->
@@ -28,54 +91,12 @@
         <ListView android:id="@+id/main_drawer"
             android:layout_width="240dp"
             android:layout_height="match_parent"
+            android:background="@color/drawerBc"
             android:layout_gravity="start"
-
+            android:alpha="0.9"
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
-            android:dividerHeight="0dp"/>
+            android:dividerHeight="3dp"/>
     </android.support.v4.widget.DrawerLayout>
-
-    <TextView
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textUser"
-        android:textSize="35dp"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="+"
-        android:textSize="36sp"
-        android:alpha="0.4"
-        android:background="@color/softWhite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/menubutton"
-        android:onClick="openDrawer"
-        android:elevation="0dp"
-        android:layout_alignParentTop="true"
-        style="@style/Widget.AppCompat.Button.Small" />
-
-    <nl.mprog.rens.vinylcountdown.MyTextView
-        android:text="Vinyl Countdown"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView6"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/menubutton" />
-
-    <TextView
-        android:text="Welcome,"
-        android:textSize="25dp"
-        android:paddingTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/textView6"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

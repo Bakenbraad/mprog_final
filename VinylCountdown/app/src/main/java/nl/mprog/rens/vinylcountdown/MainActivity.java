@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        // Get the news info:
+        new NewsAsyncTask(this, this).execute();
+
         // Check the login state.
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
