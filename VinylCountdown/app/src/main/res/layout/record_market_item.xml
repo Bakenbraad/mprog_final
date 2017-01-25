@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/marketImage"
+        android:layout_marginRight="8dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_toEndOf="@+id/marketImage"
+        android:layout_height="match_parent"
+        android:id="@+id/sale_layout">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:text="Album title"
+                android:textSize="18dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/marketTitle"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/marketImage" />
+
+            <TextView
+                android:text="Artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/marketTitle"
+                android:layout_toEndOf="@+id/marketImage"
+                android:id="@+id/marketArtist" />
+
+            <TextView
+                android:text="Condition"
+                android:textSize="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView17"
+                android:layout_above="@+id/marketCondition"
+                android:layout_toEndOf="@+id/marketImage" />
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/marketCondition"
+                android:max="5"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_alignBottom="@+id/marketImage"
+                android:layout_toEndOf="@+id/marketImage" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="right">
+
+            <TextView
+                android:text="Sold by:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="40dp"
+                android:id="@+id/soldSale" />
+
+            <TextView
+                android:text="username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/soldSale"
+                android:layout_alignStart="@+id/soldSale"
+                android:id="@+id/marketUsername" />
+
+            <TextView
+                android:text="Price"
+                android:textSize="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/marketPrice"
+                android:layout_alignStart="@+id/marketPrice"
+                android:id="@+id/marketPriceType" />
+
+            <TextView
+                android:text="$20.20"
+                android:textSize="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/marketCondition"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/marketPrice"
+                android:layout_marginEnd="50dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

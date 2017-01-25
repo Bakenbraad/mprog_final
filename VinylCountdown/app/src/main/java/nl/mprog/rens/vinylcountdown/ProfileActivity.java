@@ -91,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Set the adapter for the list view
         drawers.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_layout, navigations));
+                R.layout.drawer_item, navigations));
         // Set the list's click listener
         drawers.setOnItemClickListener(new ProfileActivity.DrawerItemClickListener());
     }

@@ -1,10 +1,6 @@
 package nl.mprog.rens.vinylcountdown;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -47,7 +42,7 @@ public class CustomMarketAdapter extends ArrayAdapter<RecordSaleInfo> {
         // to inflate it basically means to render, or show, the view.
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.record_sale_layout, null);
+            v = inflater.inflate(R.layout.record_market_item, null);
         }
 
         final RecordSaleInfo i = objects.get(position);
@@ -65,25 +60,28 @@ public class CustomMarketAdapter extends ArrayAdapter<RecordSaleInfo> {
             artistTV.setText(i.getArtist());
             titleTV.setText(i.getTitle());
 
-//            // Get the current selling user.
-//            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-//            ValueEventListener valueEventListener = new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    String username = dataSnapshot.child(i.getMbid()).getValue(UserProfile.class).getUsername();
-//                    userTV.setText(username);
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            };
-//            databaseReference.addListenerForSingleValueEvent(valueEventListener);
+            // Get the current selling user.
+            DatabaseReference mSettingsReference = FirebaseDatabase.getInstance().getReference().child("users").child(i.getUserID());
+            // User is signed in
+            ValueEventListener settingsListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Get UserSettings object and use the values to update the UI
+                    UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                    if (userProfile != null) {
+                        userTV.setText(userProfile.getUsername());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            };
+            mSettingsReference.addValueEventListener(settingsListener);
 
             // Download and set the image for the album:
             ImageView imageView = (ImageView) v.findViewById(R.id.marketImage);
-            new DownloadImageTask(imageView).execute(i.getImgLink());
+            new AsyncTaskImgDownload(imageView).execute(i.getImgLink());
 
             conditionTV.setRating(i.getCondition());
             if (i.priceType.equals("Trade")){

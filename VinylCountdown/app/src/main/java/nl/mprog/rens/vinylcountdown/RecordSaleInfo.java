@@ -1,10 +1,12 @@
 package nl.mprog.rens.vinylcountdown;
 
+import java.io.Serializable;
+
 /**
  * Created by Rens on 16/01/2017.
  */
 
-public class RecordSaleInfo {
+public class RecordSaleInfo implements Serializable{
 
     String mbid;
     String description;
@@ -16,6 +18,26 @@ public class RecordSaleInfo {
     String imgLink;
     String artist;
     String title;
+
+    public String getCurrentBidUser() {
+        return currentBidUser;
+    }
+
+    public void setCurrentBidUser(String currentBidUser) {
+        this.currentBidUser = currentBidUser;
+    }
+
+    String currentBidUser;
+
+    public float getCurrentBid() {
+        return currentBid;
+    }
+
+    public void setCurrentBid(float currentBid) {
+        this.currentBid = currentBid;
+    }
+
+    float currentBid;
 
     public RecordSaleInfo(){}
 
@@ -30,6 +52,8 @@ public class RecordSaleInfo {
         this.imgLink = imgLink;
         this.artist = artist;
         this.title = title;
+        this.currentBid = 0;
+        this.currentBidUser = "None";
         saleUID = userID + mbid + String.valueOf(System.currentTimeMillis());
 
     }

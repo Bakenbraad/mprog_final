@@ -24,14 +24,16 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".RegisterActivity" />
         <activity
-            android:name=".SaleActivity"
+            android:name=".RecordInfoActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
         <activity android:name=".SaleSearchActivity" />
-        <activity android:name=".SettingsActivity" />
         <activity android:name=".WishlistActivity" />
-        <activity android:name=".SaleDetail" />
-        <activity android:name=".NewsActivity"
-            android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog"></activity>
+        <activity android:name=".SaleActivity" />
+        <activity
+            android:name=".NewsActivity"
+            android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
+        <activity android:name=".InboxActivity" />
+        <activity android:name=".InboxDetail"></activity>
     </application>
 
 </manifest>

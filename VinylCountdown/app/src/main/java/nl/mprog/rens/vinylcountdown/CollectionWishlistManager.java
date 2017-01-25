@@ -6,11 +6,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
- * Created by Rens on 16/01/2017.
+ * Created by Rens on 24/01/2017.
  */
 
-public class CollectionManager {
-
+public class CollectionWishlistManager {
     // Authentication service.
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;

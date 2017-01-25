@@ -24,13 +24,13 @@ import java.util.Map;
  * Created by Rens on 23/01/2017.
  */
 
-public class NewsAsyncTask extends AsyncTask<Void, Void, List<NewsItem>> {
+public class AsyncTaskNews extends AsyncTask<Void, Void, List<NewsItem>> {
 
     Activity activity;
     Context c;
     List<NewsItem> newsList = new ArrayList();
 
-    public NewsAsyncTask(Activity activity, Context context){
+    public AsyncTaskNews(Activity activity, Context context){
         this.activity = activity;
         this.c = context;
     }
@@ -61,7 +61,6 @@ public class NewsAsyncTask extends AsyncTask<Void, Void, List<NewsItem>> {
 
     @Override
     protected void onPostExecute(List<NewsItem> newsItems) {
-        super.onPostExecute(newsItems);
 
         // Find the listview to fill
         final ListView lv = (ListView) activity.findViewById(R.id.news_list);

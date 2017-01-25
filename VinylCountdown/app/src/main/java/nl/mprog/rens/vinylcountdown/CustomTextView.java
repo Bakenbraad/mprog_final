@@ -9,19 +9,19 @@ import android.widget.TextView;
  * Created by Rens on 16/01/2017.
  */
 
-public class MyTextView extends TextView {
+public class CustomTextView extends TextView {
 
-    public MyTextView(Context context, AttributeSet attrs, int defStyle) {
+    public CustomTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
 
-    public MyTextView(Context context, AttributeSet attrs) {
+    public CustomTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MyTextView(Context context) {
+    public CustomTextView(Context context) {
         super(context);
         init();
     }

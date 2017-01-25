@@ -13,10 +13,10 @@ import java.io.InputStream;
  */
 
 // This class downloads and sets the images for each row
-class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+class AsyncTaskImgDownload extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
 
-    public DownloadImageTask(ImageView bmImage) {
+    public AsyncTaskImgDownload(ImageView bmImage) {
         this.bmImage = bmImage;
     }
 

@@ -1,10 +1,6 @@
 package nl.mprog.rens.vinylcountdown;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -40,7 +35,7 @@ public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
         // to inflate it basically means to render, or show, the view.
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.record_layout, null);
+            v = inflater.inflate(R.layout.record_item, null);
         }
 
         RecordInfo i = objects.get(position);
@@ -58,7 +53,7 @@ public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
 
             // Download and set the image for the album:
             ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
-            new DownloadImageTask(imageView).execute(i.getImgLinkmed());
+            new AsyncTaskImgDownload(imageView).execute(i.getImgLinkmed());
         }
 
         // the view must be returned to our activity

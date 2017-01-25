@@ -7,22 +7,11 @@
     android:background="@color/colorPrimary"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="nl.mprog.rens.vinylcountdown.NewsActivity">
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:textColor="@color/softWhite"
-        android:id="@+id/full_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/imageButton5"
-        android:scrollbars="vertical"
-        android:maxLines="30"/>
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -33,4 +22,23 @@
         android:onClick="closeNews"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imageButton5">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/softWhite"
+            android:id="@+id/full_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageButton5"
+            />
+
+    </ScrollView>
 </RelativeLayout>

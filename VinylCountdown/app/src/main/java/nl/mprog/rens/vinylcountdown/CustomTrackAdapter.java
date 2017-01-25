@@ -3,7 +3,6 @@ package nl.mprog.rens.vinylcountdown;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -15,10 +14,10 @@ import java.util.Map;
  * From: http://stackoverflow.com/questions/19466757/hashmap-to-listview
  */
 
-public class TrackAdapter extends BaseAdapter {
+public class CustomTrackAdapter extends BaseAdapter {
     private final ArrayList mData;
 
-    public TrackAdapter(Map<String, String> map) {
+    public CustomTrackAdapter(Map<String, String> map) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
     }
@@ -44,7 +43,7 @@ public class TrackAdapter extends BaseAdapter {
         final View result;
 
         if (convertView == null) {
-            result = LayoutInflater.from(parent.getContext()).inflate(R.layout.track_layout, parent, false);
+            result = LayoutInflater.from(parent.getContext()).inflate(R.layout.track_item, parent, false);
         } else {
             result = convertView;
         }

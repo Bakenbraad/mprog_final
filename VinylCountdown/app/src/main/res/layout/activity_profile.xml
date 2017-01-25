@@ -139,7 +139,7 @@
 
     </LinearLayout>
 
-    <nl.mprog.rens.vinylcountdown.MyTextView
+    <nl.mprog.rens.vinylcountdown.CustomTextView
         android:text="Vinyl Countdown"
         android:gravity="center"
         android:textSize="30dp"

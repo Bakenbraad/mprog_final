@@ -21,23 +21,16 @@ import java.util.List;
 
 public class ApiManager {
 
-    // Search takes a query and sets it to the default. Then it retrieves a list of albumIDs by means of the
+    // Search takes a query and retrieves a list of albumIDs by means of the
     // albumIDSearch function. This fills the albumids list which is then used to do a recordsearch, this
     // function takes in the mbid results in albumids and find the info for the corresponding albums.
     // These are subsequently addend to a list and returned for passing through the custom adapter.
-    public List<RecordInfo> Search(String query, int method) throws IOException {
-
-        List<String> albumIDs = new ArrayList<>();
+    public List<RecordInfo> Search(String query) throws IOException {
 
         // If the method is 1 search for albums using the query:
-        if (method == 2){
-            // Get a list of album ids for the query.
-            albumIDs = getAlbumIDs(query);
-        }
-        if (method == 1){
-            // Get a list of queried artists' top album ids.
-            albumIDs = getArtistsAlbumIDs(query);
-        }
+
+        List<String> albumIDs = getAlbumIDs(query);
+
 
         // Get all data from the albums and put them in the generated searchResults list.
         List<RecordInfo> searchResults = new ArrayList<>();
@@ -66,7 +59,7 @@ public class ApiManager {
         return sb.toString();
     }
 
-    // Get all search results for albums.
+    // Get all search results for a certain query.
     private List<String> getAlbumIDs(String query) throws IOException {
 
         // Initiate return list.
@@ -76,7 +69,7 @@ public class ApiManager {
         query = query.replace(" ", "%20");
 
         // Create the url string.
-        String albumURL = "http://ws.audioscrobbler.com/2.0/?method=album.search&limit=50&album=" + query + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
+        String albumURL = "http://ws.audioscrobbler.com/2.0/?method=album.search&limit=80&album=" + query + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
 
         // Try to create the input stream.
         try (InputStream is = new URL(albumURL).openStream()) {
@@ -110,88 +103,7 @@ public class ApiManager {
         return albumIDs;
     }
 
-    // This is a two step api request, you get the artists ids first and then retrieve their albums using
-    // the artist search and artist getTopAlbums method.
-    private List<String> getArtistsAlbumIDs(String query) throws IOException {
-
-        // Initialize the artist id list and album id list. This is used for retrieving storing artist ids
-        List<String> artistIDs = new ArrayList<>();
-        List<String> albumIDs = new ArrayList<>();
-
-        // Format the query to make it url readable, for example blonde on blonde becomes blonde%20on%20blonde.
-        query = query.replace(" ", "%20");
-
-        // Create the url string for artist search.
-        String artistURL = "http://ws.audioscrobbler.com/2.0/?method=artist.search&limit=8&artist=" + query + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
-
-        // Try to create the input stream.
-        try (InputStream is = new URL(artistURL).openStream()) {
-
-            // Get input and turn it to a JSONObject.
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-
-            // If results are found, the mbids for the artist are extracted from the matches and added to a list.
-            if (!json.getJSONObject("results").getString("opensearch:totalResults").equals("0")){
-                JSONArray artists = json.getJSONObject("results").getJSONObject("artistmatches").getJSONArray("artist");
-
-                // Go over each match and get the artists' mbid.
-                for (int i = 0; i < artists.length(); i++){
-
-                    // Extract id and mbid from each artist object.
-                    JSONObject artist = artists.getJSONObject(i);
-                    String mbid = artist.getString("mbid");
-                    // Check if the artist has an mbid.
-                    if (!mbid.equals("")){
-                        // Don't add duplicates!
-                        if (!artistIDs.contains(mbid)){
-                            artistIDs.add(mbid);
-                        }
-                    }
-                }
-            }
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
-        }
-
-        // This is the second step, all artist ID's are passed through the gettopalbums method.
-        for (int i = 0; i < artistIDs.size(); i++){
-            String mbidQuery = artistIDs.get(i);
-
-            // Create the url string for the mbid query.
-            String artistMbidURL = "http://ws.audioscrobbler.com/2.0/?method=artist.getTopAlbums&limit=40&mbid=" + mbidQuery + "&api_key=53ed794c5c41de92a71525c6e303cf19&format=json";
-
-            // For each id found in the artist query get their top albums.
-            try (InputStream is = new URL(artistMbidURL).openStream()) {
-
-                // Get input and turn it to a JSONObject.
-                BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-                String jsonText = readAll(rd);
-                JSONObject json = new JSONObject(jsonText);
-
-                // If results are found, the mbids for the artist are extracted from the matches and added to a list.
-                JSONArray albums = json.getJSONObject("topalbums").getJSONArray("album");
-
-                // Go over each album and get the albums mbid.
-                for (int j = 0; j < albums.length(); j++){
-
-                    // Extract mbid from each album object and add it to the list.
-                    JSONObject album = albums.getJSONObject(j);
-                    String mbid = album.getString("mbid");
-                    if (!mbid.equals("")){
-                        if (!albumIDs.contains(mbid)){
-                            albumIDs.add(mbid);
-                        }
-                    }
-                }
-            } catch (JSONException | IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return albumIDs;
-    }
-
+    // Searches an album by mbid and returns an object with all necessary data.
     public RecordInfo recordInfoSearch(String mbid){
 
         // Create the url string for method album.getinfo
@@ -213,8 +125,16 @@ public class ApiManager {
             String imgLinkmed = album.getJSONArray("image").getJSONObject(3).getString("#text");
             String imgLinklarge = album.getJSONArray("image").getJSONObject(4).getString("#text");
 
-            String summary = album.getJSONObject("wiki").getString("summary");
-            String[] summarySplit = summary.split("<a href");
+            // Get the wiki if object has one
+            String[] summarySplit = new String[2];
+            if (album.has("wiki") && album.getJSONObject("wiki").has("summary")){
+                String summary = album.getJSONObject("wiki").getString("summary");
+                summarySplit = summary.split("<a href");
+            }
+            else{
+                summarySplit[0] = "Not available.";
+            }
+
 
             RecordInfo recordInfo = new RecordInfo(title, artist, imgLinkmed, imgLinklarge, summarySplit[0], mbid);
 

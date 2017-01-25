@@ -5,13 +5,9 @@
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
     tools:context="nl.mprog.rens.vinylcountdown.RegisterActivity"
     android:addStatesFromChildren="false"
-    android:background="@drawable/background">
+    android:background="@drawable/vinylbc">
 
     <EditText
         android:layout_width="wrap_content"
@@ -21,9 +17,10 @@
         android:layout_margin="3dp"
         android:hint="E-mail address"
         android:gravity="center"
+        android:textColorHint="@color/softWhite"
         android:textColor="@color/softWhite"
         android:padding="5dp"
-        android:background="@color/colorAccent"
+        android:background="@color/colorPrimaryDark"
         android:layout_centerVertical="true"
         android:id="@+id/regEmail"
         android:layout_alignParentStart="true"
@@ -34,10 +31,11 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:hint="Username"
+        android:textColorHint="@color/softWhite"
         android:layout_margin="3dp"
         android:textColor="@color/softWhite"
         android:padding="5dp"
-        android:background="@color/colorAccent"
+        android:background="@color/drawerBc"
         android:ems="10"
         android:layout_above="@+id/regEmail"
         android:id="@+id/regUsername"
@@ -50,12 +48,13 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
+        android:textColorHint="@color/softWhite"
         android:hint="Password"
         android:layout_margin="3dp"
         android:gravity="center"
         android:textColor="@color/softWhite"
         android:padding="5dp"
-        android:background="@color/colorAccent"
+        android:background="@color/drawerBc"
         android:layout_below="@+id/regEmail"
         android:id="@+id/regPass"
         android:layout_alignParentStart="true"
@@ -69,7 +68,8 @@
         android:layout_margin="3dp"
         android:textColor="@color/softWhite"
         android:padding="5dp"
-        android:background="@color/colorAccent"
+        android:textColorHint="@color/softWhite"
+        android:background="@color/colorPrimaryDark"
         android:layout_below="@+id/regPass"
         android:id="@+id/regPassComp"
         android:layout_alignParentEnd="true"
@@ -79,14 +79,15 @@
 
     <Button
         android:text="Sign up"
-        style="@android:style/Widget.Material.Light.Button.Inset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/regPassComp"
         android:id="@+id/button4"
         android:onClick="signUp"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:alpha="0.8"
+        android:alpha="0.99"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true" />
 
@@ -94,29 +95,28 @@
         android:text="Back to Login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@android:style/Widget.Material.Light.Button.Inset"
         android:id="@+id/button3"
+        android:background="@drawable/button_background"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:alpha="0.8"
+        android:alpha="0.99"
         android:onClick="goToLogin"
         android:layout_below="@+id/button4"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true" />
 
-    <nl.mprog.rens.vinylcountdown.MyTextView
-        android:text="vinyl countdown"
+    <nl.mprog.rens.vinylcountdown.CustomTextView
+        android:text="Vinyl Countdown"
         android:gravity="center"
         android:textSize="45dp"
-        android:padding="15dp"
         android:fontFamily=""
-        android:alpha="0.5"
+        android:alpha="0.9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
         android:textColor="@color/softWhite"
+        android:background="@color/drawerBc"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/regUsername" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
 

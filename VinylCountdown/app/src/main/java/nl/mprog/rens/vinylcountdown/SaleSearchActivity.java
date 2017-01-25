@@ -10,11 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +23,6 @@ import java.util.concurrent.ExecutionException;
 public class SaleSearchActivity extends AppCompatActivity {
 
     EditText searchViewED;
-    Switch switchMethod;
-    int currentMethod;
-    String query;
 
     // Authenticator:
     // The authenticator for firebase.
@@ -49,24 +43,13 @@ public class SaleSearchActivity extends AppCompatActivity {
 
         // Get the searchview and switch and set the text for the searchview.
         searchViewED = (EditText) findViewById(R.id.searchSaleED);
-        searchViewED.setHint("Enter Album");
+        searchViewED.setHint("Search");
 
-        switchMethod = (Switch) findViewById(R.id.switch1);
+        // Get the user
+        mAuth = FirebaseAuth.getInstance();
 
-        // Change the method when its clicked.
-        switchMethod.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    // method is search artists
-                    searchViewED.setHint("Enter Artist");
-                    Toast.makeText(getApplicationContext(),"Artist mode", Toast.LENGTH_SHORT).show();
-                } else {
-                    // method is search albums
-                    searchViewED.setHint("Enter Album");
-                    Toast.makeText(getApplicationContext(),"Album mode", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        // Get the button
+        menuButton = (Button) findViewById(R.id.menubutton);
 
         searchViewED.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -88,11 +71,11 @@ public class SaleSearchActivity extends AppCompatActivity {
         // Navigation drawer from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
         navigations = getResources().getStringArray(R.array.menuOptions);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawers = (ListView) findViewById(R.id.sale_drawer);
+        drawers = (ListView) findViewById(R.id.main_drawer);
 
         // Set the adapter for the list view
         drawers.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_layout, navigations));
+                R.layout.drawer_item, navigations));
         // Set the list's click listener
         drawers.setOnItemClickListener(new SaleSearchActivity.DrawerItemClickListener());
     }
@@ -105,8 +88,10 @@ public class SaleSearchActivity extends AppCompatActivity {
     }
 
     // Redirects the user to where they can search possible records they can sell.
-    public void goToSaleSearch() {
-
+    public void goToMenu() {
+        Intent goToMenu = new Intent(this, MainActivity.class);
+        startActivity(goToMenu);
+        finish();
     }
 
     public void goToBuySearch(){
@@ -125,7 +110,14 @@ public class SaleSearchActivity extends AppCompatActivity {
     }
 
     public void openDrawer(View view) {
-        drawerLayout.openDrawer(drawers);
+        if(drawerLayout.isDrawerOpen(drawers)){
+            drawerLayout.closeDrawer(drawers);
+            menuButton.setText("+");
+        }
+        else {
+            drawerLayout.openDrawer(drawers);
+            menuButton.setText("-");
+        }
     }
 
     // onclicklistener for the drawer, manages navigation.
@@ -142,9 +134,9 @@ public class SaleSearchActivity extends AppCompatActivity {
         String[] menuOptions = getResources().getStringArray(R.array.menuOptions);
         switch (menuOptions[position]){
             case ("Menu"):
+                goToMenu();
                 break;
             case ("Sell"):
-                goToSaleSearch();
                 break;
             case ("Buy"):
                 goToBuySearch();
@@ -160,19 +152,13 @@ public class SaleSearchActivity extends AppCompatActivity {
     }
 
     public void searchMusic() throws ExecutionException, InterruptedException {
-
+        String query = searchViewED.getText().toString();
         // Search for music if the query is long enough, otherwise let the user know of their mistakes.
-        if (searchViewED.getText().toString().length() < 2){
+        if (query.length() < 2){
             Toast.makeText(this, "Please give us more to go on...",Toast.LENGTH_SHORT).show();
             searchViewED.setError("Invalid search");
         } else {
-            query = searchViewED.getText().toString();
-            if (switchMethod.isChecked()){
-                new RecordAsyncTask(this, query, 1).execute();
-            }
-            else {
-                new RecordAsyncTask(this, query, 2).execute();
-            }
+            new AsyncTaskMusicSearch(this, query, "saleSearch").execute();
         }
     }
 

@@ -1,6 +1,7 @@
 package nl.mprog.rens.vinylcountdown;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,9 +18,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class InboxActivity extends AppCompatActivity {
 
     // Authenticator:
     // The authenticator for firebase.
@@ -32,19 +36,21 @@ public class MainActivity extends AppCompatActivity {
     ListView drawers;
     String[] navigations;
     Button menuButton;
+    CustomInboxAdapter customInboxAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_inbox);
 
         mAuth = FirebaseAuth.getInstance();
         menuButton = (Button) findViewById(R.id.menubutton);
 
+        // Load the users inbox, if the user isn't logged in the auth listener will redirect them back.
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        // Get the news info:
-        new AsyncTaskNews(this, this).execute();
+        if (user != null){
+            new MessageAsyncTask(user.getUid()).execute();
+        }
 
         // Check the login state.
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -52,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // user is logged in!
+                    // Get the inbox
+                    new MessageAsyncTask(user.getUid()).execute();
 
                 } else {
                     // User is signed out, they don't belong here so send them back!
@@ -60,30 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-        // User is signed in welcome them in the textview and retrieve their username.
-        final TextView userNameTV = (TextView) findViewById(R.id.textUser);
-
-        DatabaseReference mSettingsReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
-        if (user != null) {
-            // User is signed in
-            ValueEventListener settingsListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // Get UserSettings object and use the values to update the UI
-                    UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-                    if (userProfile != null) {
-                        TextView userNameTV = (TextView) findViewById(R.id.textUser);
-                        userNameTV.setText(userProfile.getUsername());
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            };
-            mSettingsReference.addValueEventListener(settingsListener);
-        }
 
         // Navigation drawer from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
         navigations = getResources().getStringArray(R.array.menuOptions);
@@ -94,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         drawers.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_item, navigations));
         // Set the list's click listener
-        drawers.setOnItemClickListener(new DrawerItemClickListener());
+        drawers.setOnItemClickListener(new InboxActivity.DrawerItemClickListener());
     }
 
 
@@ -102,18 +85,21 @@ public class MainActivity extends AppCompatActivity {
     public void goToProfile() {
         Intent goToProfile = new Intent(this, ProfileActivity.class);
         startActivity(goToProfile);
+        finish();
     }
 
     // Redirects the user to where they can search the marketplace.
     public void goToMarketSearch() {
         Intent goToMarketSearch = new Intent(this, BuySearchActivity.class);
         startActivity(goToMarketSearch);
+        finish();
     }
 
     // Redirects the user to where they can search possible records they can sell.
     public void goToSaleSearch() {
         Intent goToSaleSearch = new Intent(this, SaleSearchActivity.class);
         startActivity(goToSaleSearch);
+        finish();
     }
 
     // Redirects the user to the login screen and logs them out.
@@ -129,25 +115,30 @@ public class MainActivity extends AppCompatActivity {
     public void goToInbox() {
         Intent goToInbox = new Intent(this, InboxActivity.class);
         startActivity(goToInbox);
+        finish();
     }
 
-    // Redirects the user to where they can search possible records they can sell.
-    public void goToMenu() {
-        Intent goToMenu = new Intent(this, MainActivity.class);
-        startActivity(goToMenu);
+    public void goToMainMenu(){
+        Intent goToMain = new Intent(this, MainActivity.class);
+        startActivity(goToMain);
         finish();
     }
 
     public void openDrawer(View view) {
 
-        if(drawerLayout.isDrawerOpen(drawers)){
+        if (drawerLayout.isDrawerOpen(drawers)) {
             drawerLayout.closeDrawer(drawers);
             menuButton.setText("+");
-        }
-        else {
+        } else {
             drawerLayout.openDrawer(drawers);
             menuButton.setText("-");
         }
+    }
+
+    public void refreshContent(View view) {
+        ListView lv = (ListView) findViewById(R.id.inboxList);
+        CustomInboxAdapter customInboxAdapter = (CustomInboxAdapter) lv.getAdapter();
+        customInboxAdapter.notifyDataSetChanged();
     }
 
     // onclicklistener for the drawer, manages navigation.
@@ -158,13 +149,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Swaps fragments in the main content view */
+    /**
+     * Swaps fragments in the main content view
+     */
     private void selectItem(int position) {
         // Get the right position and go to the right activity.
         String[] menuOptions = getResources().getStringArray(R.array.menuOptions);
-        switch (menuOptions[position]){
+        switch (menuOptions[position]) {
             case ("Menu"):
-                goToMenu();
+                goToMainMenu();
                 break;
             case ("Sell"):
                 goToSaleSearch();
@@ -185,4 +178,77 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.closeDrawer(drawers);
         menuButton.setText("+");
     }
+
+    public class MessageAsyncTask extends AsyncTask<Void, Void, List<Message>>{
+
+        String userID;
+        List<Message> messageList;
+
+        public MessageAsyncTask(String userID){
+            this.userID = userID;
+        }
+
+        @Override
+        protected List<Message> doInBackground(Void... params) {
+
+            // Initiate messageList
+            messageList = new ArrayList<>();
+            DatabaseReference mInboxReference = FirebaseDatabase.getInstance().getReference().child("messages");
+            Query queryRef = mInboxReference.orderByChild(userID);
+            ValueEventListener refListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Get UserSettings object and use the values to update the UI
+                    for (DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
+                        Message message = (Message) chatSnapshot.getValue(Message.class);
+
+                        // Check if this is not the users own message and add:
+                        if (!message.getSenderID().equals(userID)){
+                            messageList.add(message);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+            queryRef.addListenerForSingleValueEvent(refListener);
+
+            return messageList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Message> messages) {
+
+            if (messages != null){
+
+                // Set the adapter with the retrieved messages.
+                final ListView lv = (ListView) findViewById(R.id.inboxList);
+                CustomInboxAdapter customInboxAdapter = new CustomInboxAdapter(getApplicationContext(), R.layout.inbox_item, messages);
+                lv.setAdapter(customInboxAdapter);
+                customInboxAdapter.notifyDataSetChanged();
+
+                // Set a listener for the listview.
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View arg1,
+                                            int arg2, long arg3) {
+
+                        // Get the message from the listview.
+                        Message message = (Message) lv.getItemAtPosition(arg2);
+
+                        // Send it to the detail view.
+                        Intent goToInboxDetail = new Intent(getApplicationContext(), InboxDetail.class);
+                        goToInboxDetail.putExtra("message", message);
+                        startActivity(goToInboxDetail);
+                    }
+                });
+
+            }
+        }
+    }
+
+
 }

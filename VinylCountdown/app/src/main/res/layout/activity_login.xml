@@ -4,9 +4,7 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:background="@drawable/background"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/vinylbc"
     tools:context="nl.mprog.rens.vinylcountdown.LoginActivity">
 
     <EditText
@@ -17,8 +15,9 @@
         android:hint="E-Mail"
         android:gravity="center"
         android:textColor="@color/softWhite"
+        android:textColorHint="@color/softWhite"
         android:padding="5dp"
-        android:background="@color/colorAccent"
+        android:background="@color/drawerBc"
         android:id="@+id/editText2"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
@@ -28,13 +27,14 @@
 
     <Button
         android:text="Login"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button2"
         android:onClick="login"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:alpha="0.8"
-        style="@android:style/Widget.Material.Light.Button.Inset"
+        android:alpha="0.99"
+        android:background="@drawable/button_background"
         android:layout_below="@+id/editText3"
         android:layout_alignStart="@+id/editText3"
         android:layout_alignEnd="@+id/editText2" />
@@ -46,8 +46,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:id="@+id/button4"
         android:onClick="goToRegisterActivity"
-        style="@android:style/Widget.Material.Light.Button.Inset"
-        android:alpha="0.8"
+        android:background="@drawable/button_background"
+        android:alpha="0.99"
         android:layout_below="@+id/button2"
         android:layout_alignStart="@+id/button2"
         android:layout_alignEnd="@+id/editText2" />
@@ -59,8 +59,9 @@
         android:ems="10"
         android:gravity="center"
         android:textColor="@color/softWhite"
+        android:textColorHint="@color/softWhite"
         android:padding="5dp"
-        android:background="@color/colorAccent"
+        android:background="@color/colorPrimaryDark"
         android:hint="Password"
         android:layout_marginTop="5dp"
         android:id="@+id/editText3"
@@ -68,17 +69,17 @@
         android:layout_alignStart="@+id/editText2"
         android:layout_alignEnd="@+id/editText2" />
 
-    <nl.mprog.rens.vinylcountdown.MyTextView
-        android:text="vinyl countdown"
+    <nl.mprog.rens.vinylcountdown.CustomTextView
+        android:text="Vinyl Countdown"
         android:gravity="center"
         android:textSize="45dp"
-        android:padding="15dp"
         android:fontFamily=""
-        android:alpha="0.5"
+        android:alpha="0.9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
         android:textColor="@color/softWhite"
+        android:background="@color/drawerBc"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/regUsername" />

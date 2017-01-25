@@ -1,66 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_sale_search"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_buy_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nl.mprog.rens.vinylcountdown.SaleSearchActivity">
+    tools:context="nl.mprog.rens.vinylcountdown.BuySearchActivity">
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
-        android:text="Vinyl Countdown"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:textColor="@color/softWhite"
-        android:background="@color/drawerBc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView6"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/menubutton"
-        android:layout_above="@+id/current_page" />
-
-    <nl.mprog.rens.vinylcountdown.CustomTextView
-        android:text="Selling records"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:textColor="@color/softWhite"
-        android:background="@color/drawerBc"
-        android:alpha="0.8"
-        android:id="@+id/current_page"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/menubutton"
-        />
-
-    <Button
-        android:text="+"
-        android:textSize="36sp"
-        android:textColor="@color/softWhite"
-        android:background="@color/drawerBc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/menubutton"
-        android:onClick="openDrawer"
-        android:elevation="0dp"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/current_page">
-
+        android:layout_below="@+id/current_page">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="5">
+            android:layout_height="60dp">
 
             <EditText
                 android:layout_width="match_parent"
@@ -89,13 +46,19 @@
                 android:background="@null" />
         </LinearLayout>
 
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_buy"
+            android:padding="10dp"
+            android:gravity="center"/>
+
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/saleResult"
+            android:id="@+id/buyResult"
             android:paddingLeft="15dp"
-            android:layout_weight="1
-            "/>
+            android:layout_weight="6"/>
 
     </LinearLayout>
 
@@ -125,5 +88,47 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="3dp"/>
     </android.support.v4.widget.DrawerLayout>
+
+    <nl.mprog.rens.vinylcountdown.CustomTextView
+        android:text="Vinyl Countdown"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textColor="@color/softWhite"
+        android:background="@color/drawerBc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/menubutton"
+        android:layout_above="@+id/current_page" />
+
+    <nl.mprog.rens.vinylcountdown.CustomTextView
+        android:text="Marketplace"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textColor="@color/softWhite"
+        android:background="@color/drawerBc"
+        android:alpha="0.8"
+        android:id="@+id/current_page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/menubutton"
+        />
+
+    <Button
+        android:text="+"
+        android:textSize="36sp"
+        android:textColor="@color/softWhite"
+        android:background="@color/drawerBc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/menubutton"
+        android:onClick="openDrawer"
+        android:elevation="0dp"
+        style="@style/Widget.AppCompat.Button.Small"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -7,28 +7,42 @@
 
     tools:context="nl.mprog.rens.vinylcountdown.CollectionActivity">
 
-    <nl.mprog.rens.vinylcountdown.MyTextView
+    <nl.mprog.rens.vinylcountdown.CustomTextView
         android:text="Vinyl Countdown"
         android:gravity="center"
         android:textSize="30dp"
         android:textColor="@color/softWhite"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/drawerBc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView6"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/profileButton"
-        android:layout_alignBottom="@+id/profileButton" />
+        android:layout_toEndOf="@+id/menubutton"
+        android:layout_above="@+id/current_page" />
+
+    <nl.mprog.rens.vinylcountdown.CustomTextView
+        android:text="Collection"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textColor="@color/softWhite"
+        android:background="@color/drawerBc"
+        android:alpha="0.8"
+        android:id="@+id/current_page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/menubutton"
+        />
 
     <Button
         android:text="+"
         android:textSize="36sp"
         android:textColor="@color/softWhite"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/drawerBc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/profileButton"
+        android:id="@+id/menubutton"
         android:onClick="openDrawer"
         android:elevation="0dp"
         style="@style/Widget.AppCompat.Button.Small"

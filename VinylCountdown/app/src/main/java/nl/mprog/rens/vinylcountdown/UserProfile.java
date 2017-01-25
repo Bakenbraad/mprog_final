@@ -1,10 +1,12 @@
 package nl.mprog.rens.vinylcountdown;
 
+import java.io.Serializable;
+
 /**
  * Created by Rens on 19/01/2017.
  */
 
-public class UserProfile {
+public class UserProfile implements Serializable {
 
     private String username;
     private String email;

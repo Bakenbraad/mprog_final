@@ -23,3 +23,14 @@ The entire project had to be downgraded in order for firebase to work. This took
 ### Thursday
 The user is finally properly welcomed in the main activity. The offers can now also be queried in the marketplace in correspondence to the original api query. The offers are displayed in a nice layout through an adapter.
 ## Week 3
+### Monday
+Worked on layout and presenting marketsearch data in a new activity (so the user is able to respond to presented offers).
+### Tuesday
+Worked even more on layout, started implementing a message system so users can contact eachother if they respond to an offer.
+The message system operates with automatically formatted messages to prevent misuse, only when users agree to trade/sell a record can
+they view each others email for further contact.
+### Wednesday
+A long day of perfecting much of the message system, with dialogs, accept/reject system for offers, preventing users from misusing the
+message system in many ways (no invalid offers/ repeated offers) and removing completed offers from the marketplace. The login/register
+layout was also redone.
+Activity and resource names have been reviewed in order to maintain a clear structure of the project.
