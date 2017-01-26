@@ -1,5 +1,7 @@
 package nl.mprog.rens.vinylcountdown;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -23,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,8 +55,8 @@ public class BuyActivity extends AppCompatActivity {
 
         // Get the selected record.
         Intent intent = this.getIntent();
-        Bundle recordInfo = intent.getExtras();
-        recordSaleInfo = (RecordSaleInfo) recordInfo.getSerializable("recordSaleInfo");
+        Bundle recordInfoBundle = intent.getExtras();
+        recordSaleInfo = (RecordSaleInfo) recordInfoBundle.getSerializable("recordSaleInfo");
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -175,131 +176,141 @@ public class BuyActivity extends AppCompatActivity {
 
     public void createBuy(View view) {
 
-        // Get the database ref for writing:
-        DatabaseReference mMarketReference = FirebaseDatabase.getInstance().getReference().child("marketplace").child("offers").child(recordSaleInfo.getSaleUID());
-        DatabaseReference mMessageReference = FirebaseDatabase.getInstance().getReference().child("messages");
+    new AlertDialog.Builder(this)
+            .setTitle("Confirm offer")
+            .setMessage("Do you want to let the owner know you want to exchange " + recordInfo.getTitle() + " by " + recordInfo.getArtist() + "?")
+            .setIcon(R.drawable.logo)
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-        // This is the checking that happens in order to validate a bid.
-        if (recordSaleInfo.getPriceType().equals("Bidding from")){
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Get the database ref for writing:
+                    DatabaseReference mMarketReference = FirebaseDatabase.getInstance().getReference().child("marketplace").child("offers").child(recordSaleInfo.getSaleUID());
+                    DatabaseReference mMessageReference = FirebaseDatabase.getInstance().getReference().child("messages");
 
-            // Get the users bid from the layout and compare it to the other bids.
-            EditText yourBidED = (EditText) findViewById(R.id.bidPriceYours);
-            float yourBid;
+                    // This is the checking that happens in order to validate a bid.
+                    if (recordSaleInfo.getPriceType().equals("Bidding from")){
 
-            if (yourBidED.getText() != null){
-                yourBid = Float.parseFloat(yourBidED.getText().toString());
-            } else{
-                yourBid = 0;
-            }
+                        // Get the users bid from the layout and compare it to the other bids.
+                        EditText yourBidED = (EditText) findViewById(R.id.bidPriceYours);
+                        float yourBid;
 
-            if (yourBid > 0 && yourBid > recordSaleInfo.getCurrentBid()){
-                if (!recordSaleInfo.getCurrentBidUser().equals(user.getUid())){
+                        if (yourBidED.getText() != null){
+                            yourBid = Float.parseFloat(yourBidED.getText().toString());
+                        } else{
+                            yourBid = 0;
+                        }
 
-                    // If the bid is legit update the data and write it to firebase.
-                    recordSaleInfo.setCurrentBid(yourBid);
-                    recordSaleInfo.setCurrentBidUser(user.getUid());
-                    mMarketReference.setValue(recordSaleInfo);
+                        if (yourBid > 0 && yourBid > recordSaleInfo.getCurrentBid()){
+                            if (!recordSaleInfo.getCurrentBidUser().equals(user.getUid())){
 
-                    // Send the user a message about your offer:
-                    Message tradeMessage = new Message();
-                    tradeMessage.messageMarket("offer", recordSaleInfo.getPriceType(), recordSaleInfo.getTitle(), String.valueOf(yourBid),
-                            recordSaleInfo.getSaleUID(), buyerProfile, user.getUid(), sellerProfile, recordSaleInfo.getUserID());
-                    mMessageReference.push().setValue(tradeMessage);
+                                // If the bid is legit update the data and write it to firebase.
+                                recordSaleInfo.setCurrentBid(yourBid);
+                                recordSaleInfo.setCurrentBidUser(user.getUid());
+                                mMarketReference.setValue(recordSaleInfo);
 
-                    // Let the user know of their succes and send them back!
-                    Toast.makeText(this, "Succesfully sent a message to the record owner!", Toast.LENGTH_LONG).show();
-                    Intent goBackToSearch = new Intent(this, BuySearchActivity.class);
-                    startActivity(goBackToSearch);
-                    finish();
+                                // Send the user a message about your offer:
+                                Message tradeMessage = new Message();
+                                String tradeMessageID = mMessageReference.push().getKey();
+                                tradeMessage.messageMarket("offer", recordSaleInfo.getPriceType(), recordSaleInfo.getTitle(), String.valueOf(yourBid),
+                                        recordSaleInfo.getSaleUID(), buyerProfile, user.getUid(), sellerProfile, recordSaleInfo.getUserID(), tradeMessageID);
+                                mMessageReference.child(tradeMessageID).setValue(tradeMessage);
 
-                } else {
-                    Toast.makeText(this, "You already placed a bid!", Toast.LENGTH_LONG).show();
-                }
-            } else {
-                // Bid is insufficient
-                Toast.makeText(this, "Insufficient bid!", Toast.LENGTH_LONG).show();
-            }
-        }
+                                // Let the user know of their succes and send them back!
+                                Toast.makeText(getApplicationContext(), "Succesfully sent a message to the record owner!", Toast.LENGTH_LONG).show();
+                                Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
+                                startActivity(goBackToSearch);
+                                finish();
 
-        // This is the checking that happens for trades, if a record is selected, you can send a message to the user offering it.
-        else if (recordSaleInfo.getPriceType().equals("Trade")){
+                            } else {
+                                Toast.makeText(getApplicationContext(), "You already placed a bid!", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            // Bid is insufficient
+                            Toast.makeText(getApplicationContext(), "Insufficient bid!", Toast.LENGTH_LONG).show();
+                        }
+                    }
 
-            // Check if anything is selected.
-            TextView selectedTV = (TextView) findViewById(R.id.selectedRecord);
-            if (selectedTV.getVisibility() == View.VISIBLE){
+                    // This is the checking that happens for trades, if a record is selected, you can send a message to the user offering it.
+                    else if (recordSaleInfo.getPriceType().equals("Trade")){
 
-                // Check if user isn't sending multiple messages:
-                if (!recordSaleInfo.getCurrentBidUser().equals(user.getUid())){
+                        // Check if anything is selected.
+                        TextView selectedTV = (TextView) findViewById(R.id.selectedRecord);
+                        if (selectedTV.getVisibility() == View.VISIBLE){
 
-                    // Get the selected record.
-                    String tradeProposal = selectedTV.getText().toString();
+                            // Check if user isn't sending multiple messages:
+                            if (!recordSaleInfo.getCurrentBidUser().equals(user.getUid())){
 
-                    // Update the marketplace info:
-                    recordSaleInfo.setCurrentBidUser(user.getUid());
-                    mMarketReference.setValue(recordSaleInfo);
+                                // Get the selected record.
+                                String tradeProposal = selectedTV.getText().toString();
 
-                    // Send the user a message about your trade offer:
-                    Message tradeMessage = new Message();
-                    tradeMessage.messageMarket("offer", recordSaleInfo.getPriceType(), recordSaleInfo.getTitle(), tradeProposal,
-                            recordSaleInfo.getSaleUID(), buyerProfile, user.getUid(), sellerProfile, recordSaleInfo.getUserID());
-                    mMessageReference.push().setValue(tradeMessage);
+                                // Update the marketplace info:
+                                recordSaleInfo.setCurrentBidUser(user.getUid());
+                                mMarketReference.setValue(recordSaleInfo);
 
-                    // Let the user know of their succes and send them back!
-                    Toast.makeText(this, "Succesfully sent a message to the record owner!", Toast.LENGTH_LONG).show();
-                    Intent goBackToSearch = new Intent(this, BuySearchActivity.class);
-                    startActivity(goBackToSearch);
-                    finish();
+                                // Send the user a message about your trade offer:
+                                Message tradeMessage = new Message();
+                                String tradeMessageID = mMessageReference.push().getKey();
+                                tradeMessage.messageMarket("offer", recordSaleInfo.getPriceType(), recordSaleInfo.getTitle(), tradeProposal,
+                                        recordSaleInfo.getSaleUID(), buyerProfile, user.getUid(), sellerProfile, recordSaleInfo.getUserID(), tradeMessageID);
+                                mMessageReference.child(tradeMessageID).setValue(tradeMessage);
 
-                } else {
-                    Toast.makeText(this, "You already sent this user an offer!", Toast.LENGTH_LONG).show();
-                }
+                                // Let the user know of their succes and send them back!
+                                Toast.makeText(getApplicationContext(), "Succesfully sent a message to the record owner!", Toast.LENGTH_LONG).show();
+                                Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
+                                startActivity(goBackToSearch);
+                                finish();
 
-            }
-            else{
-                Toast.makeText(this, "Please select a record first!", Toast.LENGTH_LONG).show();
-            }
-        }
+                            } else {
+                                Toast.makeText(getApplicationContext(), "You already sent this user an offer!", Toast.LENGTH_LONG).show();
+                            }
 
-        // This is the checking that happens for prices, if someone clicks buy, a message is sent that someone wants to buy the record.
-        else if (recordSaleInfo.getPriceType().equals("Price")){
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Please select a record first!", Toast.LENGTH_LONG).show();
+                        }
+                    }
 
-            // Update the marketplace info:
-            recordSaleInfo.setCurrentBidUser(user.getUid());
-            mMarketReference.setValue(recordSaleInfo);
+                    // This is the checking that happens for prices, if someone clicks buy, a message is sent that someone wants to buy the record.
+                    else if (recordSaleInfo.getPriceType().equals("Price")){
 
-            // Check if user already responded.
-            if (!recordSaleInfo.getCurrentBidUser().equals(user.getUid())){
+                        // Check if user already responded.
+                        if (!recordSaleInfo.getCurrentBidUser().equals(user.getUid())){
 
-                // Send the user a message about your offer:
-                Message tradeMessage = new Message();
-                tradeMessage.messageMarket("offer", recordSaleInfo.getPriceType(), recordSaleInfo.getTitle(), String.valueOf(recordSaleInfo.getPrice()),
-                        recordSaleInfo.getSaleUID(), buyerProfile, user.getUid(), sellerProfile, recordSaleInfo.getUserID());
-                mMessageReference.push().setValue(tradeMessage);
+                            // Update the marketplace info:
+                            recordSaleInfo.setCurrentBidUser(user.getUid());
+                            mMarketReference.setValue(recordSaleInfo);
 
-                // Let the user know of their succes and send them back!
-                Toast.makeText(this, "Succesfully sent a message to the record owner!", Toast.LENGTH_LONG).show();
-                Intent goBackToSearch = new Intent(this, BuySearchActivity.class);
-                startActivity(goBackToSearch);
-                finish();
-            }
-            else{
-                // Let the user know that they already responded to this offer.
-                Toast.makeText(this, "You already replied to this offer!", Toast.LENGTH_LONG).show();
-            }
-        }
+                            // Send the user a message about your offer:
+                            Message tradeMessage = new Message();
+                            String tradeMessageID = mMessageReference.push().getKey();
+                            tradeMessage.messageMarket("offer", recordSaleInfo.getPriceType(), recordSaleInfo.getTitle(), String.valueOf(recordSaleInfo.getPrice()),
+                                    recordSaleInfo.getSaleUID(), buyerProfile, user.getUid(), sellerProfile, recordSaleInfo.getUserID(), tradeMessageID);
+                            mMessageReference.child(tradeMessageID).setValue(tradeMessage);
+
+                            // Let the user know of their succes and send them back!
+                            Toast.makeText(getApplicationContext(), "Succesfully sent a message to the record owner!", Toast.LENGTH_LONG).show();
+                            Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
+                            startActivity(goBackToSearch);
+                            finish();
+                        }
+                        else{
+                            // Let the user know that they already responded to this offer.
+                            Toast.makeText(getApplicationContext(), "You already replied to this offer!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }})
+            .setNegativeButton(android.R.string.no, null).show();
+
     }
 
     public void moreInfo(View view){
 
-        Intent goToSaleDetail = new Intent(this, RecordInfoActivity.class);
+        Intent goToRecordInfo = new Intent(this, RecordInfoActivity.class);
 
-        // Put the values into the next activity.
-        goToSaleDetail.putExtra("title", recordSaleInfo.getTitle());
-        goToSaleDetail.putExtra("artist", recordSaleInfo.getArtist());
-        goToSaleDetail.putExtra("summary", summary);
-        goToSaleDetail.putExtra("tracks", (Serializable) tracks);
+        // Put the extra info into the next activity.
+        goToRecordInfo.putExtra("recordInfo", recordInfo);
 
-        startActivity(goToSaleDetail);
+        startActivity(goToRecordInfo);
     }
 
     public void setRecord(RecordInfo recordInfo){
@@ -321,7 +332,7 @@ public class BuyActivity extends AppCompatActivity {
         EditText editText = (EditText) findViewById(R.id.tradeSearchED);
         String query = editText.getText().toString();
         if (query.length() > 2){
-            new AsyncTaskMusicSearch(this, query, "tradeSearch").execute();
+            new AsyncTaskMusicSearch(this, query, "tradeSearch", user.getUid()).execute();
         }
         else {
             Toast.makeText(this, "Please give us more to go on!", Toast.LENGTH_SHORT).show();
@@ -345,10 +356,10 @@ public class BuyActivity extends AppCompatActivity {
         protected RecordInfo doInBackground(Void... params) {
 
             // Create an API manager object.
-            ApiManager apiManager = new ApiManager();
+            HelperApiManager helperApiManager = new HelperApiManager();
 
-            // Use the apiManager to search for results using the correct method.
-            searchResult = apiManager.recordInfoSearch(mbid);
+            // Use the helperApiManager to search for results using the correct method.
+            searchResult = helperApiManager.recordInfoSearch(mbid);
 
             return searchResult;
         }

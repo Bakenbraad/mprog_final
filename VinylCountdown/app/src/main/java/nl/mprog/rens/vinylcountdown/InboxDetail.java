@@ -39,13 +39,16 @@ public class InboxDetail extends AppCompatActivity {
         // Get the message that was clicked.
         Intent intent = getIntent();
         Bundle messageBundle = intent.getExtras();
-
         message = (Message) messageBundle.getSerializable("message");
 
         // Check if this message is from the market or a reply a reply must have hidden buttons:
         if (message.getMessageType().equals("reject") || message.getMessageType().equals("accept")){
             findViewById(R.id.accept_button).setVisibility(View.INVISIBLE);
             findViewById(R.id.reject_button).setVisibility(View.INVISIBLE);
+        } else if(message.isRead()){
+            findViewById(R.id.accept_button).setVisibility(View.INVISIBLE);
+            findViewById(R.id.reject_button).setVisibility(View.INVISIBLE);
+            findViewById(R.id.already_replied_text).setVisibility(View.VISIBLE);
         }
         // Display the message appropriately.
         TextView offerTV = (TextView) findViewById(R.id.message_offer);
@@ -55,14 +58,17 @@ public class InboxDetail extends AppCompatActivity {
 
         offerTV.setText(message.getBuyOffer());
         senderTV.setText(message.getSender().getUsername());
-        contentTV.setText(message.getMessageContent() + "\nPlease accept my offer or contact me at: " + message.getSender().getEmail());
+        if (message.getMessageType().equals("accept")){
+            contentTV.setText(message.getMessageContent() + " " +message.getSender().getEmail());
+        } else{
+            contentTV.setText(message.getMessageContent());
+        }
+
         timeTV.setText(message.getTime());
 
         // Get the user for message sending:
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-        // Get both the selling and buying user profiles.
 
         // Get the users profiles:
         // Get both the selling and buying user profiles (this must be redone because profiles can change)
@@ -116,11 +122,20 @@ public class InboxDetail extends AppCompatActivity {
                         DatabaseReference mMarketReference = FirebaseDatabase.getInstance().getReference().child("marketplace").child("offers").child(message.getOfferID());
                         mMarketReference.removeValue();
 
-                        // Generate and send the message
-                        Message reply = new Message();
-                        reply.messageReply("accept", message.getBuyOffer(), message.getSellOffer(), senderProfile, message.getReceiverID(), receiverProfile, message.getSenderID());
+                        // Set this message as read/replied:
+                        DatabaseReference mMessageReadReference = FirebaseDatabase.getInstance().getReference().child("messages").child(message.getMessageID());
+                        message.setRead(true);
+                        mMessageReadReference.setValue(message);
+
+                        // Get a database and key to put reply message at that key
                         DatabaseReference mMessageReference = FirebaseDatabase.getInstance().getReference().child("messages");
-                        mMessageReference.push().setValue(reply);
+                        Message reply = new Message();
+                        String replyMessageID = mMessageReference.push().getKey();
+
+                        // Generate reply
+                        reply.messageReply("accept", message.getBuyOffer(), message.getSellOffer(), senderProfile, message.getReceiverID(), receiverProfile, message.getSenderID(), replyMessageID);
+                        // Put reply in firebase
+                        mMessageReference.child(replyMessageID).setValue(reply);
                         finish();
                     }
 
@@ -140,33 +155,19 @@ public class InboxDetail extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        // Make sure the rejected user can resubmit an offer from the marketplace by updating the current state of the offer.
-                        final DatabaseReference mMarketReference = FirebaseDatabase.getInstance().getReference().child("marketplace").child("offers").child(message.getSenderID());
-                        ValueEventListener marketListener = new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Set this message as read/replied:
+                        DatabaseReference mMessageReadReference = FirebaseDatabase.getInstance().getReference().child("messages").child(message.getMessageID());
+                        message.setRead(true);
+                        mMessageReadReference.setValue(message);
 
-                                // Get the recordsaleinfo in its current state from the market.
-                                RecordSaleInfo currentRecordSaleInfo = dataSnapshot.getValue(RecordSaleInfo.class);
-
-                                // Compare the latest bidding user and compare to the sender of this message.
-                                if (currentRecordSaleInfo.getCurrentBidUser().equals(message.getSenderID())){
-                                    currentRecordSaleInfo.setCurrentBidUser("none");
-                                    mMarketReference.setValue(currentRecordSaleInfo);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                            }
-                        };
-                        mMarketReference.addListenerForSingleValueEvent(marketListener);
+                        // Generate the message and put it in the firebase
+                        DatabaseReference mMessageReference = FirebaseDatabase.getInstance().getReference().child("messages");
+                        String replyMessageID = mMessageReference.push().getKey();
 
                         // Generate and send the rejection message
                         Message reply = new Message();
-                        reply.messageReply("reject", message.getBuyOffer(), message.getSellOffer(), senderProfile, message.getReceiverID(), receiverProfile, message.getReceiverID());
-                        DatabaseReference mMessageReference = FirebaseDatabase.getInstance().getReference().child("messages");
-                        mMessageReference.push().setValue(reply);
+                        reply.messageReply("reject", message.getBuyOffer(), message.getSellOffer(), senderProfile, message.getReceiverID(), receiverProfile, message.getSenderID(), replyMessageID);
+                        mMessageReference.child(replyMessageID).setValue(reply);
                         finish();
                     }
 

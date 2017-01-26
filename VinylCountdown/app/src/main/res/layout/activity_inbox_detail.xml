@@ -123,6 +123,14 @@
                 android:layout_weight="1"
                 android:onClick="rejectMessage"/>
 
+            <TextView
+                android:text="You already replied to this message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/already_replied_text"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
         <Button

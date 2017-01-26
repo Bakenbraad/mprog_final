@@ -1,5 +1,6 @@
 package nl.mprog.rens.vinylcountdown;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,23 +8,26 @@ import java.util.Map;
  * Created by Rens on 16/01/2017.
  */
 
-public class RecordInfo {
+public class RecordInfo implements Serializable {
 
-    String title;
-    String artist;
-    String imgLinkmed;
-    String imgLinklarge;
-    String summary;
-    String mbID;
-    Map<String, String> tracks;
+    private String title;
+    private String artist;
+    private String imgLinkmed;
+    private String imgLinklarge;
+    private String summary;
+    private String mbID;
+    private Map<String, String> tracks;
+
+    // Firebase required empty constructor.
+    public RecordInfo(){}
 
     public RecordInfo(String title, String artist, String imgLinkmed, String imgLinklarge, String summary, String mbID){
-        setArtist(artist);
-        setImgLinkmed(imgLinkmed);
-        setImgLinklarge(imgLinklarge);
-        setMbid(mbID);
-        setSummary(summary);
-        setTitle(title);
+        this.artist = artist;
+        this.imgLinkmed = imgLinkmed;
+        this.title = title;
+        this.imgLinklarge = imgLinklarge;
+        this.summary = summary;
+        this.mbID = mbID;
         tracks = new HashMap<>();
     }
 
@@ -56,34 +60,10 @@ public class RecordInfo {
         return tracks;
     }
 
-    // Set all fields.
-    public void setMbid(String mbID) {
-        this.mbID = mbID;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public void setImgLinkmed(String imgLinkmed) {
-        this.imgLinkmed = imgLinkmed;
-    }
-
-    public void setImgLinklarge(String imgLinklarge) {
-        this.imgLinklarge = imgLinklarge;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public void addTrack(String title, String duration){
         if (title != null && duration != null){
-            tracks.put(title,duration);
+            title = title.replace("#", "no").replace(".", "");
+            tracks.put(title.replace("#", "no"),duration);
         }
     }
 }

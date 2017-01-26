@@ -1,5 +1,7 @@
 package nl.mprog.rens.vinylcountdown;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ public class SaleActivity extends AppCompatActivity {
     Map<String,String> tracks = new HashMap<>();
     String[] items;
     EditText priceED;
+    RecordInfo recordInfo;
 
     private DatabaseReference mDatabase;
 
@@ -43,17 +46,17 @@ public class SaleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sale);
 
         Intent intent = getIntent();
-        Bundle recordBundle = intent.getExtras();
+        Bundle bundle = intent.getExtras();
 
+        // Get basic record info.
+        recordInfo = (RecordInfo) bundle.getSerializable("recordInfo");
 
-
-        // Set the info.
-        artist = recordBundle.getString("artist");
-        title = recordBundle.getString("title");
-        summary = recordBundle.getString("summary");
-        imgLink = recordBundle.getString("imgLink");
-        mbid = recordBundle.getString("mbid");
-        tracks = (Map<String, String>) recordBundle.getSerializable("tracks");
+        artist = recordInfo.getArtist();
+        title = recordInfo.getTitle();
+        summary = recordInfo.getSummary();
+        tracks = recordInfo.getTracks();
+        imgLink = recordInfo.getImgLinklarge();
+        mbid = recordInfo.getMbid();
 
         priceED = (EditText) findViewById(R.id.priceED);
 
@@ -68,7 +71,7 @@ public class SaleActivity extends AppCompatActivity {
 
         // Set the spinner adapter.
         final Spinner dropdown = (Spinner)findViewById(R.id.spinner);
-        items = new String[]{"Price", "Bidding from", "Trade"};
+        items = new String[]{"Price", "Bidding", "Trade"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
@@ -79,8 +82,12 @@ public class SaleActivity extends AppCompatActivity {
                     priceTV.setText("Trading");
                     priceED.setVisibility(View.INVISIBLE);
                 }
-                else {
+                else if (items[position].equals("Price")){
                     priceTV.setText("Price: $");
+                    priceED.setVisibility(View.VISIBLE);
+                }
+                else if (items[position].equals("Bidding")){
+                    priceTV.setText("Asking price: $");
                     priceED.setVisibility(View.VISIBLE);
                 }
             }
@@ -97,10 +104,7 @@ public class SaleActivity extends AppCompatActivity {
         Intent goToSaleDetail = new Intent(this, RecordInfoActivity.class);
 
         // Put the values into the next activity.
-        goToSaleDetail.putExtra("title", title);
-        goToSaleDetail.putExtra("artist", artist);
-        goToSaleDetail.putExtra("summary", summary);
-        goToSaleDetail.putExtra("tracks", (Serializable) tracks);
+        goToSaleDetail.putExtra("recordInfo", recordInfo);
 
         startActivity(goToSaleDetail);
     }
@@ -111,10 +115,16 @@ public class SaleActivity extends AppCompatActivity {
         Spinner saleTypeSP = (Spinner) findViewById(R.id.spinner);
         EditText descriptionED = (EditText) findViewById(R.id.descriptionED);
 
-        float price;
-        float condition = ratingBar.getRating();
-        String description = descriptionED.getText().toString();
+        final float price;
+        final float condition = ratingBar.getRating();
+        final String description = descriptionED.getText().toString();
         String saleType = saleTypeSP.getSelectedItem().toString();
+
+        // Hotfix for string mismatch
+        if (saleType.equals("Bidding")){
+            saleType = "Bidding from";
+        }
+
         if (!saleType.equals("Trade")){
             price = Float.parseFloat(priceED.getText().toString());
         }
@@ -122,22 +132,35 @@ public class SaleActivity extends AppCompatActivity {
             price = Float.parseFloat("0.0");
         }
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null && description.length() != 0 && condition != 0 && !saleType.equals("")){
 
-            // Create the object.
-            RecordSaleInfo recordSaleInfo = new RecordSaleInfo(mbid, description, price, saleType, condition, user.getUid(), imgLink, artist, title);
+            // Throw a dialog to confirm the addition.
+            final String finalSaleType = saleType;
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirm sale")
+                    .setIcon(R.drawable.logo)
+                    .setMessage("Do you want to sell " + recordInfo.getTitle() + " by " + recordInfo.getArtist() + "?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-            // Write it to the Database and the user-offer relation table.
-            DatabaseReference mUsersReference = FirebaseDatabase.getInstance().getReference();
-            mUsersReference.child("marketplace").child("offers").child(recordSaleInfo.getSaleUID()).setValue(recordSaleInfo);
+                        public void onClick(DialogInterface dialog, int whichButton) {
 
-            // Back to search
-            Intent goToMain = new Intent(this, SaleSearchActivity.class);
-            goToMain.putExtra("method", "saleSearch");
-            startActivity(goToMain);
-            finish();
+                            // Create the object.
+                            RecordSaleInfo recordSaleInfo = new RecordSaleInfo(mbid, description, price, finalSaleType, condition, user.getUid(), imgLink, artist, title);
+
+                            // Write it to the Database and the user-offer relation table.
+                            DatabaseReference mUsersReference = FirebaseDatabase.getInstance().getReference();
+                            mUsersReference.child("marketplace").child("offers").child(recordSaleInfo.getSaleUID()).setValue(recordSaleInfo);
+
+                            // Back to search
+                            Intent goToMain = new Intent(getApplicationContext(), SaleSearchActivity.class);
+                            goToMain.putExtra("method", "saleSearch");
+                            startActivity(goToMain);
+                            Toast.makeText(getApplicationContext(), "Your offer has been created", Toast.LENGTH_LONG).show();
+                            finish();
+                        }})
+                    .setNegativeButton(android.R.string.no, null).show();
         }
         else {
             Toast.makeText(this, "One or more of your fields is not complete", Toast.LENGTH_LONG).show();

@@ -73,15 +73,15 @@
         android:text="Vinyl Countdown"
         android:gravity="center"
         android:textSize="45dp"
+        android:padding="20dp"
         android:fontFamily=""
         android:alpha="0.9"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
         android:textColor="@color/softWhite"
         android:background="@color/drawerBc"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/regUsername" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

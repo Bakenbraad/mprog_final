@@ -16,6 +16,7 @@
         android:layout_alignParentTop="true"
         android:id="@+id/buyTitle"
         android:textSize="20sp"
+        android:layout_marginTop="20dp"
         android:layout_above="@+id/buyArtist"
         android:layout_alignStart="@+id/buyArtist"
         android:layout_toStartOf="@+id/imageButton" />
@@ -51,26 +52,20 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:id="@+id/button5"
-        style="@android:style/Widget.DeviceDefault.Button.Inset"
+        android:background="@drawable/button_background"
+        android:layout_margin="15dp"
         android:textSize="12sp"
         android:onClick="backToSearch" />
 
-    <ImageView
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:id="@+id/buyImage"
-        android:layout_margin="8dp"
-        android:layout_marginRight="5dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
     <TextView
-        android:text="description"
+        android:text="Description"
+        android:padding="7dp"
         android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:background="@drawable/textview_background"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         android:layout_below="@+id/buyArtist"
         android:layout_alignParentStart="true"
         android:id="@+id/buyDesc"
@@ -82,6 +77,8 @@
         app:srcCompat="@drawable/placeoffer"
         android:background="@null"
         android:scaleType="fitCenter"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
         android:id="@+id/buyButton"
         android:onClick="createBuy"
         android:layout_alignParentBottom="true"
@@ -169,8 +166,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
-
                 android:id="@+id/saleResult"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:text="test"
@@ -335,7 +332,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="numberDecimal"
                 android:text=""
                 android:hint="0.00"
                 android:padding="5dp"
@@ -349,11 +346,30 @@
     </LinearLayout>
 
     <TextView
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="match_parent"
+        android:id="@+id/inbox_empty_item"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
         android:text="Selectedrecord"
         android:layout_height="0dp"
         android:layout_above="@+id/button5"
         android:layout_alignParentEnd="true"
         android:id="@+id/selectedRecord"
         android:layout_width="0dp" />
+
+    <ImageView
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:id="@+id/buyImage"
+        android:src="@drawable/textview_background"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="18dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/buyDesc" />
 
 </RelativeLayout>

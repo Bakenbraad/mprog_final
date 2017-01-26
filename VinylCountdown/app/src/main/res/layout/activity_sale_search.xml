@@ -99,6 +99,15 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="match_parent"
+        android:id="@+id/inbox_empty_item"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_alignParentEnd="true" />
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="200dp"

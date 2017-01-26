@@ -16,7 +16,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText passwordCompareED;
     EditText usernameED;
 
-    UserRegistrator userRegistrator;
+    HelperUserRegistrator helperUserRegistrator;
 
     FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -44,8 +44,8 @@ public class RegisterActivity extends AppCompatActivity {
         final String username = usernameED.getText().toString();
 
         // Register the user using the user registrator class.
-        userRegistrator = new UserRegistrator(email, password, passwordComp, username, this, this);
-        userRegistrator.initRegistration();
+        helperUserRegistrator = new HelperUserRegistrator(email, password, passwordComp, username, this, this);
+        helperUserRegistrator.initRegistration();
         // If the user data is validated, continue registering them and put their username in the database.
 
     }

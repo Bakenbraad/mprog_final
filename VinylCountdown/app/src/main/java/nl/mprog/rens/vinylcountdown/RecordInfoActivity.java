@@ -26,13 +26,14 @@ public class RecordInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_record_info);
 
         Intent intent = getIntent();
-        Bundle recordBundle = intent.getExtras();
+        Bundle bundle = intent.getExtras();
 
         // Get basic record info.
-        artist = recordBundle.getString("artist");
-        title = recordBundle.getString("title");
-        summary = recordBundle.getString("summary");
-        tracks = (Map<String, String>) recordBundle.getSerializable("tracks");
+        RecordInfo recordBundle = (RecordInfo) bundle.getSerializable("recordInfo");
+        artist = recordBundle.getArtist();
+        title = recordBundle.getTitle();
+        summary = recordBundle.getSummary();
+        tracks = recordBundle.getTracks();
 
         TextView artistTV = (TextView) findViewById(R.id.artistSell);
         artistTV.setText(artist);

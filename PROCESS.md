@@ -34,3 +34,7 @@ A long day of perfecting much of the message system, with dialogs, accept/reject
 message system in many ways (no invalid offers/ repeated offers) and removing completed offers from the marketplace. The login/register
 layout was also redone.
 Activity and resource names have been reviewed in order to maintain a clear structure of the project.
+### Thursday
+Perfected messaging with replies and read/unread status. Fixed navigation, created profile/profile updates, implemented wishlist and collections. These can be expanded.
+Cleaned up a load of code. Renamed many classes to create a uniform format.
+

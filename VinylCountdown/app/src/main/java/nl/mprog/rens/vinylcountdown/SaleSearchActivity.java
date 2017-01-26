@@ -1,6 +1,7 @@
 package nl.mprog.rens.vinylcountdown;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.concurrent.ExecutionException;
@@ -36,17 +38,59 @@ public class SaleSearchActivity extends AppCompatActivity {
     String[] navigations;
     Button menuButton;
 
+    // This is the method (collection/search/wishlist)
+    String method;
+
+    // Initiate the navigation handler:
+    HelperNavigationHandler helperNavigationHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_search);
 
+        // This method may also be approached from the sale, collection and wishlist activities,
+        // causing the asynctask to behave a differently, here we get the method that was called:
+        Intent intent = getIntent();
+        Bundle methodBundle = intent.getExtras();
+        method = methodBundle.getString("method");
+
+        // Set the title accordingly:
+        TextView currentPage = (TextView) findViewById(R.id.current_page);
+        switch (method){
+            case ("collectionSearch"):
+                currentPage.setText("Add to Collection");
+                break;
+            case ("wishlistSearch"):
+                currentPage.setText("Add to Wishlist");
+                break;
+            case ("saleSearch"):
+                currentPage.setText("Selling");
+                break;
+        }
+
         // Get the searchview and switch and set the text for the searchview.
         searchViewED = (EditText) findViewById(R.id.searchSaleED);
         searchViewED.setHint("Search");
 
-        // Get the user
+        // Initiate the navigation handler.
+        helperNavigationHandler = new HelperNavigationHandler(this);
+
+        // Initiate the authentication
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Check the login state and welcome the user if they are logged in.
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // User is signed out, they don't belong here so send them back!
+                    new HelperNavigationHandler(getParent()).goToLogin();
+                }
+            }
+        };
 
         // Get the button
         menuButton = (Button) findViewById(R.id.menubutton);
@@ -72,6 +116,7 @@ public class SaleSearchActivity extends AppCompatActivity {
         navigations = getResources().getStringArray(R.array.menuOptions);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawers = (ListView) findViewById(R.id.main_drawer);
+        menuButton = (Button) findViewById(R.id.menubutton);
 
         // Set the adapter for the list view
         drawers.setAdapter(new ArrayAdapter<String>(this,
@@ -80,36 +125,9 @@ public class SaleSearchActivity extends AppCompatActivity {
         drawers.setOnItemClickListener(new SaleSearchActivity.DrawerItemClickListener());
     }
 
-    // Redirects the user to their profile.
-    public void goToProfile() {
-        Intent goToProfile = new Intent(this, ProfileActivity.class);
-        startActivity(goToProfile);
-        finish();
-    }
-
-    // Redirects the user to where they can search possible records they can sell.
-    public void goToMenu() {
-        Intent goToMenu = new Intent(this, MainActivity.class);
-        startActivity(goToMenu);
-        finish();
-    }
-
-    public void goToBuySearch(){
-        Intent goToBuySeach = new Intent(this, BuySearchActivity.class);
-        startActivity(goToBuySeach);
-        finish();
-    }
-
-    // Redirects the user to the login screen and logs them out.
-    public void goToLogin() {
-        Intent goToLogin = new Intent(this, LoginActivity.class);
-        mAuth.getCurrentUser();
-        mAuth.signOut();
-        startActivity(goToLogin);
-        finish();
-    }
-
+    // Change the button appearance when it is clicked.
     public void openDrawer(View view) {
+
         if(drawerLayout.isDrawerOpen(drawers)){
             drawerLayout.closeDrawer(drawers);
             menuButton.setText("+");
@@ -120,45 +138,27 @@ public class SaleSearchActivity extends AppCompatActivity {
         }
     }
 
-    // onclicklistener for the drawer, manages navigation.
+    // This is the onclicklistener for the drawer, it sends data to navigation.
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            helperNavigationHandler.redirect(position);
+            drawerLayout.closeDrawer(drawers);
+            menuButton.setText("+");
         }
-    }
-
-    /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
-        // Get the right position and go to the right activity.
-        String[] menuOptions = getResources().getStringArray(R.array.menuOptions);
-        switch (menuOptions[position]){
-            case ("Menu"):
-                goToMenu();
-                break;
-            case ("Sell"):
-                break;
-            case ("Buy"):
-                goToBuySearch();
-                break;
-            case ("Profile"):
-                goToProfile();
-                break;
-            case ("Logout"):
-                goToLogin();
-                break;
-        }
-        drawerLayout.closeDrawer(drawers);
     }
 
     public void searchMusic() throws ExecutionException, InterruptedException {
+
+        // Get the query
         String query = searchViewED.getText().toString();
+
         // Search for music if the query is long enough, otherwise let the user know of their mistakes.
         if (query.length() < 2){
             Toast.makeText(this, "Please give us more to go on...",Toast.LENGTH_SHORT).show();
             searchViewED.setError("Invalid search");
         } else {
-            new AsyncTaskMusicSearch(this, query, "saleSearch").execute();
+            new AsyncTaskMusicSearch(this, query, method, mAuth.getCurrentUser().getUid()).execute();
         }
     }
 

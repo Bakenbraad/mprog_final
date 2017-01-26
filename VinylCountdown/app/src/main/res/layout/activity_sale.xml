@@ -20,18 +20,6 @@
         android:layout_alignStart="@+id/textView7"
         android:layout_toStartOf="@+id/imageButton" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="80dp"
-        android:layout_marginLeft="60dp"
-        app:srcCompat="@drawable/cartout"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        android:id="@+id/imageView3"
-        android:layout_alignParentBottom="true"
-        android:onClick="createSale"
-        android:layout_centerHorizontal="true" />
-
     <TextView
         android:text="Sale type:"
         android:layout_marginTop="10dp"
@@ -74,7 +62,7 @@
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/imageView3"
+        android:layout_above="@+id/button_lin_lay"
         android:layout_centerHorizontal="true"
         android:id="@+id/ratingBar"
         android:paddingBottom="30dp"/>
@@ -147,16 +135,38 @@
         android:layout_alignStart="@+id/titleDetail"
         android:layout_alignParentEnd="true" />
 
-    <Button
-        android:text="Cancel"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/button5"
-        android:layout_toEndOf="@+id/ratingBar"
-        style="@android:style/Widget.DeviceDefault.Button.Inset"
-        android:textSize="12sp"
-        android:onClick="backToSearch" />
+        android:gravity="bottom"
+        android:id="@+id/button_lin_lay">
+
+        <ImageButton
+            android:layout_width="180dp"
+            android:layout_height="60dp"
+            app:srcCompat="@drawable/cartout"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:id="@+id/imageView3"
+            android:onClick="createSale"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="Cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/button5"
+            android:layout_toEndOf="@+id/ratingBar"
+            android:background="@drawable/button_background"
+            android:textSize="12sp"
+            android:onClick="backToSearch"
+            android:layout_weight="1" />
+    </LinearLayout>
 
 </RelativeLayout>

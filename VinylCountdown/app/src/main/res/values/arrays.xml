@@ -10,4 +10,17 @@
         <item>Wishlist</item>
         <item>Logout</item>
     </array>
+
+    <array name="buyFilter">
+        <item>Any</item>
+        <item>Price</item>
+        <item>Bidding</item>
+        <item>Trade</item>
+    </array>
+
+    <array name="sortingOptions">
+        <item>Ordered by:</item>
+        <item>Artist</item>
+        <item>Album</item>
+    </array>
 </resources>

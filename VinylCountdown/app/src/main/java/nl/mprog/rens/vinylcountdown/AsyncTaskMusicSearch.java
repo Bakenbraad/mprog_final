@@ -1,8 +1,10 @@
 package nl.mprog.rens.vinylcountdown;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
@@ -12,10 +14,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Rens on 16/01/2017.
@@ -28,13 +32,15 @@ public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>
     private Activity activity;
     private ProgressDialog dialog;
     private String method;
+    private String userID;
 
 
-    public AsyncTaskMusicSearch(Activity c, String query, String method){
+    public AsyncTaskMusicSearch(Activity c, String query, String method, String userID){
 
         this.query = query;
         this.activity = c;
         this.method = method;
+        this.userID = userID;
 
         // Create a progress dialog.
         dialog = new ProgressDialog(c);
@@ -51,11 +57,11 @@ public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>
     protected List<RecordInfo> doInBackground(Void... params) {
 
         // Create an API manager object.
-        ApiManager apiManager = new ApiManager();
+        HelperApiManager helperApiManager = new HelperApiManager();
 
-        // Use the apiManager to search for results using the correct method.
+        // Use the helperApiManager to search for results using the correct method.
         try {
-            searchResults = apiManager.Search(query);
+            searchResults = helperApiManager.Search(query);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,6 +86,12 @@ public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>
         if (searchResults != null){
 
             Toast.makeText(activity, "Found " + searchResults.size() + " records!", Toast.LENGTH_SHORT).show();
+
+            // Set the empty view
+            TextView emptyView = (TextView) activity.findViewById(R.id.inbox_empty_item);
+            emptyView.setText("No search results");
+            lv.setEmptyView(emptyView);
+
             CustomAlbumAdapter customAlbumAdapter = new CustomAlbumAdapter(activity, R.layout.record_item, searchResults);
             lv.setAdapter(customAlbumAdapter);
             customAlbumAdapter.notifyDataSetChanged();
@@ -93,21 +105,8 @@ public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>
                         Intent goToSale = new Intent(activity, SaleActivity.class);
                         RecordInfo recordInfo = (RecordInfo) lv.getItemAtPosition(arg2);
 
-                        // Get all the values from the record info.
-                        String title = recordInfo.getTitle();
-                        String artist = recordInfo.getArtist();
-                        String summary = recordInfo.getSummary();
-                        String imgLink = recordInfo.getImgLinklarge();
-                        String mbid = recordInfo.getMbid();
-                        Map<String, String> tracks = recordInfo.getTracks();
-
-                        // Put the values into the next activity.
-                        goToSale.putExtra("title", title);
-                        goToSale.putExtra("artist", artist);
-                        goToSale.putExtra("summary", summary);
-                        goToSale.putExtra("imgLink", imgLink);
-                        goToSale.putExtra("mbid", mbid);
-                        goToSale.putExtra("tracks", (Serializable) tracks);
+                        // Put the recordInfo into the next activity.
+                        goToSale.putExtra("recordInfo", recordInfo);
 
                         // Start the activity
                         activity.startActivity(goToSale);
@@ -133,6 +132,79 @@ public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>
                         tradeResultTV.setText("Selected: " + recordInfo.getTitle() + ", by " + recordInfo.getArtist());
                         selectedView.setText(recordInfo.getTitle());
                         tradeResultTV.setVisibility(View.VISIBLE);
+                    }
+                });
+
+            }
+
+            else if (method.equals("collectionSearch")){
+                // Set a listener, this is used to send record info to the selling details.
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View arg1,
+                                            int arg2, long arg3) {
+
+                        // Get the object from the listview.
+                        final RecordInfo recordInfo = (RecordInfo) lv.getItemAtPosition(arg2);
+
+                        // Throw a dialog to confirm the addition.
+                        new AlertDialog.Builder(activity)
+                                .setTitle("Confirm addition")
+                                .setMessage("Do you want to add this record to your collection?")
+                                .setIcon(R.drawable.logo)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                                        // Create a collection item:
+                                        CollectionWishlistRecord collectionWishlistRecord = new CollectionWishlistRecord(recordInfo, userID);
+
+                                        // Put the record in the collection.
+                                        DatabaseReference mCollectionReference = FirebaseDatabase.getInstance().getReference().child("collection");
+                                        mCollectionReference.push().setValue(collectionWishlistRecord);
+
+                                        // Notify the user.
+                                        Toast.makeText(activity.getApplicationContext(), "Added to collection", Toast.LENGTH_SHORT).show();
+
+                                        activity.finish();
+                                    }})
+                                .setNegativeButton(android.R.string.no, null).show();
+                    }
+                });
+
+            }
+
+            else if (method.equals("wishlistSearch")){
+                // Set a listener, this is used to send record info to the selling details.
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View arg1,
+                                            int arg2, long arg3) {
+
+                        // Get the object from the listview.
+                        final RecordInfo recordInfo = (RecordInfo) lv.getItemAtPosition(arg2);
+
+                        // Throw a dialog to confirm the addition.
+                        new AlertDialog.Builder(activity)
+                                .setTitle("Confirm addition")
+                                .setMessage("Do you want to add this record to your wishlist?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                                        // Create a collection item:
+                                        CollectionWishlistRecord collectionWishlistRecord = new CollectionWishlistRecord(recordInfo, userID);
+
+                                        // Put the record in the collection.
+                                        DatabaseReference mCollectionReference = FirebaseDatabase.getInstance().getReference().child("wishlist");
+                                        mCollectionReference.push().setValue(collectionWishlistRecord);
+
+                                        // Notify the user.
+                                        Toast.makeText(activity.getApplicationContext(), "Added to wishlist", Toast.LENGTH_SHORT).show();
+
+                                        activity.finish();
+                                    }})
+                                .setNegativeButton(android.R.string.no, null).show();
                     }
                 });
 

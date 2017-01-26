@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
  * Created by Rens on 16/01/2017.
  */
 
-public class UserRegistrator {
+public class HelperUserRegistrator {
     final String email;
     final String password;
     final String passwordComp;
@@ -40,7 +40,7 @@ public class UserRegistrator {
     // Reference for writing and reading purposes.
     private DatabaseReference mUsersReference;
 
-    public UserRegistrator(String email, String password, String passwordComp, String username, Context c, Activity activity) {
+    public HelperUserRegistrator(String email, String password, String passwordComp, String username, Context c, Activity activity) {
         this.email = email;
         this.password = password;
         this.passwordComp = passwordComp;

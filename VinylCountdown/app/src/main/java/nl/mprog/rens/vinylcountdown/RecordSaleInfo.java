@@ -1,6 +1,7 @@
 package nl.mprog.rens.vinylcountdown;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by Rens on 16/01/2017.
@@ -18,6 +19,7 @@ public class RecordSaleInfo implements Serializable{
     String imgLink;
     String artist;
     String title;
+    String timeCreated;
 
     public String getCurrentBidUser() {
         return currentBidUser;
@@ -55,6 +57,7 @@ public class RecordSaleInfo implements Serializable{
         this.currentBid = 0;
         this.currentBidUser = "None";
         saleUID = userID + mbid + String.valueOf(System.currentTimeMillis());
+        this.timeCreated = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new java.util.Date());
 
     }
 

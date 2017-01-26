@@ -20,6 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     // Authenticator:
@@ -33,43 +36,27 @@ public class MainActivity extends AppCompatActivity {
     String[] navigations;
     Button menuButton;
 
+    // Initiate the navigation handler:
+    HelperNavigationHandler helperNavigationHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initiate the navigation handler.
+        helperNavigationHandler = new HelperNavigationHandler(this);
+
+        // Initiate the authentication
         mAuth = FirebaseAuth.getInstance();
-        menuButton = (Button) findViewById(R.id.menubutton);
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        // Get the news info:
-        new AsyncTaskNews(this, this).execute();
-
-        // Check the login state.
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                final FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // user is logged in!
-
-                } else {
-                    // User is signed out, they don't belong here so send them back!
-                    goToLogin();
-                }
-            }
-        };
-
-        // User is signed in welcome them in the textview and retrieve their username.
-        final TextView userNameTV = (TextView) findViewById(R.id.textUser);
-
-        DatabaseReference mSettingsReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
         if (user != null) {
-            // User is signed in
+            // User is logged in proceed to set their username in the welcome text!
+            DatabaseReference mSettingsReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
             ValueEventListener settingsListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
                     // Get UserSettings object and use the values to update the UI
                     UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
                     if (userProfile != null) {
@@ -84,11 +71,26 @@ public class MainActivity extends AppCompatActivity {
             };
             mSettingsReference.addValueEventListener(settingsListener);
         }
+        // Listen for the login state.
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null){
+                    // User is signed out, they don't belong here so send them back!
+                    new HelperNavigationHandler(getParent()).goToLogin();
+                }
+            }
+        };
+
+        // Get the news info:
+        NewsLoader();
 
         // Navigation drawer from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
         navigations = getResources().getStringArray(R.array.menuOptions);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawers = (ListView) findViewById(R.id.main_drawer);
+        menuButton = (Button) findViewById(R.id.menubutton);
 
         // Set the adapter for the list view
         drawers.setAdapter(new ArrayAdapter<String>(this,
@@ -97,47 +99,7 @@ public class MainActivity extends AppCompatActivity {
         drawers.setOnItemClickListener(new DrawerItemClickListener());
     }
 
-
-    // Redirects the user to their profile.
-    public void goToProfile() {
-        Intent goToProfile = new Intent(this, ProfileActivity.class);
-        startActivity(goToProfile);
-    }
-
-    // Redirects the user to where they can search the marketplace.
-    public void goToMarketSearch() {
-        Intent goToMarketSearch = new Intent(this, BuySearchActivity.class);
-        startActivity(goToMarketSearch);
-    }
-
-    // Redirects the user to where they can search possible records they can sell.
-    public void goToSaleSearch() {
-        Intent goToSaleSearch = new Intent(this, SaleSearchActivity.class);
-        startActivity(goToSaleSearch);
-    }
-
-    // Redirects the user to the login screen and logs them out.
-    public void goToLogin() {
-        Intent goToLogin = new Intent(this, LoginActivity.class);
-        mAuth.getCurrentUser();
-        mAuth.signOut();
-        startActivity(goToLogin);
-        finish();
-    }
-
-    // Redirects to the inbox:
-    public void goToInbox() {
-        Intent goToInbox = new Intent(this, InboxActivity.class);
-        startActivity(goToInbox);
-    }
-
-    // Redirects the user to where they can search possible records they can sell.
-    public void goToMenu() {
-        Intent goToMenu = new Intent(this, MainActivity.class);
-        startActivity(goToMenu);
-        finish();
-    }
-
+    // Change the button appearance when it is clicked.
     public void openDrawer(View view) {
 
         if(drawerLayout.isDrawerOpen(drawers)){
@@ -150,39 +112,61 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // onclicklistener for the drawer, manages navigation.
+    // This is the onclicklistener for the drawer, it sends data to navigation.
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            helperNavigationHandler.redirect(position);
+            drawerLayout.closeDrawer(drawers);
+            menuButton.setText("+");
         }
     }
 
-    /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
-        // Get the right position and go to the right activity.
-        String[] menuOptions = getResources().getStringArray(R.array.menuOptions);
-        switch (menuOptions[position]){
-            case ("Menu"):
-                goToMenu();
-                break;
-            case ("Sell"):
-                goToSaleSearch();
-                break;
-            case ("Buy"):
-                goToMarketSearch();
-                break;
-            case ("Profile"):
-                goToProfile();
-                break;
-            case ("Logout"):
-                goToLogin();
-                break;
-            case ("Inbox"):
-                goToInbox();
-                break;
-        }
-        drawerLayout.closeDrawer(drawers);
-        menuButton.setText("+");
+    public void NewsLoader(){
+
+        // Declare the list and database reference.
+        final List<NewsItem> newsList = new ArrayList();
+        DatabaseReference mSettingsReference = FirebaseDatabase.getInstance().getReference().child("news");
+
+        ValueEventListener settingsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get UserSettings object and use the values to update the UI
+                for (DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
+                    NewsItem newsItem =  chatSnapshot.getValue(NewsItem.class);
+                    newsList.add(newsItem);
+                }
+
+                final ListView lv = (ListView) findViewById(R.id.news_list);
+
+                // Fill the view.
+                CustomNewsAdapter customNewsAdapter = new CustomNewsAdapter(getApplicationContext(), R.layout.news_item, newsList);
+                lv.setAdapter(customNewsAdapter);
+                customNewsAdapter.notifyDataSetChanged();
+
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View arg1,
+                                            int arg2, long arg3) {
+                        Intent goToNews = new Intent(getApplicationContext(), NewsActivity.class);
+                        NewsItem newsItem = (NewsItem) lv.getItemAtPosition(arg2);
+
+                        // Get all the values from the record info.
+                        String content = newsItem.getContent();
+
+                        // Put the value into the next activity.
+                        goToNews.putExtra("content", content);
+
+                        // Start the activity
+                        startActivity(goToNews);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        mSettingsReference.addValueEventListener(settingsListener);
     }
 }

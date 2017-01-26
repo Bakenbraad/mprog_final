@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,21 +53,37 @@ public class BuySearchActivity extends AppCompatActivity {
     String[] navigations;
     Button menuButton;
 
+    // Initiate the navigation handler:
+    HelperNavigationHandler helperNavigationHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy_search);
 
-        // Set the authenticator;
+        // Initiate the navigation handler.
+        helperNavigationHandler = new HelperNavigationHandler(this);
+
+        // Initiate the authentication
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Get the searchview and switch and set the text for the searchview.
-        searchViewED = (EditText) findViewById(R.id.searchSaleED);
-        searchViewED.setHint("Search");
+        // Check the login state and welcome the user if they are logged in.
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // User is signed out, they don't belong here so send them back!
+                    new HelperNavigationHandler(getParent()).goToLogin();
+                }
+            }
+        };
 
-        // Get the button
+        // Get the button and searchview
         menuButton = (Button) findViewById(R.id.menubutton);
 
+        searchViewED = (EditText) findViewById(R.id.searchSaleED);
         searchViewED.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -85,7 +103,7 @@ public class BuySearchActivity extends AppCompatActivity {
 
         // Set the spinner adapter.
         Spinner dropdownBuy = (Spinner) findViewById(R.id.spinner_buy);
-        String[] items = new String[]{"Any", "Price", "Bidding from", "Trade"};
+        String[] items = getResources().getStringArray(R.array.buyFilter);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdownBuy.setAdapter(adapter);
 
@@ -93,6 +111,7 @@ public class BuySearchActivity extends AppCompatActivity {
         navigations = getResources().getStringArray(R.array.menuOptions);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawers = (ListView) findViewById(R.id.main_drawer);
+        menuButton = (Button) findViewById(R.id.menubutton);
 
         // Set the adapter for the list view
         drawers.setAdapter(new ArrayAdapter<String>(this,
@@ -101,36 +120,9 @@ public class BuySearchActivity extends AppCompatActivity {
         drawers.setOnItemClickListener(new BuySearchActivity.DrawerItemClickListener());
     }
 
-    // Redirects the user to their profile.
-    public void goToProfile() {
-        Intent goToProfile = new Intent(this, ProfileActivity.class);
-        startActivity(goToProfile);
-        finish();
-    }
-
-    // Redirects the user to where they can search possible records they can sell.
-    public void goToMenu() {
-        Intent goToMenu = new Intent(this, MainActivity.class);
-        startActivity(goToMenu);
-        finish();
-    }
-
-    public void goToSaleSearch(){
-        Intent goToSaleSeach = new Intent(this, SaleSearchActivity.class);
-        startActivity(goToSaleSeach);
-        finish();
-    }
-
-    // Redirects the user to the login screen and logs them out.
-    public void goToLogin() {
-        Intent goToLogin = new Intent(this, LoginActivity.class);
-        mAuth.getCurrentUser();
-        mAuth.signOut();
-        startActivity(goToLogin);
-        finish();
-    }
-
+    // Change the button appearance when it is clicked.
     public void openDrawer(View view) {
+
         if(drawerLayout.isDrawerOpen(drawers)){
             drawerLayout.closeDrawer(drawers);
             menuButton.setText("+");
@@ -141,35 +133,14 @@ public class BuySearchActivity extends AppCompatActivity {
         }
     }
 
-    // onclicklistener for the drawer, manages navigation.
+    // This is the onclicklistener for the drawer, it sends data to navigation.
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            helperNavigationHandler.redirect(position);
+            drawerLayout.closeDrawer(drawers);
+            menuButton.setText("+");
         }
-    }
-
-    /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
-        // Get the right position and go to the right activity.
-        String[] menuOptions = getResources().getStringArray(R.array.menuOptions);
-        switch (menuOptions[position]){
-            case ("Menu"):
-                goToMenu();
-                break;
-            case ("Sell"):
-                goToSaleSearch();
-                break;
-            case ("Buy"):
-                break;
-            case ("Profile"):
-                goToProfile();
-                break;
-            case ("Logout"):
-                goToLogin();
-                break;
-        }
-        drawerLayout.closeDrawer(drawers);
     }
 
     public void searchMarket() throws ExecutionException, InterruptedException {
@@ -178,6 +149,10 @@ public class BuySearchActivity extends AppCompatActivity {
         String query = searchViewED.getText().toString();
         Spinner marketFilter = (Spinner) findViewById(R.id.spinner_buy);
         String priceType = marketFilter.getSelectedItem().toString();
+        // Hotfix for string mismatch
+        if (priceType.equals("Bidding")){
+            priceType = "Bidding from";
+        }
 
         // Search for music if the query is long enough, otherwise let the user know of their mistakes.
         if (query.length() < 2){
@@ -227,11 +202,11 @@ public class BuySearchActivity extends AppCompatActivity {
         protected List<RecordInfo> doInBackground(Void... params) {
 
             // Create an API manager object.
-            ApiManager apiManager = new ApiManager();
+            HelperApiManager helperApiManager = new HelperApiManager();
 
-            // Use the apiManager to search for results using the correct method.
+            // Use the helperApiManager to search for results using the correct method.
             try {
-                searchResults = apiManager.Search(query);
+                searchResults = helperApiManager.Search(query);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -242,19 +217,26 @@ public class BuySearchActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<RecordInfo> searchResults) {
-//            super.onPostExecute(searchResults);
+
+            // Declare the list of record sales.
+            final List<RecordSaleInfo> recordSaleInfoList = new ArrayList<>();
 
             // Close the dialog
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
 
+            // Declare the listview and set its emptyview
+            final ListView lv= (ListView) findViewById(R.id.buyResult);
+
+            // Set the empty view
+            TextView emptyView = (TextView) findViewById(R.id.inbox_empty_item);
+            emptyView.setText("Nothing found in the marketplace");
+            lv.setEmptyView(emptyView);
+
             // If there are results put them in the listview.
             if (searchResults != null) {
-                // Make a list for the matches.
-                final List<RecordSaleInfo> recordSaleInfoList = new ArrayList<>();
 
-                final ListView lv = (ListView) findViewById(R.id.buyResult);
                 // Get matches for each mbid result.
                 for (int i = 0; i < searchResults.size(); i++) {
                     final String mbid = searchResults.get(i).getMbid();
@@ -263,6 +245,7 @@ public class BuySearchActivity extends AppCompatActivity {
                     DatabaseReference marketplaceRef = FirebaseDatabase.getInstance().getReference().child("marketplace").child("offers");
                     final Query queryRef = marketplaceRef.orderByChild(mbid);
                     ValueEventListener refListener = new ValueEventListener() {
+
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             // Get UserSettings object and use the values to update the UI
@@ -274,6 +257,30 @@ public class BuySearchActivity extends AppCompatActivity {
                                     }
                                 }
                             }
+
+                            // Set the adapter
+                            CustomMarketAdapter customMarketAdapter = new CustomMarketAdapter(getApplicationContext(), R.layout.record_market_item, recordSaleInfoList);
+                            lv.setAdapter(customMarketAdapter);
+                            customMarketAdapter.notifyDataSetChanged();
+
+                            // Set a listener, this is used to send record info to the selling details.
+                            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> arg0, View arg1,
+                                                        int arg2, long arg3) {
+                                    Intent goToBuy = new Intent(getApplicationContext(), BuyActivity.class);
+                                    RecordSaleInfo recordSaleInfo = (RecordSaleInfo) lv.getItemAtPosition(arg2);
+
+                                    // Put the values into the next activity.
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("recordSaleInfo", recordSaleInfo);
+                                    goToBuy.putExtras(bundle);
+
+                                    // Start the activity
+                                    startActivity(goToBuy);
+                                    finish();
+                                }
+                            });
                         }
 
                         @Override
@@ -284,29 +291,7 @@ public class BuySearchActivity extends AppCompatActivity {
                     queryRef.addListenerForSingleValueEvent(refListener);
 
                 }
-                CustomMarketAdapter customMarketAdapter = new CustomMarketAdapter(getApplicationContext(), R.layout.record_market_item, recordSaleInfoList);
-                lv.setAdapter(customMarketAdapter);
-                customMarketAdapter.notifyDataSetChanged();
-                customMarketAdapter.notifyDataSetInvalidated();
 
-                // Set a listener, this is used to send record info to the selling details.
-                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0, View arg1,
-                                            int arg2, long arg3) {
-                        Intent goToBuy = new Intent(getApplicationContext(), BuyActivity.class);
-                        RecordSaleInfo recordSaleInfo = (RecordSaleInfo) lv.getItemAtPosition(arg2);
-
-                        // Put the values into the next activity.
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("recordSaleInfo", recordSaleInfo);
-                        goToBuy.putExtras(bundle);
-
-                        // Start the activity
-                        startActivity(goToBuy);
-                        finish();
-                    }
-                });
 
                 // Hide the keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

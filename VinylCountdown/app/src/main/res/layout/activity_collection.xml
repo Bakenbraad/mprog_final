@@ -5,7 +5,98 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="nl.mprog.rens.vinylcountdown.CollectionActivity">
+    tools:context="nl.mprog.rens.vinylcountdown.CollectionWishlistActivity">
+
+
+
+    <Button
+        android:text="+"
+        android:textSize="36sp"
+        android:textColor="@color/softWhite"
+        android:background="@color/drawerBc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/menubutton"
+        android:onClick="openDrawer"
+        android:elevation="0dp"
+        style="@style/Widget.AppCompat.Button.Small"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/menubutton"
+        android:layout_below="@+id/current_page"
+        android:layout_alignParentStart="true">
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="31dp"
+            android:id="@+id/sortingOptions"
+            android:layout_margin="4dp"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/collectionList"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:text="add"
+                android:background="@drawable/button_background"
+                android:layout_width="match_parent"
+                android:onClick="goToAddSearch"
+                android:layout_margin="15dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:id="@+id/button11"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="match_parent"
+        android:id="@+id/inbox_empty_item"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_alignParentEnd="true" />
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/current_page">
+        <!-- The main content view -->
+
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+        <!-- The navigation drawer -->
+
+        <ListView android:id="@+id/main_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:background="@color/drawerBc"
+            android:layout_gravity="start"
+            android:alpha="0.9"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="3dp"/>
+    </android.support.v4.widget.DrawerLayout>
 
     <nl.mprog.rens.vinylcountdown.CustomTextView
         android:text="Vinyl Countdown"
@@ -35,17 +126,4 @@
         android:layout_below="@+id/menubutton"
         />
 
-    <Button
-        android:text="+"
-        android:textSize="36sp"
-        android:textColor="@color/softWhite"
-        android:background="@color/drawerBc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/menubutton"
-        android:onClick="openDrawer"
-        android:elevation="0dp"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
 </RelativeLayout>

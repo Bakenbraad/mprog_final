@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".BuyActivity" />
-        <activity android:name=".CollectionActivity" />
+        <activity android:name=".CollectionWishlistActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,13 +27,15 @@
             android:name=".RecordInfoActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
         <activity android:name=".SaleSearchActivity" />
-        <activity android:name=".WishlistActivity" />
         <activity android:name=".SaleActivity" />
         <activity
             android:name=".NewsActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
         <activity android:name=".InboxActivity" />
-        <activity android:name=".InboxDetail"></activity>
+        <activity android:name=".InboxDetail" />
+        <activity
+            android:name=".ProfileEditActivity"
+            android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog"/>
     </application>
 
 </manifest>
