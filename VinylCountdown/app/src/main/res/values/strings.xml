@@ -24,4 +24,22 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_main_nav">MainActivityNav</string>
+    <string name="bidding">Bidding from</string>
+    <string name="trade">Trade</string>
+    <string name="price">Price</string>
+    <string name="confirm_offer">Confirm offer</string>
+    <string name="double_bid">You already placed a bid!</string>
+    <string name="low_bid">Insufficient bid!</string>
+    <string name="success_message">Succesfully sent a message to the record owner!</string>
+    <string name="record_unselect">Please select a record first!</string>
+    <string name="no_market_results">Nothing found in the marketplace</string>
+    <string name="dialog_market_search">"Looking for offers of "</string>
+    <string name="collection">Collection</string>
+    <string name="wishlist">Wishlist</string>
+    <string name="no_search_results">No search results</string>
+    <string name="acc_collection">Added to collection</string>
+    <string name="confirm_add">Confirm addition</string>
+    <string name="confirm_add_text">Do you want to add this record to your collection?</string>
+    <string name="confirm_wish_text">Do you want to add this record to your wishlist?</string>
+    <string name="wish_add">Added to wishlist</string>
 </resources>

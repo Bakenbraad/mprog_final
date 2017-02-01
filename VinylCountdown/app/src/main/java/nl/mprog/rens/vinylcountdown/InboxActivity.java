@@ -33,12 +33,6 @@ public class InboxActivity extends AppCompatActivity {
     FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseUser user;
 
-    // Initiate drawer modules:
-    DrawerLayout drawerLayout;
-    ListView drawers;
-    String[] navigations;
-    Button menuButton;
-
     // Initiate the navigation handler:
     HelperNavigationHandler helperNavigationHandler;
 
@@ -68,42 +62,10 @@ public class InboxActivity extends AppCompatActivity {
 
         // Load the users inbox, if the user isn't logged in the auth listener will redirect them back.
         loadInbox();
-
-
-        // Navigation drawer from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
-        navigations = getResources().getStringArray(R.array.menuOptions);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawers = (ListView) findViewById(R.id.main_drawer);
-        menuButton = (Button) findViewById(R.id.menubutton);
-
-        // Set the adapter for the list view
-        drawers.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_item, navigations));
-        // Set the list's click listener
-        drawers.setOnItemClickListener(new InboxActivity.DrawerItemClickListener());
     }
 
-    // Change the button appearance when it is clicked.
     public void openDrawer(View view) {
-
-        if(drawerLayout.isDrawerOpen(drawers)){
-            drawerLayout.closeDrawer(drawers);
-            menuButton.setText("+");
-        }
-        else {
-            drawerLayout.openDrawer(drawers);
-            menuButton.setText("-");
-        }
-    }
-
-    // This is the onclicklistener for the drawer, it sends data to navigation.
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            helperNavigationHandler.redirect(position);
-            drawerLayout.closeDrawer(drawers);
-            menuButton.setText("+");
-        }
+        helperNavigationHandler.openDrawer();
     }
 
     // This function loads the users inbox.
@@ -128,7 +90,7 @@ public class InboxActivity extends AppCompatActivity {
                     Message message = (Message) chatSnapshot.getValue(Message.class);
 
                     // Check if this is not the users own message and add:
-                    if (message.getSenderID().equals(user.getUid())){
+                    if (!message.getSenderID().equals(user.getUid())){
                         messageList.add(message);
                     }
                 }

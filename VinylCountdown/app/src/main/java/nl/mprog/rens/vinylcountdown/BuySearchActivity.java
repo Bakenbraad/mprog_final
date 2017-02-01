@@ -36,22 +36,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * BuySearchActivity.class
+ *
+ * This activity manages the market search, this is a two part search that consists of retrieving data from
+ * the api and using that data to crossreference with the marketplace in firebase. This returns a list of all
+ * records that match the query and are being sold at the moment. When a record in the marketplace
+ * is clicked the data is passed to the buyactivity.
+ */
+
 public class BuySearchActivity extends AppCompatActivity {
 
-    // Initiate the search ED and the results lv
+    // Declare the search ED
     EditText searchViewED;
 
     // Authenticator:
     // The authenticator for firebase.
-    private FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
-    DatabaseReference mDatabase;
-
-    // Initiate drawer modules:
-    DrawerLayout drawerLayout;
-    ListView drawers;
-    String[] navigations;
-    Button menuButton;
 
     // Initiate the navigation handler:
     HelperNavigationHandler helperNavigationHandler;
@@ -64,11 +68,24 @@ public class BuySearchActivity extends AppCompatActivity {
         // Initiate the navigation handler.
         helperNavigationHandler = new HelperNavigationHandler(this);
 
-        // Initiate the authentication
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        // If a query was sent (from the wishlist activity) this is automatically used to
+        // search the marketplace.
+        Intent intent = getIntent();
+        Bundle methodBundle = intent.getExtras();
+        if (methodBundle != null){
 
-        // Check the login state and welcome the user if they are logged in.
+            String wishlistQuery = methodBundle.getString("query");
+
+            // Check if a query exists
+            if (wishlistQuery != null && !wishlistQuery.equals("")){
+
+                // Perform a search using the given query.
+                new MarketAsyncTask(wishlistQuery, "Any").execute();
+            }
+        }
+
+
+        // Check the login state.
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -80,9 +97,8 @@ public class BuySearchActivity extends AppCompatActivity {
             }
         };
 
-        // Get the button and searchview
-        menuButton = (Button) findViewById(R.id.menubutton);
-
+        // When the search button in the keyboard is used, do a marketsearch
+        // using the input query.
         searchViewED = (EditText) findViewById(R.id.searchSaleED);
         searchViewED.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -101,54 +117,33 @@ public class BuySearchActivity extends AppCompatActivity {
             }
         });
 
-        // Set the spinner adapter.
+        // Set the spinner adapter, this is used as a filter.
         Spinner dropdownBuy = (Spinner) findViewById(R.id.spinner_buy);
         String[] items = getResources().getStringArray(R.array.buyFilter);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdownBuy.setAdapter(adapter);
-
-        // Navigation drawer from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
-        navigations = getResources().getStringArray(R.array.menuOptions);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawers = (ListView) findViewById(R.id.main_drawer);
-        menuButton = (Button) findViewById(R.id.menubutton);
-
-        // Set the adapter for the list view
-        drawers.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_item, navigations));
-        // Set the list's click listener
-        drawers.setOnItemClickListener(new BuySearchActivity.DrawerItemClickListener());
     }
 
-    // Change the button appearance when it is clicked.
+    // Open drawer is called when the button to open the menu is pressed.
     public void openDrawer(View view) {
-
-        if(drawerLayout.isDrawerOpen(drawers)){
-            drawerLayout.closeDrawer(drawers);
-            menuButton.setText("+");
-        }
-        else {
-            drawerLayout.openDrawer(drawers);
-            menuButton.setText("-");
-        }
+        helperNavigationHandler.openDrawer();
     }
 
-    // This is the onclicklistener for the drawer, it sends data to navigation.
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            helperNavigationHandler.redirect(position);
-            drawerLayout.closeDrawer(drawers);
-            menuButton.setText("+");
-        }
-    }
-
+    /**
+     * This function is used to execute the market search, the query is checked for validity and then
+     * passed, along with the filter, to the marketasynctask which manages the getting of results.
+     * These results are displayed in the results listview by the asynctask.
+     *
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public void searchMarket() throws ExecutionException, InterruptedException {
 
         // Get the query and the price type.
         String query = searchViewED.getText().toString();
         Spinner marketFilter = (Spinner) findViewById(R.id.spinner_buy);
         String priceType = marketFilter.getSelectedItem().toString();
+
         // Hotfix for string mismatch
         if (priceType.equals("Bidding")){
             priceType = "Bidding from";
@@ -163,16 +158,18 @@ public class BuySearchActivity extends AppCompatActivity {
         }
     }
 
+    // This is an inbetween step that makes it possible for the function to be called by a button
+    // as well as on the keyboard by the built in search action.
     public void onSearchClick(View view) throws ExecutionException, InterruptedException {
         searchMarket();
     }
 
-    /*
-    This is the asynctask that manages the loading of the marketplace, the Background process runs the
-    api manager in order to get all mbids that match a certain query. Subsequently, the firebase
-    offers are ordered by mbid matching all the apis results, if a filter is selected this is also taken into
-    account. This returns all the offered records in a listview that match the search query as if they
-    were sent to the lastfm api directly.
+    /**
+    * This is the asynctask that manages the loading of the marketplace, the Background process runs the
+    * api manager in order to get all mbids that match a certain query. Subsequently, the firebase
+    * offers are filtered by mbid matching all the apis results, if a filter is selected this is also taken into
+    * account when adding results to the list. This returns all the offered records in a listview that match the
+    * search query as if they were sent to the lastfm api directly.
      */
     public class MarketAsyncTask extends AsyncTask<Void, Void, List<RecordInfo>> implements Serializable {
 
@@ -194,7 +191,7 @@ public class BuySearchActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog.setMessage("Looking for offers of " + query);
+            dialog.setMessage(getString(R.string.dialog_market_search) + query);
             dialog.show();
         }
 
@@ -231,7 +228,7 @@ public class BuySearchActivity extends AppCompatActivity {
 
             // Set the empty view
             TextView emptyView = (TextView) findViewById(R.id.inbox_empty_item);
-            emptyView.setText("Nothing found in the marketplace");
+            emptyView.setText(R.string.no_market_results);
             lv.setEmptyView(emptyView);
 
             // If there are results put them in the listview.
@@ -241,17 +238,23 @@ public class BuySearchActivity extends AppCompatActivity {
                 for (int i = 0; i < searchResults.size(); i++) {
                     final String mbid = searchResults.get(i).getMbid();
 
-                    // Match every mbid to the marketplace data.
+                    // Match every mbid to the marketplace data. This is done by getting a reference to the
+                    // marketplace and querying every mbid.
                     DatabaseReference marketplaceRef = FirebaseDatabase.getInstance().getReference().child("marketplace").child("offers");
                     final Query queryRef = marketplaceRef.orderByChild(mbid);
                     ValueEventListener refListener = new ValueEventListener() {
 
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            // Get UserSettings object and use the values to update the UI
+
+                            // Get the datasnapshot matching the query
                             for (DataSnapshot chatSnapshot : dataSnapshot.getChildren()) {
+
+                                // Get the object form the marketplace.
                                 RecordSaleInfo recordSaleInfo = (RecordSaleInfo) chatSnapshot.getValue(RecordSaleInfo.class);
                                 if (recordSaleInfo.getMbid().equals(mbid)) {
+
+                                    // Apply the filter.
                                     if (recordSaleInfo.priceType.equals(filter) || filter.equals("Any")) {
                                         recordSaleInfoList.add(recordSaleInfo);
                                     }
@@ -263,7 +266,7 @@ public class BuySearchActivity extends AppCompatActivity {
                             lv.setAdapter(customMarketAdapter);
                             customMarketAdapter.notifyDataSetChanged();
 
-                            // Set a listener, this is used to send record info to the selling details.
+                            // Set a listener, this is used to send info to the buyactivity.
                             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> arg0, View arg1,
@@ -291,7 +294,6 @@ public class BuySearchActivity extends AppCompatActivity {
                     queryRef.addListenerForSingleValueEvent(refListener);
 
                 }
-
 
                 // Hide the keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

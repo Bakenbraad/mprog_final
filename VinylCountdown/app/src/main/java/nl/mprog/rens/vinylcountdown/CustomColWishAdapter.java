@@ -14,13 +14,13 @@ import java.util.List;
  * Created by Rens on 16/01/2017.
  */
 
-public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
+public class CustomColWishAdapter extends ArrayAdapter<ColWishRecord> {
 
     // List of items
-    private List<RecordInfo> objects;
+    private List<ColWishRecord> objects;
 
     // Constructor
-    public CustomAlbumAdapter(Context context, int textViewResourceId, List<RecordInfo> objects) {
+    public CustomColWishAdapter(Context context, int textViewResourceId, List<ColWishRecord> objects) {
         super(context, textViewResourceId, objects);
         this.objects = objects;
     }
@@ -38,7 +38,7 @@ public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
             v = inflater.inflate(R.layout.record_item, null);
         }
 
-        RecordInfo i = objects.get(position);
+        ColWishRecord i = objects.get(position);
 
         if (i != null) {
 
@@ -48,12 +48,12 @@ public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
             TextView artist = (TextView) v.findViewById(R.id.artistTV);
             TextView title = (TextView) v.findViewById(R.id.titleTV);
 
-            artist.setText(i.getArtist());
-            title.setText(i.getTitle());
+            artist.setText(i.getRecordInfo().getArtist());
+            title.setText(i.getRecordInfo().getTitle());
 
             // Download and set the image for the album:
             ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
-            new AsyncImgLoad(imageView).execute(i.getImgLinkmed());
+            new AsyncImgLoad(imageView).execute(i.getRecordInfo().getImgLinkmed());
         }
 
         // the view must be returned to our activity

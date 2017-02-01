@@ -15,6 +15,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -56,9 +58,11 @@ public class CustomMarketAdapter extends ArrayAdapter<RecordSaleInfo> {
             TextView priceTV = (TextView) v.findViewById(R.id.marketPrice);
             TextView priceTypeTV = (TextView) v.findViewById(R.id.marketPriceType);
             final TextView userTV = (TextView) v.findViewById(R.id.marketUsername);
+            TextView timeTV = (TextView) v.findViewById(R.id.marketTime);
 
             artistTV.setText(i.getArtist());
             titleTV.setText(i.getTitle());
+            timeTV.setText(i.getTimeCreated());
 
             // Get the current selling user.
             DatabaseReference mSettingsReference = FirebaseDatabase.getInstance().getReference().child("users").child(i.getUserID());
@@ -81,7 +85,7 @@ public class CustomMarketAdapter extends ArrayAdapter<RecordSaleInfo> {
 
             // Download and set the image for the album:
             ImageView imageView = (ImageView) v.findViewById(R.id.marketImage);
-            new AsyncTaskImgDownload(imageView).execute(i.getImgLink());
+            new AsyncImgLoad(imageView).execute(i.getImgLink());
 
             conditionTV.setRating(i.getCondition());
             if (i.priceType.equals("Trade")){

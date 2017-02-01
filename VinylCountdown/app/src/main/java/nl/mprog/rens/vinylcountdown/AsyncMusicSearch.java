@@ -22,10 +22,18 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Rens on 16/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * AsyncMusicSearch.class
+ *
+ * This asynctask manages the main api search function. The results of which are put into a listview of different kinds,
+ * depending on the methodcall. The constructor takes the activity at which the function is ran, the query with which
+ * to run the api manager, the method (which determines how the data is displayed and what onclick does) and finally
+ * the user ID. The userID is used in the methods for wishlist and collection when a record is added to either.
  */
 
-public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> implements Serializable {
+public class AsyncMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> implements Serializable {
 
     private String query;
     private List<RecordInfo> searchResults;
@@ -35,7 +43,7 @@ public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>
     private String userID;
 
 
-    public AsyncTaskMusicSearch(Activity c, String query, String method, String userID){
+    public AsyncMusicSearch(Activity c, String query, String method, String userID){
 
         this.query = query;
         this.activity = c;
@@ -89,7 +97,7 @@ public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>
 
             // Set the empty view
             TextView emptyView = (TextView) activity.findViewById(R.id.inbox_empty_item);
-            emptyView.setText("No search results");
+            emptyView.setText(R.string.no_search_results);
             lv.setEmptyView(emptyView);
 
             CustomAlbumAdapter customAlbumAdapter = new CustomAlbumAdapter(activity, R.layout.record_item, searchResults);
@@ -149,22 +157,25 @@ public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>
 
                         // Throw a dialog to confirm the addition.
                         new AlertDialog.Builder(activity)
-                                .setTitle("Confirm addition")
-                                .setMessage("Do you want to add this record to your collection?")
+                                .setTitle(R.string.confirm_add)
+                                .setMessage(R.string.confirm_add_text)
                                 .setIcon(R.drawable.logo)
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                                     public void onClick(DialogInterface dialog, int whichButton) {
 
+                                        // Get a reference.
+                                        DatabaseReference mCollectionReference = FirebaseDatabase.getInstance().getReference().child("collection");
+
                                         // Create a collection item:
-                                        CollectionWishlistRecord collectionWishlistRecord = new CollectionWishlistRecord(recordInfo, userID);
+                                        String colWishKey = mCollectionReference.push().getKey();
+                                        ColWishRecord colWishRecord = new ColWishRecord(recordInfo, userID, colWishKey);
 
                                         // Put the record in the collection.
-                                        DatabaseReference mCollectionReference = FirebaseDatabase.getInstance().getReference().child("collection");
-                                        mCollectionReference.push().setValue(collectionWishlistRecord);
+                                        mCollectionReference.child(colWishKey).setValue(colWishRecord);
 
                                         // Notify the user.
-                                        Toast.makeText(activity.getApplicationContext(), "Added to collection", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity.getApplicationContext(), R.string.acc_collection, Toast.LENGTH_SHORT).show();
 
                                         activity.finish();
                                     }})
@@ -186,21 +197,24 @@ public class AsyncTaskMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>
 
                         // Throw a dialog to confirm the addition.
                         new AlertDialog.Builder(activity)
-                                .setTitle("Confirm addition")
-                                .setMessage("Do you want to add this record to your wishlist?")
+                                .setTitle(R.string.confirm_add)
+                                .setMessage(R.string.confirm_wish_text)
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                                     public void onClick(DialogInterface dialog, int whichButton) {
 
+                                        // Get a reference.
+                                        DatabaseReference mCollectionReference = FirebaseDatabase.getInstance().getReference().child("wishlist");
+
                                         // Create a collection item:
-                                        CollectionWishlistRecord collectionWishlistRecord = new CollectionWishlistRecord(recordInfo, userID);
+                                        String colWishKey = mCollectionReference.push().getKey();
+                                        ColWishRecord colWishRecord = new ColWishRecord(recordInfo, userID, colWishKey);
 
                                         // Put the record in the collection.
-                                        DatabaseReference mCollectionReference = FirebaseDatabase.getInstance().getReference().child("wishlist");
-                                        mCollectionReference.push().setValue(collectionWishlistRecord);
+                                        mCollectionReference.child(colWishKey).setValue(colWishRecord);
 
                                         // Notify the user.
-                                        Toast.makeText(activity.getApplicationContext(), "Added to wishlist", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity.getApplicationContext(), R.string.wish_add, Toast.LENGTH_SHORT).show();
 
                                         activity.finish();
                                     }})

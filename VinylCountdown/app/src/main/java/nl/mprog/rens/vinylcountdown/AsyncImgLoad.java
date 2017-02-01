@@ -9,21 +9,34 @@ import android.widget.ImageView;
 import java.io.InputStream;
 
 /**
- * Created by Rens on 16/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * AsyncImgLoad.class
+ *
+ * This asynctask extension downloads an image from a url link and returns an imageview with the
+ * downloaded image as bitmap.
+ *
+ * Constructed from:
+ * http://stackoverflow.com/questions/3090650/android-loading-an-image-from-the-web-with-asynctask
  */
 
 // This class downloads and sets the images for each row
-class AsyncTaskImgDownload extends AsyncTask<String, Void, Bitmap> {
+class AsyncImgLoad extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
 
-    AsyncTaskImgDownload(ImageView bmImage) {
+    AsyncImgLoad(ImageView bmImage) {
         this.bmImage = bmImage;
     }
 
     protected Bitmap doInBackground(String... urls) {
+
+        // Get the url that should contain the image.
         String urldisplay = urls[0];
         Bitmap mIcon11 = null;
         try {
+
+            // Read the url as inputstream and parse it to a bitmap.
             InputStream in = new java.net.URL(urldisplay).openStream();
             mIcon11 = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
@@ -34,6 +47,8 @@ class AsyncTaskImgDownload extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
+
+        // Set the resulting bitmap in the image view.
         bmImage.setImageBitmap(result);
     }
 }

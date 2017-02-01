@@ -20,9 +20,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,7 +64,7 @@ public class SaleActivity extends AppCompatActivity {
         artistTV.setText(artist);
         titleTV.setText(title);
         ImageView imageView = (ImageView) findViewById(R.id.imageDetail);
-        new AsyncTaskImgDownload(imageView).execute(imgLink);
+        new AsyncImgLoad(imageView).execute(imgLink);
 
         // Set the spinner adapter.
         final Spinner dropdown = (Spinner)findViewById(R.id.spinner);

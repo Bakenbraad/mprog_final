@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".BuyActivity" />
-        <activity android:name=".CollectionWishlistActivity" />
+        <activity android:name=".ColWishActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

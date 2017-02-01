@@ -57,6 +57,13 @@
                 style="@style/Widget.AppCompat.RatingBar.Small"
                 android:layout_alignBottom="@+id/marketImage"
                 android:layout_toEndOf="@+id/marketImage" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/marketTime"
+                android:textSize="8sp" />
         </LinearLayout>
 
         <LinearLayout

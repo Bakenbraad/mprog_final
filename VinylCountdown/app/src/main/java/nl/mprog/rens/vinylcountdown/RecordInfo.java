@@ -15,25 +15,25 @@ public class RecordInfo implements Serializable {
     private String imgLinkmed;
     private String imgLinklarge;
     private String summary;
-    private String mbID;
+    private String mbid;
     private Map<String, String> tracks;
 
     // Firebase required empty constructor.
     public RecordInfo(){}
 
-    public RecordInfo(String title, String artist, String imgLinkmed, String imgLinklarge, String summary, String mbID){
+    public RecordInfo(String title, String artist, String imgLinkmed, String imgLinklarge, String summary, String mbid){
         this.artist = artist;
         this.imgLinkmed = imgLinkmed;
         this.title = title;
         this.imgLinklarge = imgLinklarge;
         this.summary = summary;
-        this.mbID = mbID;
+        this.mbid = mbid;
         tracks = new HashMap<>();
     }
 
     // Getters for all fields
     public String getMbid() {
-        return mbID;
+        return mbid;
     }
 
     public String getArtist() {

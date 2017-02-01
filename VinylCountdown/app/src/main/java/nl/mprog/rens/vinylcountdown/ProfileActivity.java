@@ -86,34 +86,10 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         };
-
-        // Get the menubutton.
-        menuButton = (Button) findViewById(R.id.menubutton);
-
-        // Navigation drawer from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
-        navigations = getResources().getStringArray(R.array.menuOptions);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawers = (ListView) findViewById(R.id.main_drawer);
-        menuButton = (Button) findViewById(R.id.menubutton);
-
-        // Set the adapter for the list view
-        drawers.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_item, navigations));
-        // Set the list's click listener
-        drawers.setOnItemClickListener(new ProfileActivity.DrawerItemClickListener());
     }
 
-    // Change the button appearance when it is clicked.
     public void openDrawer(View view) {
-
-        if(drawerLayout.isDrawerOpen(drawers)){
-            drawerLayout.closeDrawer(drawers);
-            menuButton.setText("+");
-        }
-        else {
-            drawerLayout.openDrawer(drawers);
-            menuButton.setText("-");
-        }
+        helperNavigationHandler.openDrawer();
     }
 
 
@@ -122,17 +98,4 @@ public class ProfileActivity extends AppCompatActivity {
         goToProfileEdit.putExtra("profile", userProfile);
         startActivity(goToProfileEdit);
     }
-
-
-    // This is the onclicklistener for the drawer, it sends data to navigation.
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            helperNavigationHandler.redirect(position);
-            drawerLayout.closeDrawer(drawers);
-            menuButton.setText("+");
-        }
-    }
-
-
 }

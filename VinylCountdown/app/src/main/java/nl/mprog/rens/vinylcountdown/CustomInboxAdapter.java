@@ -1,6 +1,7 @@
 package nl.mprog.rens.vinylcountdown;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,10 @@ public class CustomInboxAdapter extends ArrayAdapter<Message> {
 
             // Format the message according to the message type (can be offer, from the marketplace, or reject/accept from inbox)
             String messageType = i.getMessageType();
+
+            if (i.isRead()){
+                subjectTV.setTypeface(Typeface.DEFAULT);
+            }
 
             if (messageType.equals("offer")){
                 String priceType = i.getType();

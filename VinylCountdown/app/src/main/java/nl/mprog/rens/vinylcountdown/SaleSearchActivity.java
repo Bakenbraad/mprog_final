@@ -92,9 +92,6 @@ public class SaleSearchActivity extends AppCompatActivity {
             }
         };
 
-        // Get the button
-        menuButton = (Button) findViewById(R.id.menubutton);
-
         searchViewED.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -111,41 +108,10 @@ public class SaleSearchActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        // Navigation drawer from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
-        navigations = getResources().getStringArray(R.array.menuOptions);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawers = (ListView) findViewById(R.id.main_drawer);
-        menuButton = (Button) findViewById(R.id.menubutton);
-
-        // Set the adapter for the list view
-        drawers.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_item, navigations));
-        // Set the list's click listener
-        drawers.setOnItemClickListener(new SaleSearchActivity.DrawerItemClickListener());
     }
 
-    // Change the button appearance when it is clicked.
     public void openDrawer(View view) {
-
-        if(drawerLayout.isDrawerOpen(drawers)){
-            drawerLayout.closeDrawer(drawers);
-            menuButton.setText("+");
-        }
-        else {
-            drawerLayout.openDrawer(drawers);
-            menuButton.setText("-");
-        }
-    }
-
-    // This is the onclicklistener for the drawer, it sends data to navigation.
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            helperNavigationHandler.redirect(position);
-            drawerLayout.closeDrawer(drawers);
-            menuButton.setText("+");
-        }
+        helperNavigationHandler.openDrawer();
     }
 
     public void searchMusic() throws ExecutionException, InterruptedException {
@@ -158,7 +124,7 @@ public class SaleSearchActivity extends AppCompatActivity {
             Toast.makeText(this, "Please give us more to go on...",Toast.LENGTH_SHORT).show();
             searchViewED.setError("Invalid search");
         } else {
-            new AsyncTaskMusicSearch(this, query, method, mAuth.getCurrentUser().getUid()).execute();
+            new AsyncMusicSearch(this, query, method, mAuth.getCurrentUser().getUid()).execute();
         }
     }
 

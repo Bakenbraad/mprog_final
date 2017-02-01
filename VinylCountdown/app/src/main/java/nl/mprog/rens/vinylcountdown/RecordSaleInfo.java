@@ -19,6 +19,15 @@ public class RecordSaleInfo implements Serializable{
     String imgLink;
     String artist;
     String title;
+
+    public String getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(String timeCreated) {
+        this.timeCreated = timeCreated;
+    }
+
     String timeCreated;
 
     public String getCurrentBidUser() {
