@@ -6,7 +6,13 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 /**
- * Created by Rens on 16/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * CustomTextView.class
+ *
+ * This is an extension of the regular textview and applies a custom font (Montserrat regular).
+ * Constructed from: http://stackoverflow.com/questions/3651086/android-using-custom-font
  */
 
 public class CustomTextView extends TextView {

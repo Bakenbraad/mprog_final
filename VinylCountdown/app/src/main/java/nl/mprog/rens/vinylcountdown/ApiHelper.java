@@ -19,7 +19,7 @@ import java.util.List;
  * Created by Rens on 16/01/2017.
  */
 
-public class HelperApiManager {
+public class ApiHelper {
 
     // Search takes a query and retrieves a list of albumIDs by means of the
     // albumIDSearch function. This fills the albumids list which is then used to do a recordsearch, this

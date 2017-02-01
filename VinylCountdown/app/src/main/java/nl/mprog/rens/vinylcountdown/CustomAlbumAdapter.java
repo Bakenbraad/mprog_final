@@ -11,7 +11,13 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by Rens on 16/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * CustomAlbumAdapter.class
+ *
+ * This adapter displays the recordinfo data in a nice way.
+ * Constructed from: https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
  */
 
 public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
@@ -28,11 +34,11 @@ public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
 
     public View getView(int position, View convertView, ViewGroup parent){
 
-        // assign the view we are converting to a local variable
+        // Make the view a local variable.
         View v = convertView;
 
-        // first check to see if the view is null. if so, we have to inflate it.
-        // to inflate it basically means to render, or show, the view.
+        // First check to see if the view is null. if so, we have to inflate it.
+        // To inflate it basically means to render, or show, the view.
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.record_item, null);
@@ -42,9 +48,7 @@ public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
 
         if (i != null) {
 
-            // This is how you obtain a reference to the TextViews.
-            // These TextViews are created in the XML files we defined.
-
+            // Set the object properties to the textviews.
             TextView artist = (TextView) v.findViewById(R.id.artistTV);
             TextView title = (TextView) v.findViewById(R.id.titleTV);
 
@@ -56,7 +60,7 @@ public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
             new AsyncImgLoad(imageView).execute(i.getImgLinkmed());
         }
 
-        // the view must be returned to our activity
+        // The view must be returned to our activity
         return v;
 
     }

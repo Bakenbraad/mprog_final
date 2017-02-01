@@ -12,7 +12,14 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by Rens on 16/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * CustomNewsAdapter.class
+ *
+ * This adapter displays the news items in a nice way. Takes a list of NewsItems and fills
+ * the views with their data.
+ * Constructed from: https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
  */
 
 public class CustomNewsAdapter extends ArrayAdapter<NewsItem> {
@@ -29,11 +36,11 @@ public class CustomNewsAdapter extends ArrayAdapter<NewsItem> {
 
     public View getView(int position, View convertView, ViewGroup parent){
 
-        // assign the view we are converting to a local variable
+        // Assign the view we are converting to a local variable
         View v = convertView;
 
-        // first check to see if the view is null. if so, we have to inflate it.
-        // to inflate it basically means to render, or show, the view.
+        // First check to see if the view is null. if so, we have to inflate it.
+        // To inflate it basically means to render, or show, the view.
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.news_item, null);
@@ -46,14 +53,12 @@ public class CustomNewsAdapter extends ArrayAdapter<NewsItem> {
             // Find the views and set the appropriate values.
             TextView authorTV = (TextView) v.findViewById(R.id.news_author);
             TextView titleTV = (TextView) v.findViewById(R.id.news_title);
-            TextView contentTV = (TextView) v.findViewById(R.id.news_content);
 
             authorTV.setText(i.getAuthor());
             titleTV.setText(i.getTitle());
-            contentTV.setText(i.getContent());
         }
 
-        // the view must be returned to our activity
+        // The view must be returned to our activity
         return v;
 
     }

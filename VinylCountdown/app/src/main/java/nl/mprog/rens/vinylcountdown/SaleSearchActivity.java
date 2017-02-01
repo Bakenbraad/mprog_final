@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.view.View;
@@ -42,7 +40,7 @@ public class SaleSearchActivity extends AppCompatActivity {
     String method;
 
     // Initiate the navigation handler:
-    HelperNavigationHandler helperNavigationHandler;
+    NavigationHelper navigationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +72,7 @@ public class SaleSearchActivity extends AppCompatActivity {
         searchViewED.setHint("Search");
 
         // Initiate the navigation handler.
-        helperNavigationHandler = new HelperNavigationHandler(this);
+        navigationHelper = new NavigationHelper(this);
 
         // Initiate the authentication
         mAuth = FirebaseAuth.getInstance();
@@ -87,7 +85,7 @@ public class SaleSearchActivity extends AppCompatActivity {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user == null) {
                     // User is signed out, they don't belong here so send them back!
-                    new HelperNavigationHandler(getParent()).goToLogin();
+                    new NavigationHelper(getParent()).goToLogin();
                 }
             }
         };
@@ -111,7 +109,7 @@ public class SaleSearchActivity extends AppCompatActivity {
     }
 
     public void openDrawer(View view) {
-        helperNavigationHandler.openDrawer();
+        navigationHelper.openDrawer();
     }
 
     public void searchMusic() throws ExecutionException, InterruptedException {

@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/vinylbc"
     tools:context="nl.mprog.rens.vinylcountdown.MainActivity">
-
-    <TextView
-        android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textUser"
-        android:gravity="center"
-        android:textSize="35dp"
-        android:textColor="@color/softWhite"
-        android:background="@color/colorPrimaryDark"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true" />
 
     <nl.mprog.rens.vinylcountdown.CustomTextView
         android:text="Vinyl Countdown"
@@ -48,48 +35,63 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:text="Welcome,"
-        android:textSize="25dp"
-        android:textColor="@color/softWhite"
-        android:background="@color/colorPrimaryDark"
-        android:paddingTop="16dp"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/textView6"
-        android:layout_centerHorizontal="true" />
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/menubutton"
-        android:layout_alignParentStart="true"
-        android:id="@+id/news_list"
-        android:padding="20dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="20.0sp"
-        android:layout_below="@+id/textUser" />
-
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/menubutton">
+
         <!-- The main content view -->
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        </FrameLayout>
+            <TextView
+                android:text=""
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textUser"
+                android:gravity="center"
+                android:textSize="35dp"
+                android:textColor="@color/softWhite"
+                android:background="@color/colorPrimaryDark"
+                android:layout_below="@+id/textView2"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:text="Welcome,"
+                android:textSize="25dp"
+                android:textColor="@color/softWhite"
+                android:background="@color/colorPrimaryDark"
+                android:paddingTop="16dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:layout_below="@+id/textView6"
+                android:layout_centerHorizontal="true" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/menubutton"
+                android:layout_alignParentStart="true"
+                android:id="@+id/news_list"
+                android:paddingTop="20dp"
+                android:paddingBottom="15dp"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="20.0sp"
+                android:layout_below="@+id/textUser" />
+
+        </RelativeLayout>
         <!-- The navigation drawer -->
 
         <ListView android:id="@+id/main_drawer"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:background="@color/drawerBc"
             android:layout_gravity="start"
@@ -98,5 +100,15 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="3dp"/>
     </android.support.v4.widget.DrawerLayout>
+
+    <Button
+        android:text="Info"
+        android:onClick="goToInfo"
+        android:background="@drawable/button_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button7"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

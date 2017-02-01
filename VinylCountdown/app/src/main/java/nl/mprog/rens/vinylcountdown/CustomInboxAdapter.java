@@ -11,13 +11,23 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by Rens on 25/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * CustomInboxAdapter.class
+ *
+ * This adapter displays the users in-app inbox in a nice way. A list of messages is used
+ * to fill a listview. The sender, time, subject are set and if the message is not yet replied to
+ * the subject is made bold. Because all messages in-app are automatically generated, this adapter
+ * also constructs the subject from the message properties.
+ * Constructed from: https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
  */
 
 public class CustomInboxAdapter extends ArrayAdapter<Message> {
 
     // List of items
     private List<Message> objects;
+
     // Constructor
     public CustomInboxAdapter(Context context, int textViewResourceId, List<Message> objects) {
         super(context, textViewResourceId, objects);
@@ -27,11 +37,11 @@ public class CustomInboxAdapter extends ArrayAdapter<Message> {
 
     public View getView(int position, View convertView, ViewGroup parent){
 
-        // assign the view we are converting to a local variable
+        // Assign the view we are converting to a local variable
         View v = convertView;
 
-        // first check to see if the view is null. if so, we have to inflate it.
-        // to inflate it basically means to render, or show, the view.
+        // First check to see if the view is null. if so, we have to inflate it.
+        // To inflate it basically means to render, or show, the view.
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.inbox_item, null);
@@ -55,6 +65,7 @@ public class CustomInboxAdapter extends ArrayAdapter<Message> {
 
             if (messageType.equals("offer")){
                 String priceType = i.getType();
+
                 // Generate a subject from the type and specifications of the message.
                 switch (priceType) {
                     case "Trade":
@@ -68,11 +79,14 @@ public class CustomInboxAdapter extends ArrayAdapter<Message> {
                         break;
                 }
 
-                timeTV.setText(i.getTime());
-                senderTV.setText(i.getSender().getUsername());
             } else if (i.getMessageType().equals("accept")){
+
+                // Format the acceptation subject.
                 subjectTV.setText("Re: " + i.getSender().getUsername() + " accepted your offer of " + i.getBuyOffer());
+
             } else if (i.getMessageType().equals("reject")){
+
+                // Format the rejection subject.
                 subjectTV.setText("Re: " + i.getSender().getUsername() + " rejected your offer of " + i.getBuyOffer());
             }
 
@@ -81,7 +95,7 @@ public class CustomInboxAdapter extends ArrayAdapter<Message> {
             senderTV.setText(i.getSender().getUsername());
         }
 
-        // the view must be returned to our activity
+        // The view must be returned to our activity
         return v;
 
     }

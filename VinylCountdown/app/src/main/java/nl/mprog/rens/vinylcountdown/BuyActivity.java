@@ -27,9 +27,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Rens van der Veldt - 10766162
  * Minor Programmeren
@@ -191,15 +188,13 @@ public class BuyActivity extends AppCompatActivity {
     }
 
    /**
-    * createBuy(View view)
-    *
     * This is the function that creates the offers. This consists of 3 steps, firstly a dialog is
     * created, the text of this dialog is then set according to the record being sold.
     * When a users confirms the sale the second part is started. This happens behind the screen.
     * According to the sale type the input data is checked and the marketplace is updated if a bid
     * is done. In the case of price and trade this is unnecessary.
     *
-    * The argument View is passed because this is an onclick that is called by pressing the offer
+    * @param view is passed because this is an onclick that is called by pressing the offer
     * button in the buy view.
     */
     public void createBuy(View view) {
@@ -363,8 +358,11 @@ public class BuyActivity extends AppCompatActivity {
         }
     }
 
-    // This function is called in the singleasyncrequest to set the recordinfo data of the record in
-    // this activity.
+    /**
+     * This function is called in the singleasyncrequest to set the recordinfo data of the record in
+     * this activity.
+     * @param recordInfo is passed to be set as the local version of the recordinfo.
+     */
     public void setRecord(RecordInfo recordInfo){
         this.recordInfo = recordInfo;
 
@@ -425,10 +423,10 @@ public class BuyActivity extends AppCompatActivity {
         protected RecordInfo doInBackground(Void... params) {
 
             // Create an API manager object.
-            HelperApiManager helperApiManager = new HelperApiManager();
+            ApiHelper apiHelper = new ApiHelper();
 
-            // Use the helperApiManager to search for results using the correct method.
-            searchResult = helperApiManager.recordInfoSearch(mbid);
+            // Use the apiHelper to search for results using the correct method.
+            searchResult = apiHelper.recordInfoSearch(mbid);
 
             return searchResult;
         }

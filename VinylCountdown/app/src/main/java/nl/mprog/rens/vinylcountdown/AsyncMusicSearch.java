@@ -65,11 +65,11 @@ public class AsyncMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> im
     protected List<RecordInfo> doInBackground(Void... params) {
 
         // Create an API manager object.
-        HelperApiManager helperApiManager = new HelperApiManager();
+        ApiHelper apiHelper = new ApiHelper();
 
-        // Use the helperApiManager to search for results using the correct method.
+        // Use the apiHelper to search for results using the correct method.
         try {
-            searchResults = helperApiManager.Search(query);
+            searchResults = apiHelper.Search(query);
         } catch (IOException e) {
             e.printStackTrace();
         }

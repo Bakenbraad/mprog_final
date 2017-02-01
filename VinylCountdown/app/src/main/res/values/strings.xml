@@ -42,4 +42,13 @@
     <string name="confirm_add_text">Do you want to add this record to your collection?</string>
     <string name="confirm_wish_text">Do you want to add this record to your wishlist?</string>
     <string name="wish_add">Added to wishlist</string>
+    <string name="info_menu_text">Press the + button to open the menu and navigate between activities. From here you can navigate to the many functions this app has to offer.</string>
+    <string name="buysell_info_text">Buying and selling allows you to search the market for your favorite records! And sell your unwanted records to others! Browsing is as easy as can be!</string>
+    <string name="colwish_info_text">Maintain your personal collection and your wishlist here. Hold an item to delete it and click it once from collection to start selling that item (or just view more info about it). From wishlist a single click sends you to the marketplace where you will get any results if they are available.</string>
+    <string name="profile_info_text">Edit your username, view your email adress and have an overview of all your personal sales here!</string>
+    <string name="inbox_info_text">Here you can view all replies to your offers and respond to them. Any replies you get from your messages to others can also be viewed here.</string>
+    <string name="no_messages">No messages yet</string>
+    <string name="reject_text">If you reject the offer, your record will stay in the marketplace and the receiver will be made aware!</string>
+    <string name="accept_text">If you accept the offer, your record will be removed from the marketplace and the receiver will be made aware!</string>
+    <string name="confirm_message">Confirming message</string>
 </resources>

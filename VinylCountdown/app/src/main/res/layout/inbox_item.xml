@@ -20,13 +20,15 @@
             android:id="@+id/textView3"
             android:layout_marginEnd="2dp"
             android:layout_weight="3"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"
+            android:textColor="@color/greyText"/>
 
         <TextView
             android:text="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/subjectTV"
+            android:textColor="@color/greyText"
             android:layout_weight="1"
             android:textStyle="normal|bold" />
     </LinearLayout>
@@ -38,6 +40,7 @@
 
         <TextView
             android:text="From:"
+            android:textColor="@color/greyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView15"
@@ -45,6 +48,7 @@
 
         <TextView
             android:text="text"
+            android:textColor="@color/greyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/senderTV"
@@ -59,11 +63,13 @@
 
         <TextView
             android:text="Time:"
+            android:textColor="@color/greyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"/>
         <TextView
             android:text="text"
+            android:textColor="@color/greyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/messageTime"

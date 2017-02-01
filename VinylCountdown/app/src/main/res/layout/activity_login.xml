@@ -18,7 +18,7 @@
         android:textColorHint="@color/softWhite"
         android:padding="5dp"
         android:background="@color/drawerBc"
-        android:id="@+id/editText2"
+        android:id="@+id/login_email_ed"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
         android:layout_centerVertical="true"
@@ -35,9 +35,9 @@
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:alpha="0.99"
         android:background="@drawable/button_background"
-        android:layout_below="@+id/editText3"
-        android:layout_alignStart="@+id/editText3"
-        android:layout_alignEnd="@+id/editText2" />
+        android:layout_below="@+id/login_pass_ed"
+        android:layout_alignStart="@+id/login_pass_ed"
+        android:layout_alignEnd="@+id/login_email_ed" />
 
     <Button
         android:text="Sign up"
@@ -50,7 +50,7 @@
         android:alpha="0.99"
         android:layout_below="@+id/button2"
         android:layout_alignStart="@+id/button2"
-        android:layout_alignEnd="@+id/editText2" />
+        android:layout_alignEnd="@+id/login_email_ed" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -64,10 +64,10 @@
         android:background="@color/colorPrimaryDark"
         android:hint="Password"
         android:layout_marginTop="5dp"
-        android:id="@+id/editText3"
-        android:layout_below="@+id/editText2"
-        android:layout_alignStart="@+id/editText2"
-        android:layout_alignEnd="@+id/editText2" />
+        android:id="@+id/login_pass_ed"
+        android:layout_below="@+id/login_email_ed"
+        android:layout_alignStart="@+id/login_email_ed"
+        android:layout_alignEnd="@+id/login_email_ed" />
 
     <nl.mprog.rens.vinylcountdown.CustomTextView
         android:text="Vinyl Countdown"

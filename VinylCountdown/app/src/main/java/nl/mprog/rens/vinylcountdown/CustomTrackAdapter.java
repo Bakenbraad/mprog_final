@@ -10,7 +10,14 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Created by Rens on 18/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * CustomTrackAdapter.class
+ *
+ * This class is an extension of the baseadapter (in contrary to the arrayadapters extensions that are
+ * the other custom adapters in this project) and displays keys and values from a hashmap. In this case
+ * the keys are track titles and the values their duration. These are then displayed in a nice fashion.
  * From: http://stackoverflow.com/questions/19466757/hashmap-to-listview
  */
 
@@ -34,7 +41,6 @@ public class CustomTrackAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        // TODO implement you own logic with ID
         return 0;
     }
 

@@ -7,61 +7,6 @@
     android:layout_height="match_parent"
     tools:context="nl.mprog.rens.vinylcountdown.BuySearchActivity">
 
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/current_page">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:hint="Search..."
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:id="@+id/searchSaleED"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:padding="5dp"
-                android:background="@drawable/edittext_background"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_weight="1"
-                />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_search_category_default"
-                android:id="@+id/imageButton6"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
-                android:onClick="onSearchClick"
-                android:background="@null" />
-        </LinearLayout>
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner_buy"
-            android:padding="10dp"
-            android:gravity="center"/>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/buyResult"
-            android:paddingLeft="15dp"
-            android:layout_weight="6"/>
-
-    </LinearLayout>
-
     <TextView
         android:layout_width="match_parent"
         android:padding="10dp"
@@ -73,18 +18,72 @@
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/current_page">
         <!-- The main content view -->
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </FrameLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:hint="Search..."
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/searchSaleED"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:padding="5dp"
+                        android:background="@drawable/edittext_background"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@android:drawable/ic_search_category_default"
+                        android:id="@+id/imageButton6"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:onClick="onSearchClick"
+                        android:background="@null" />
+                </LinearLayout>
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_buy"
+                    android:textColor="@color/greyText"
+                    android:padding="10dp"
+                    android:gravity="center"/>
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/buyResult"
+                    android:paddingLeft="15dp"
+                    android:layout_weight="6"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
         <!-- The navigation drawer -->
 
         <ListView android:id="@+id/main_drawer"

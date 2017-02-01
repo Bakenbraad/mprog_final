@@ -1,9 +1,11 @@
 package nl.mprog.rens.vinylcountdown;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
  * Created by Rens on 26/01/2017.
  */
 
-public class HelperNavigationHandler {
+public class NavigationHelper {
 
     Activity activity;
     FirebaseAuth mAuth;
@@ -26,7 +28,7 @@ public class HelperNavigationHandler {
     String[] navigations;
     Button menuButton;
 
-    public HelperNavigationHandler(Activity activity){
+    public NavigationHelper(Activity activity){
 
         this.activity = activity;
         mAuth = FirebaseAuth.getInstance();
@@ -151,6 +153,12 @@ public class HelperNavigationHandler {
 
     // Change the button appearance when it is clicked.
     public void openDrawer() {
+
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
 
         if(drawerLayout.isDrawerOpen(drawers)){
             drawerLayout.closeDrawer(drawers);

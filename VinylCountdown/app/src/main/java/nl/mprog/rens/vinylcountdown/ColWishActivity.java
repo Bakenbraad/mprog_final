@@ -4,13 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,6 +23,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -36,6 +35,8 @@ import java.util.List;
  * This is a combined activity that displays the users collection or wishlist. The lists can be
  * expanded by pressing the add button and searching for a record to add. Whether wishlist or
  * collection is displayed is determined by the method that was called.
+ * Long clicks allow for item deletion and regular clicks from collection lead to a sale
+ * screen and from wishlist lead to a search in the marketplace for that record.
  */
 
 public class ColWishActivity extends AppCompatActivity {
@@ -46,7 +47,7 @@ public class ColWishActivity extends AppCompatActivity {
     FirebaseAuth.AuthStateListener mAuthListener;
 
     // Initiate the navigation handler:
-    HelperNavigationHandler helperNavigationHandler;
+    NavigationHelper navigationHelper;
 
     // Declare the overall method this can be collection or wishlist.
     String method;
@@ -54,10 +55,10 @@ public class ColWishActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collection);
+        setContentView(R.layout.activity_col_wish);
 
         // Initiate the navigation handler.
-        helperNavigationHandler = new HelperNavigationHandler(this);
+        navigationHelper = new NavigationHelper(this);
 
         // Initiate the authentication
         mAuth = FirebaseAuth.getInstance();
@@ -70,7 +71,7 @@ public class ColWishActivity extends AppCompatActivity {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user == null) {
                     // User is signed out, they don't belong here so send them back!
-                    new HelperNavigationHandler(getParent()).goToLogin();
+                    new NavigationHelper(getParent()).goToLogin();
                 }
             }
         };
@@ -202,21 +203,72 @@ public class ColWishActivity extends AppCompatActivity {
         }
 
         // Set the spinner.
-        Spinner sortingOptions = (Spinner) findViewById(R.id.sortingOptions);
-        String[] sortingItems = getResources().getStringArray(R.array.sortingOptions);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, sortingItems);
+        final Spinner sortingOptions = (Spinner) findViewById(R.id.sortingOptions);
+        final String[] sortingItems = getResources().getStringArray(R.array.sortingOptions);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item, sortingItems);
         sortingOptions.setAdapter(adapter);
+
+        sortingOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                orderBy(sortingOptions);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
+    /**
+     * This funciton sorts the listview by whatever is selected.
+     * @param sortingOptions: the spinner that is passed and from which you can retrieve the selected item.
+     */
+    public void orderBy(Spinner sortingOptions){
+
+        final String selected = sortingOptions.getSelectedItem().toString();
+        // Get the listviews adapter.
+        ListView lv = (ListView) findViewById(R.id.collectionList);
+        CustomColWishAdapter customColWishAdapter = (CustomColWishAdapter) lv.getAdapter();
+
+        // Sort the listview by comparing title or artist if the adapter is not null (which happens when no list is present).
+        if (customColWishAdapter != null) {
+
+            customColWishAdapter.sort(new Comparator<ColWishRecord>() {
+
+                public int compare(ColWishRecord arg0, ColWishRecord arg1) {
+                    if (selected.equals("Artist")) {
+                        return arg0.getRecordInfo().getArtist().compareTo(arg1.getRecordInfo().getArtist());
+                    } else if (selected.equals("Album")){
+                        return arg0.getRecordInfo().getTitle().compareTo(arg1.getRecordInfo().getTitle());
+                    } else {
+                        return arg0.getRecordInfo().getTitle().compareTo(arg1.getRecordInfo().getTitle());
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Opens the drawer and calls the helper function. This only serves as an onclick link to the helper.
+     * @param view
+     */
     public void openDrawer(View view) {
-        helperNavigationHandler.openDrawer();
+        navigationHelper.openDrawer();
     }
 
+    /**
+     * When the add button is pressed this function sends the user to the search activity.
+     * The method is also added to let the next activity know whether to add an item to
+     * collection or wishlist.
+     * @param view
+     */
     public void goToAddSearch(View view) {
 
         // This function leads to the same search activity as for sale but puts a different
         // onclick listener in the results
         Intent goToAddSearch = new Intent(this, SaleSearchActivity.class);
+
         if (method.equals("collection")){
             goToAddSearch.putExtra("method", "collectionSearch");
         } else {

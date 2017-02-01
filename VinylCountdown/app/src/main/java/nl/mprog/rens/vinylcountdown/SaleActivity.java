@@ -123,7 +123,16 @@ public class SaleActivity extends AppCompatActivity {
         }
 
         if (!saleType.equals("Trade")){
-            price = Float.parseFloat(priceED.getText().toString());
+            try{
+                // Try finding a price in the view.
+                price = Float.parseFloat(priceED.getText().toString());
+            }
+            catch (NumberFormatException e){
+                // If an invalid price is added toast the error.
+                Toast.makeText(this, "Invalid price!", Toast.LENGTH_LONG).show();
+                return;
+            }
+
         }
         else {
             price = Float.parseFloat("0.0");

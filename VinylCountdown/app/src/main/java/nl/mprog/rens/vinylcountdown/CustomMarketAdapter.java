@@ -20,7 +20,14 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 /**
- * Created by Rens on 16/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * CustomMarketAdapter.class
+ *
+ * This adapter displays the marketplace data in a nice way. It puts all relevant data from
+ * a recordSaleInfo object into place.
+ * Constructed from: https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
  */
 
 public class CustomMarketAdapter extends ArrayAdapter<RecordSaleInfo> {
@@ -37,11 +44,11 @@ public class CustomMarketAdapter extends ArrayAdapter<RecordSaleInfo> {
 
     public View getView(int position, View convertView, ViewGroup parent){
 
-        // assign the view we are converting to a local variable
+        // Assign the view we are converting to a local variable
         View v = convertView;
 
-        // first check to see if the view is null. if so, we have to inflate it.
-        // to inflate it basically means to render, or show, the view.
+        // First check to see if the view is null. if so, we have to inflate it.
+        // To inflate it basically means to render, or show, the view.
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.record_market_item, null);
@@ -51,26 +58,35 @@ public class CustomMarketAdapter extends ArrayAdapter<RecordSaleInfo> {
 
         if (i != null) {
 
-            // Find the views and set the appropriate values.
+            // Find the views.
             TextView artistTV = (TextView) v.findViewById(R.id.marketArtist);
             TextView titleTV = (TextView) v.findViewById(R.id.marketTitle);
             RatingBar conditionTV = (RatingBar) v.findViewById(R.id.marketCondition);
             TextView priceTV = (TextView) v.findViewById(R.id.marketPrice);
             TextView priceTypeTV = (TextView) v.findViewById(R.id.marketPriceType);
-            final TextView userTV = (TextView) v.findViewById(R.id.marketUsername);
             TextView timeTV = (TextView) v.findViewById(R.id.marketTime);
 
+            // This view has to be declared final because it is assigned a text from a listener.
+            final TextView userTV = (TextView) v.findViewById(R.id.marketUsername);
+
+            // Set the values.
             artistTV.setText(i.getArtist());
             titleTV.setText(i.getTitle());
             timeTV.setText(i.getTimeCreated());
+            conditionTV.setRating(i.getCondition());
 
-            // Get the current selling user.
+            // Download and set the image for the album:
+            ImageView imageView = (ImageView) v.findViewById(R.id.marketImage);
+            new AsyncImgLoad(imageView).execute(i.getImgLink());
+
+            // Get the current selling user for display purposes.
             DatabaseReference mSettingsReference = FirebaseDatabase.getInstance().getReference().child("users").child(i.getUserID());
-            // User is signed in
+
             ValueEventListener settingsListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    // Get UserSettings object and use the values to update the UI
+
+                    // Get UserSettings object and use the values to update the view
                     UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
                     if (userProfile != null) {
                         userTV.setText(userProfile.getUsername());
@@ -83,22 +99,18 @@ public class CustomMarketAdapter extends ArrayAdapter<RecordSaleInfo> {
             };
             mSettingsReference.addValueEventListener(settingsListener);
 
-            // Download and set the image for the album:
-            ImageView imageView = (ImageView) v.findViewById(R.id.marketImage);
-            new AsyncImgLoad(imageView).execute(i.getImgLink());
-
-            conditionTV.setRating(i.getCondition());
+            // Set the appropriate price type.
             if (i.priceType.equals("Trade")){
-                priceTV.setText("Trade");
+                priceTV.setText(R.string.trade);
             }else if(i.priceType.equals("Bidding from")){
-                priceTypeTV.setText("Bidding");
-                priceTV.setText("$ " +i.getPrice());
+                priceTypeTV.setText(R.string.bidding);
+                priceTV.setText("$ " + i.getPrice());
             }else{
-                priceTV.setText("$ " +i.getPrice());
+                priceTV.setText("$ " + i.getPrice());
             }
         }
 
-        // the view must be returned to our activity
+        // The view must be returned to our activity
         return v;
 
     }

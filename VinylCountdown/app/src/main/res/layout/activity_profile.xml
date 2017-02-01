@@ -72,6 +72,20 @@
 
         </LinearLayout>
 
+        <TextView
+            android:text="Your sales:"
+            android:paddingTop="15dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView13" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:id="@+id/salesList"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 
     <nl.mprog.rens.vinylcountdown.CustomTextView
@@ -118,7 +132,7 @@
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/current_page">
@@ -133,7 +147,7 @@
         <!-- The navigation drawer -->
 
         <ListView android:id="@+id/main_drawer"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:background="@color/drawerBc"
             android:layout_gravity="start"

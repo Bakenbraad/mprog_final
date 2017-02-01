@@ -1,15 +1,11 @@
 package nl.mprog.rens.vinylcountdown;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +21,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * InboxActivity.class
+ *
+ * This activity has the main function to show a user their received messages. The oncreate calls
+ * loadInbox and retrieves the users messages and sets an onclicklistener that allows for continuing
+ * to the message detail activity.
+ */
+
 public class InboxActivity extends AppCompatActivity {
 
     // Authenticator:
@@ -33,8 +40,8 @@ public class InboxActivity extends AppCompatActivity {
     FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseUser user;
 
-    // Initiate the navigation handler:
-    HelperNavigationHandler helperNavigationHandler;
+    // Declare the navigation handler:
+    NavigationHelper navigationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +49,20 @@ public class InboxActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inbox);
 
         // Initiate the navigation handler.
-        helperNavigationHandler = new HelperNavigationHandler(this);
+        navigationHelper = new NavigationHelper(this);
 
         // Initiate the authentication
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Check the login state and welcome the user if they are logged in.
+        // Check the login state.
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user == null) {
                     // User is signed out, they don't belong here so send them back!
-                    new HelperNavigationHandler(getParent()).goToLogin();
+                    new NavigationHelper(getParent()).goToLogin();
                 }
             }
         };
@@ -64,11 +71,17 @@ public class InboxActivity extends AppCompatActivity {
         loadInbox();
     }
 
+    // Open drawer is called when the button to open the menu is pressed.
     public void openDrawer(View view) {
-        helperNavigationHandler.openDrawer();
+        navigationHelper.openDrawer();
     }
 
-    // This function loads the users inbox.
+    /**
+     * This function loads the users inbox. A database reference using the users profile retrieves
+     * their messages (received not sent) and puts them in a list for the CustomInboxAdapter to use.
+     * The results are displayed in a custom inbox_item in the listview. The onclick listener retrieves
+     * the clicked item and sends a user to the message detail view with the item clicked.
+     */
     public void loadInbox(){
 
         final List<Message> messageList = new ArrayList<>();
@@ -76,20 +89,22 @@ public class InboxActivity extends AppCompatActivity {
 
         // Set the empty view
         TextView emptyView = (TextView) findViewById(R.id.inbox_empty_item);
-        emptyView.setText("No messages yet");
+        emptyView.setText(R.string.no_messages);
         lv.setEmptyView(emptyView);
 
+        // Get a reference to the messages.
         DatabaseReference mInboxReference = FirebaseDatabase.getInstance().getReference().child("messages");
         Query queryRef = mInboxReference.orderByChild(user.getUid());
         ValueEventListener refListener = new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get UserSettings object and use the values to update the UI
+
+                // Get all the users received messages.
                 for (DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
                     Message message = (Message) chatSnapshot.getValue(Message.class);
 
-                    // Check if this is not the users own message and add:
+                    // Check if this is not the users own sent message and add.
                     if (!message.getSenderID().equals(user.getUid())){
                         messageList.add(message);
                     }
@@ -110,7 +125,7 @@ public class InboxActivity extends AppCompatActivity {
                         Message message = (Message) lv.getItemAtPosition(arg2);
 
                         // Send it to the detail view.
-                        Intent goToInboxDetail = new Intent(getApplicationContext(), InboxDetail.class);
+                        Intent goToInboxDetail = new Intent(getApplicationContext(), InboxDetailActivity.class);
                         goToInboxDetail.putExtra("message", message);
                         startActivity(goToInboxDetail);
                     }
@@ -124,6 +139,4 @@ public class InboxActivity extends AppCompatActivity {
         };
         queryRef.addValueEventListener(refListener);
     }
-
-
 }

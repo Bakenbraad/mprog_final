@@ -2,13 +2,10 @@ package nl.mprog.rens.vinylcountdown;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,6 +20,19 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * MainActivity.class
+ *
+ * The main activity consists of a couple of things. A welcome text, welcoming the user personally with a retrieved
+ * username from the firebase. The news section, this is a listview that displays news items retrieved from
+ * firebase and each may be clicked to view the content. Finally there is an info button which
+ * is mainly useful for new users. This button displays a text in the infoActivity explaining the
+ * various functions of the app and how to navigate around.
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     // Authenticator:
@@ -31,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth.AuthStateListener mAuthListener;
 
     // Initiate the navigation handler:
-    HelperNavigationHandler helperNavigationHandler;
+    NavigationHelper navigationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initiate the navigation handler.
-        helperNavigationHandler = new HelperNavigationHandler(this);
+        navigationHelper = new NavigationHelper(this);
 
         // Initiate the authentication
         mAuth = FirebaseAuth.getInstance();
@@ -72,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user == null){
                     // User is signed out, they don't belong here so send them back!
-                    new HelperNavigationHandler(getParent()).goToLogin();
+                    new NavigationHelper(getParent()).goToLogin();
                 }
             }
         };
@@ -81,6 +91,12 @@ public class MainActivity extends AppCompatActivity {
         NewsLoader();
     }
 
+    /**
+     * The newsloader function retrieves all news objects from firebase and loads them into
+     * a listview. The listview then gets an onclicklistener that redirects the news item to
+     * the news activity, a dialog theme activity where the content of the news item
+     * can be viewed, away from the otherwise chaos of the homescreen.
+     */
     public void NewsLoader(){
 
         // Declare the list and database reference.
@@ -90,12 +106,15 @@ public class MainActivity extends AppCompatActivity {
         ValueEventListener settingsListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get UserSettings object and use the values to update the UI
+
+                // Get the news articles and add them to a list of newsitems
                 for (DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
+
                     NewsItem newsItem =  chatSnapshot.getValue(NewsItem.class);
                     newsList.add(newsItem);
                 }
 
+                // Find the listview that should contain the news items.
                 final ListView lv = (ListView) findViewById(R.id.news_list);
 
                 // Fill the view.
@@ -103,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 lv.setAdapter(customNewsAdapter);
                 customNewsAdapter.notifyDataSetChanged();
 
+                // Set the listener that should open the newsactivity with the message content.
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> arg0, View arg1,
@@ -110,10 +130,10 @@ public class MainActivity extends AppCompatActivity {
                         Intent goToNews = new Intent(getApplicationContext(), NewsActivity.class);
                         NewsItem newsItem = (NewsItem) lv.getItemAtPosition(arg2);
 
-                        // Get all the values from the record info.
+                        // Get the content of the news item.
                         String content = newsItem.getContent();
 
-                        // Put the value into the next activity.
+                        // Put the content into the next activity.
                         goToNews.putExtra("content", content);
 
                         // Start the activity
@@ -129,7 +149,13 @@ public class MainActivity extends AppCompatActivity {
         mSettingsReference.addValueEventListener(settingsListener);
     }
 
-    public void openDrawer(View view) {
-        helperNavigationHandler.openDrawer();
+    /**
+     * This function redirects the user to the dialog themed info screen. A simple activity with
+     * info about the app. This function is called by the info button.
+     * @param view
+     */
+    public void goToInfo(View view) {
+        Intent goToInfo = new Intent(this, InfoActivity.class);
+        startActivity(goToInfo);
     }
 }

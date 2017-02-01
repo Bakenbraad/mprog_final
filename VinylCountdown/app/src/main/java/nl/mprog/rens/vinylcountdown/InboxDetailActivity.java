@@ -16,8 +16,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class InboxDetail extends AppCompatActivity {
+/**
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * InboxDetailActivity.class
+ *
+ * This activity displays a message objects' data. Buttons for replies are set to visible/invisible
+ * in accordance to whether the message is answerable. If not, a text explains this. When a reply
+ * is clicked this activity also formulates what the reply should be and sends it to the other user.
+ */
 
+public class InboxDetailActivity extends AppCompatActivity {
+
+    // Declare the message.
     Message message;
 
     // Authenticator:
@@ -27,7 +39,7 @@ public class InboxDetail extends AppCompatActivity {
 
     FirebaseUser user;
 
-    // Userprofiles for sending messages:
+    // Declare user profiles for sending reply messages:
     UserProfile senderProfile;
     UserProfile receiverProfile;
 
@@ -36,35 +48,43 @@ public class InboxDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox_detail);
 
-        // Get the message that was clicked.
+        // Get the message that was clicked from the intent.
         Intent intent = getIntent();
         Bundle messageBundle = intent.getExtras();
         message = (Message) messageBundle.getSerializable("message");
 
         // Check if this message is from the market or a reply a reply must have hidden buttons:
         if (message.getMessageType().equals("reject") || message.getMessageType().equals("accept")){
+
+            // Remove the buttons from view and don't show a text because this is a reply.
             findViewById(R.id.accept_button).setVisibility(View.INVISIBLE);
             findViewById(R.id.reject_button).setVisibility(View.INVISIBLE);
+
         } else if(message.isRead()){
+
+            // Remove the buttons from view and show a text saying that this message is replied to.
             findViewById(R.id.accept_button).setVisibility(View.INVISIBLE);
             findViewById(R.id.reject_button).setVisibility(View.INVISIBLE);
             findViewById(R.id.already_replied_text).setVisibility(View.VISIBLE);
         }
-        // Display the message appropriately.
+
+        // Find the views that need to be set.
         TextView offerTV = (TextView) findViewById(R.id.message_offer);
         TextView senderTV = (TextView) findViewById(R.id.message_sender);
         TextView contentTV = (TextView) findViewById(R.id.message_content);
         TextView timeTV = (TextView) findViewById(R.id.message_time);
 
+        // Set the views texts.
         offerTV.setText(message.getBuyOffer());
         senderTV.setText(message.getSender().getUsername());
+        timeTV.setText(message.getTime());
+
+        // Only show the others contact info if they have accepted!
         if (message.getMessageType().equals("accept")){
-            contentTV.setText(message.getMessageContent() + " " +message.getSender().getEmail());
+            contentTV.setText(message.getMessageContent() + " " + message.getSender().getEmail());
         } else{
             contentTV.setText(message.getMessageContent());
         }
-
-        timeTV.setText(message.getTime());
 
         // Get the user for message sending:
         mAuth = FirebaseAuth.getInstance();
@@ -104,15 +124,26 @@ public class InboxDetail extends AppCompatActivity {
         mBuyersReference.addListenerForSingleValueEvent(receiversListener);
     }
 
+    /**
+     * This finishes the activity.
+     * @param view
+     */
     public void cancelMessage(View view) {
         finish();
     }
 
+    /**
+     * If the user clicks the accept button a dialog is thrown to confirm what the user wants and
+     * let them remove their offer from the marketplace. This function, on confirmation sends
+     * a message to the other user and lets them know you accepted, sets this message as read and finally
+     * removes the offer it concerns from the marketplace.
+     * @param view
+     */
     public void confirmMessage(View view) {
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Confirming message")
-                .setMessage("If you accept the offer, your record will be removed from the marketplace and the receiver will be made aware!")
+                .setTitle(R.string.confirm_message)
+                .setMessage(R.string.accept_text)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener()
                 {
                     @Override
@@ -133,7 +164,8 @@ public class InboxDetail extends AppCompatActivity {
                         String replyMessageID = mMessageReference.push().getKey();
 
                         // Generate reply
-                        reply.messageReply("accept", message.getBuyOffer(), message.getSellOffer(), senderProfile, message.getReceiverID(), receiverProfile, message.getSenderID(), replyMessageID);
+                        reply.messageReply("accept", message, senderProfile, receiverProfile, replyMessageID);
+
                         // Put reply in firebase
                         mMessageReference.child(replyMessageID).setValue(reply);
                         finish();
@@ -144,12 +176,16 @@ public class InboxDetail extends AppCompatActivity {
                 .show();
     }
 
-
+    /**
+     * This repeats the same process for the rejection message. But without removing the record from
+     * the marketplace.
+     * @param view
+     */
     public void rejectMessage(View view) {
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Rejecting message")
-                .setMessage("If you reject the offer, your record will stay in the marketplace and the receiver will be made aware!")
+                .setTitle(R.string.confirm_message)
+                .setMessage(R.string.reject_text)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener()
                 {
                     @Override
@@ -166,7 +202,7 @@ public class InboxDetail extends AppCompatActivity {
 
                         // Generate and send the rejection message
                         Message reply = new Message();
-                        reply.messageReply("reject", message.getBuyOffer(), message.getSellOffer(), senderProfile, message.getReceiverID(), receiverProfile, message.getSenderID(), replyMessageID);
+                        reply.messageReply("reject", message, senderProfile, receiverProfile, replyMessageID);
                         mMessageReference.child(replyMessageID).setValue(reply);
                         finish();
                     }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,19 +53,45 @@ public class ProfileEditActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                    // Get user id and update the profile
-                                    String userID = dataSnapshot.getValue(String.class);
-                                    String originalUsername = userProfile.getUsername();
+                                    // First check if the username is available.
+                                    // This part checks for username availability. The reference exists means that username is taken.
+                                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+                                    ValueEventListener usernameListener = new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                    userProfile.setUsername(usernameED.getText().toString());
+                                            if (!dataSnapshot.hasChild(usernameED.getText().toString())){
 
-                                    // The userID can be used to update the current users'userprofile object
-                                    DatabaseReference mProfileReference = FirebaseDatabase.getInstance().getReference().child("users");
-                                    mProfileReference.child(userID).setValue(userProfile);
-                                    mProfileReference.child(originalUsername).removeValue();
-                                    mProfileReference.child(usernameED.getText().toString()).setValue(userID);
-                                    finish();
+                                                // Username available, get on with namechange
 
+                                                // Get user id and update the profile
+                                                String userID = dataSnapshot.child(userProfile.getUsername()).getValue(String.class);
+                                                String originalUsername = userProfile.getUsername();
+
+                                                userProfile.setUsername(usernameED.getText().toString());
+
+                                                // The userID can be used to update the current users' userprofile object
+                                                DatabaseReference mProfileReference = FirebaseDatabase.getInstance().getReference().child("users");
+                                                mProfileReference.child(userID).setValue(userProfile);
+
+                                                // Remove the old one and replace it with the new user.
+                                                mProfileReference.child(originalUsername).removeValue();
+                                                mProfileReference.child(usernameED.getText().toString()).setValue(userID);
+                                                finish();
+
+                                            }
+                                            else {
+                                                Toast.makeText(ProfileEditActivity.this, R.string.inv_usertaken, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            Toast.makeText(ProfileEditActivity.this, R.string.inv_con, Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    };
+                                    userRef.addListenerForSingleValueEvent(usernameListener);
                                 }
 
                                 @Override

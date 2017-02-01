@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -13,7 +12,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.view.View;
 import android.widget.EditText;
@@ -58,7 +56,7 @@ public class BuySearchActivity extends AppCompatActivity {
     FirebaseAuth.AuthStateListener mAuthListener;
 
     // Initiate the navigation handler:
-    HelperNavigationHandler helperNavigationHandler;
+    NavigationHelper navigationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,7 @@ public class BuySearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_buy_search);
 
         // Initiate the navigation handler.
-        helperNavigationHandler = new HelperNavigationHandler(this);
+        navigationHelper = new NavigationHelper(this);
 
         // If a query was sent (from the wishlist activity) this is automatically used to
         // search the marketplace.
@@ -92,7 +90,7 @@ public class BuySearchActivity extends AppCompatActivity {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user == null) {
                     // User is signed out, they don't belong here so send them back!
-                    new HelperNavigationHandler(getParent()).goToLogin();
+                    new NavigationHelper(getParent()).goToLogin();
                 }
             }
         };
@@ -120,13 +118,13 @@ public class BuySearchActivity extends AppCompatActivity {
         // Set the spinner adapter, this is used as a filter.
         Spinner dropdownBuy = (Spinner) findViewById(R.id.spinner_buy);
         String[] items = getResources().getStringArray(R.array.buyFilter);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, items);
         dropdownBuy.setAdapter(adapter);
     }
 
     // Open drawer is called when the button to open the menu is pressed.
     public void openDrawer(View view) {
-        helperNavigationHandler.openDrawer();
+        navigationHelper.openDrawer();
     }
 
     /**
@@ -158,8 +156,13 @@ public class BuySearchActivity extends AppCompatActivity {
         }
     }
 
-    // This is an inbetween step that makes it possible for the function to be called by a button
-    // as well as on the keyboard by the built in search action.
+    /**
+     * This is an inbetween step that makes it possible for the function to be called by a button
+     * as well as on the keyboard by the built in search action.
+     * @param view
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public void onSearchClick(View view) throws ExecutionException, InterruptedException {
         searchMarket();
     }
@@ -199,11 +202,11 @@ public class BuySearchActivity extends AppCompatActivity {
         protected List<RecordInfo> doInBackground(Void... params) {
 
             // Create an API manager object.
-            HelperApiManager helperApiManager = new HelperApiManager();
+            ApiHelper apiHelper = new ApiHelper();
 
-            // Use the helperApiManager to search for results using the correct method.
+            // Use the apiHelper to search for results using the correct method.
             try {
-                searchResults = helperApiManager.Search(query);
+                searchResults = apiHelper.Search(query);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -281,7 +284,6 @@ public class BuySearchActivity extends AppCompatActivity {
 
                                     // Start the activity
                                     startActivity(goToBuy);
-                                    finish();
                                 }
                             });
                         }

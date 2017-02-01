@@ -20,6 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/imageView"
+                android:src="@android:drawable/ic_dialog_info"
                 android:scaleType="center"/>
         </LinearLayout>
 
@@ -34,12 +35,14 @@
                 android:text="Title"
                 android:textSize="19sp"
                 android:layout_width="293dp"
+                android:textColor="@color/greyText"
                 android:layout_height="67dp"
                 android:id="@+id/titleTV" />
 
             <TextView
                 android:text="artist"
                 android:layout_width="match_parent"
+                android:textColor="@color/greyText"
                 android:layout_height="match_parent"
                 android:id="@+id/artistTV" />
 

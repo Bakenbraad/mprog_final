@@ -11,7 +11,14 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by Rens on 16/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * CustomColWishAdapter.class
+ *
+ * This adapter displays the recordinfo data in a nice way. Exteremely similar to the customalbumadapter
+ * but because the objects are different a separate adapter has been made available.
+ * Constructed from: https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
  */
 
 public class CustomColWishAdapter extends ArrayAdapter<ColWishRecord> {
@@ -28,11 +35,11 @@ public class CustomColWishAdapter extends ArrayAdapter<ColWishRecord> {
 
     public View getView(int position, View convertView, ViewGroup parent){
 
-        // assign the view we are converting to a local variable
+        // Assign the view we are converting to a local variable
         View v = convertView;
 
-        // first check to see if the view is null. if so, we have to inflate it.
-        // to inflate it basically means to render, or show, the view.
+        // First check to see if the view is null. if so, we have to inflate it.
+        // To inflate it basically means to render, or show, the view.
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.record_item, null);
@@ -42,9 +49,7 @@ public class CustomColWishAdapter extends ArrayAdapter<ColWishRecord> {
 
         if (i != null) {
 
-            // This is how you obtain a reference to the TextViews.
-            // These TextViews are created in the XML files we defined.
-
+            // Set the object properties to the textviews.
             TextView artist = (TextView) v.findViewById(R.id.artistTV);
             TextView title = (TextView) v.findViewById(R.id.titleTV);
 
@@ -56,7 +61,7 @@ public class CustomColWishAdapter extends ArrayAdapter<ColWishRecord> {
             new AsyncImgLoad(imageView).execute(i.getRecordInfo().getImgLinkmed());
         }
 
-        // the view must be returned to our activity
+        // The view must be returned to our activity
         return v;
 
     }

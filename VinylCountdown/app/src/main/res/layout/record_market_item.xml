@@ -7,6 +7,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:id="@+id/marketImage"
+        android:src="@android:drawable/ic_dialog_info"
         android:layout_marginRight="8dp"/>
 
     <LinearLayout
@@ -21,19 +22,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="3dp">
 
             <TextView
                 android:text="Album title"
                 android:textSize="18dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/greyText"
                 android:id="@+id/marketTitle"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/marketImage" />
 
             <TextView
                 android:text="Artist"
+                android:textColor="@color/greyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/marketTitle"
@@ -43,6 +46,7 @@
             <TextView
                 android:text="Condition"
                 android:textSize="10dp"
+                android:textColor="@color/greyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView17"
@@ -60,6 +64,7 @@
 
             <TextView
                 android:text="TextView"
+                android:textColor="@color/greyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/marketTime"
@@ -77,12 +82,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:textColor="@color/greyText"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="40dp"
                 android:id="@+id/soldSale" />
 
             <TextView
                 android:text="username"
+                android:textColor="@color/greyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/soldSale"
@@ -91,6 +98,7 @@
 
             <TextView
                 android:text="Price"
+                android:textColor="@color/greyText"
                 android:textSize="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -100,6 +108,7 @@
 
             <TextView
                 android:text="$20.20"
+                android:textColor="@color/greyText"
                 android:textSize="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

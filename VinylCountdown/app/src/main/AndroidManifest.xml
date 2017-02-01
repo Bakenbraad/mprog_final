@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nl.mprog.rens.vinylcountdown">
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -32,9 +31,12 @@
             android:name=".NewsActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
         <activity android:name=".InboxActivity" />
-        <activity android:name=".InboxDetail" />
+        <activity android:name=".InboxDetailActivity" />
         <activity
             android:name=".ProfileEditActivity"
+            android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
+        <activity
+            android:name=".InfoActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog"/>
     </application>
 

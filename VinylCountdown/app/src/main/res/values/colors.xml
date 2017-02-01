@@ -5,9 +5,10 @@
     <color name="drawerBc">#9a0808</color>
     <color name="resetRed">#eeda1010</color>
     <color name="colorAccent">#b0736f71</color>
-    <color name="softWhite">#f6e9e3e6</color>
+    <color name="softWhite">#f6f5f0f0</color>
     <color name="borderColor">#e42d3e8d</color>
     <color name="buttonColorAccept">#6823bd28</color>
     <color name="buttonColorReject">#7afa1920</color>
+    <color name="greyText">#6c6363</color>
 
 </resources>
