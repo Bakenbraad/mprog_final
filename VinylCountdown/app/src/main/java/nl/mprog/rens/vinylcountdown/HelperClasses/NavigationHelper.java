@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.HelperClasses;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,15 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import nl.mprog.rens.vinylcountdown.BuySearchActivity;
+import nl.mprog.rens.vinylcountdown.ColWishActivity;
+import nl.mprog.rens.vinylcountdown.InboxActivity;
+import nl.mprog.rens.vinylcountdown.LoginActivity;
+import nl.mprog.rens.vinylcountdown.MainActivity;
+import nl.mprog.rens.vinylcountdown.ProfileActivity;
+import nl.mprog.rens.vinylcountdown.R;
+import nl.mprog.rens.vinylcountdown.SaleSearchActivity;
 
 /**
  * Created by Rens on 26/01/2017.

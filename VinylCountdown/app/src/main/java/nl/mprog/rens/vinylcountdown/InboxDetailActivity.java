@@ -16,6 +16,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import nl.mprog.rens.vinylcountdown.ObjectClasses.Message;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
+
 /**
  * Rens van der Veldt - 10766162
  * Minor Programmeren

@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.AdapterClasses;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,24 +10,27 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import nl.mprog.rens.vinylcountdown.HelperClasses.AsyncImgLoad;
+import nl.mprog.rens.vinylcountdown.R;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
+
 /**
  * Rens van der Veldt - 10766162
  * Minor Programmeren
  *
- * CustomColWishAdapter.class
+ * CustomAlbumAdapter.class
  *
- * This adapter displays the recordinfo data in a nice way. Exteremely similar to the customalbumadapter
- * but because the objects are different a separate adapter has been made available.
+ * This adapter displays the recordinfo data in a nice way.
  * Constructed from: https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
  */
 
-public class CustomColWishAdapter extends ArrayAdapter<ColWishRecord> {
+public class CustomAlbumAdapter extends ArrayAdapter<RecordInfo> {
 
     // List of items
-    private List<ColWishRecord> objects;
+    private List<RecordInfo> objects;
 
     // Constructor
-    public CustomColWishAdapter(Context context, int textViewResourceId, List<ColWishRecord> objects) {
+    public CustomAlbumAdapter(Context context, int textViewResourceId, List<RecordInfo> objects) {
         super(context, textViewResourceId, objects);
         this.objects = objects;
     }
@@ -35,7 +38,7 @@ public class CustomColWishAdapter extends ArrayAdapter<ColWishRecord> {
 
     public View getView(int position, View convertView, ViewGroup parent){
 
-        // Assign the view we are converting to a local variable
+        // Make the view a local variable.
         View v = convertView;
 
         // First check to see if the view is null. if so, we have to inflate it.
@@ -45,7 +48,7 @@ public class CustomColWishAdapter extends ArrayAdapter<ColWishRecord> {
             v = inflater.inflate(R.layout.record_item, null);
         }
 
-        ColWishRecord i = objects.get(position);
+        RecordInfo i = objects.get(position);
 
         if (i != null) {
 
@@ -53,12 +56,12 @@ public class CustomColWishAdapter extends ArrayAdapter<ColWishRecord> {
             TextView artist = (TextView) v.findViewById(R.id.artistTV);
             TextView title = (TextView) v.findViewById(R.id.titleTV);
 
-            artist.setText(i.getRecordInfo().getArtist());
-            title.setText(i.getRecordInfo().getTitle());
+            artist.setText(i.getArtist());
+            title.setText(i.getTitle());
 
             // Download and set the image for the album:
             ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
-            new AsyncImgLoad(imageView).execute(i.getRecordInfo().getImgLinkmed());
+            new AsyncImgLoad(imageView).execute(i.getImgLinkmed());
         }
 
         // The view must be returned to our activity

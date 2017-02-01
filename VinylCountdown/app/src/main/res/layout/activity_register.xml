@@ -104,7 +104,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true" />
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:text="Vinyl Countdown"
         android:gravity="center"
         android:textSize="45dp"

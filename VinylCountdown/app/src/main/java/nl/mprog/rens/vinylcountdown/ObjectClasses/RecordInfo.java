@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.ObjectClasses;
 
 import java.io.Serializable;
 import java.util.HashMap;

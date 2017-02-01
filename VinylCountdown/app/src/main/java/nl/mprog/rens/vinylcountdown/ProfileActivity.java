@@ -20,6 +20,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomMarketAdapter;
+import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordSaleInfo;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
+
 public class ProfileActivity extends AppCompatActivity {
 
     // Authenticator:

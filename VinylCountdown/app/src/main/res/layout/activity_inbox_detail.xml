@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="nl.mprog.rens.vinylcountdown.InboxDetailActivity">
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"

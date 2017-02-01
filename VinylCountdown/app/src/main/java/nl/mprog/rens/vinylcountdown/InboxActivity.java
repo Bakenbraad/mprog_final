@@ -21,6 +21,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomInboxAdapter;
+import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.Message;
+
 /**
  * Rens van der Veldt - 10766162
  * Minor Programmeren

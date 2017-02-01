@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.AdapterClasses;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,9 +15,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
+
+import nl.mprog.rens.vinylcountdown.HelperClasses.AsyncImgLoad;
+import nl.mprog.rens.vinylcountdown.R;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordSaleInfo;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
 
 /**
  * Rens van der Veldt - 10766162

@@ -26,6 +26,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomColWishAdapter;
+import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.ColWishRecord;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
+
 /**
  * Rens van der Veldt - 10766162
  * Minor Programmeren
@@ -57,6 +62,20 @@ public class ColWishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_col_wish);
 
+        // Set the collection/wishlist method.
+        Intent intent = getIntent();
+        Bundle methodBundle = intent.getExtras();
+        method = methodBundle.getString("method");
+
+        // Adjust the current page text
+        TextView currentPage = (TextView) findViewById(R.id.current_page);
+        if (method.equals("collection")){
+            currentPage.setText(R.string.collection);
+        }
+        else {
+            currentPage.setText(R.string.wishlist);
+        }
+
         // Initiate the navigation handler.
         navigationHelper = new NavigationHelper(this);
 
@@ -76,138 +95,24 @@ public class ColWishActivity extends AppCompatActivity {
             }
         };
 
-        /**
-         * This part gets the method and sets the page title accordingly, it then gets a reference
-         * and retrieves the collection/wishlist from the firebase by queryingbthe users id. The id
-         * identifies to which user the collection item belongs. After retrieval the listview is filled
-         * with the collection/wishlist data. Two listeners are added, one that listens for long clicks
-         * which throw a dialog to confirm deletion of that record. The other is a regular
-         * click listener and redirects the user to either sale activity (from the collection) or
-         * buysearch activity (from the wishlist).
-         */
-
+        // If there is a user continue loading list.
         if (user != null){
-
-            // Set the collection/wishlist method.
-            Intent intent = getIntent();
-            Bundle methodBundle = intent.getExtras();
-            method = methodBundle.getString("method");
-
-            // Adjust the current page text
-            TextView currentPage = (TextView) findViewById(R.id.current_page);
-            if (method.equals("collection")){
-                currentPage.setText(R.string.collection);
-            }
-            else {
-                currentPage.setText(R.string.wishlist);
-            }
-
-            // Collection/wishlist reference:
-            final DatabaseReference collectionReference = FirebaseDatabase.getInstance().getReference().child(method);
-
-            // Get the users collected/wishlist records.
-            Query queryRef = collectionReference.orderByChild("userID").equalTo(user.getUid());
-            ValueEventListener collectionListener = new ValueEventListener() {
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    // Declare a list of colwishrecords.
-                    List<ColWishRecord> colWishRecords = new ArrayList<>();
-
-                    // Get all of these records and add them to the list.
-                    for (DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
-                        ColWishRecord colWishRecord = (ColWishRecord) chatSnapshot.getValue(ColWishRecord.class);
-
-                        colWishRecords.add(colWishRecord);
-                    }
-
-                    // Find the listview to fill
-                    final ListView lv = (ListView) findViewById(R.id.collectionList);
-
-                    // Put the results in the adapter
-                    CustomColWishAdapter customAlbumAdapter = new CustomColWishAdapter(getApplication(), R.layout.record_item, colWishRecords);
-                    lv.setAdapter(customAlbumAdapter);
-                    customAlbumAdapter.notifyDataSetChanged();
-
-                    lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
-
-                            // Get the record we are trying to delete.
-                            final ColWishRecord colWishRecord = (ColWishRecord) lv.getItemAtPosition(pos);
-
-                            // Throw a dialog to confirm deletion from wishlist/collection.
-                            new AlertDialog.Builder(ColWishActivity.this)
-                                    .setTitle("Confirm deletion")
-                                    .setMessage("Do you want to remove " + colWishRecord.getRecordInfo().getTitle() + " from your " + method + ".")
-                                    .setIcon(R.drawable.logo)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-
-                                            // Remove the object from the database.
-                                            FirebaseDatabase.getInstance().getReference().child(method).child(colWishRecord.getColWishID()).removeValue();
-                                            lv.deferNotifyDataSetChanged();
-                                        }})
-                                    .setNegativeButton(android.R.string.no, null).show();
-                            return true;
-                        }
-                    });
-
-                    // When the record is clicked the wishlist redirects to the market and the collection
-                    // redirects to the saleactivity.
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> arg0, View arg1,
-                                                int arg2, long arg3) {
-
-                            // Get the object from the listview.
-                            ColWishRecord colWishRecord = (ColWishRecord) lv.getItemAtPosition(arg2);
-
-                            // Check where to go to next.
-                            if (method.equals("collection")){
-
-                                // Go to the sale activity.
-                                Intent goToSale = new Intent(ColWishActivity.this, SaleActivity.class);
-
-                                // Put the recordinfo as extra
-                                RecordInfo recordInfo = colWishRecord.getRecordInfo();
-                                goToSale.putExtra("recordInfo", recordInfo);
-
-                                // Start the activity
-                                startActivity(goToSale);
-                            }
-                            if (method.equals("wishlist")){
-
-                                // Go to the marketplace and put the title as query in order to search directly.
-                                Intent goToBuy = new Intent(ColWishActivity.this, BuySearchActivity.class);
-
-                                // Put the title as query into the next activity.
-                                goToBuy.putExtra("query", colWishRecord.getRecordInfo().getTitle());
-
-                                // Start the activity
-                                startActivity(goToBuy);
-                            }
-                        }
-                    });
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-            queryRef.addValueEventListener(collectionListener);
+            loadColWishlist(user);
         }
 
         // Set the spinner.
+        setSpinner();
+    }
+
+    public void setSpinner(){
+
+        // Find the spinner and set the adapter
         final Spinner sortingOptions = (Spinner) findViewById(R.id.sortingOptions);
         final String[] sortingItems = getResources().getStringArray(R.array.sortingOptions);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item, sortingItems);
         sortingOptions.setAdapter(adapter);
 
+        // Set a listener for ordering.
         sortingOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -218,6 +123,125 @@ public class ColWishActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * This function gets the method and sets the page title accordingly, it then gets a reference
+     * and retrieves the collection/wishlist from the firebase by queryingbthe users id. The id
+     * identifies to which user the collection item belongs. After retrieval the listview is filled
+     * with the collection/wishlist data. Two listeners are added, one that listens for long clicks
+     * which throw a dialog to confirm deletion of that record. The other is a regular
+     * click listener and redirects the user to either sale activity (from the collection) or
+     * buysearch activity (from the wishlist).
+     */
+    public void loadColWishlist(FirebaseUser user){
+
+        // Collection/wishlist reference:
+        final DatabaseReference collectionReference = FirebaseDatabase.getInstance().getReference().child(method);
+
+        // Get the users collected/wishlist records.
+        Query queryRef = collectionReference.orderByChild("userID").equalTo(user.getUid());
+        ValueEventListener collectionListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                // Declare a list of colwishrecords.
+                List<ColWishRecord> colWishRecords = new ArrayList<>();
+
+                // Get all of these records and add them to the list.
+                for (DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
+                    ColWishRecord colWishRecord = (ColWishRecord) chatSnapshot.getValue(ColWishRecord.class);
+
+                    colWishRecords.add(colWishRecord);
+                }
+
+                // Find the listview to fill
+                final ListView lv = (ListView) findViewById(R.id.collectionList);
+
+                // Put the results in the adapter
+                CustomColWishAdapter customAlbumAdapter = new CustomColWishAdapter(getApplication(), R.layout.record_item, colWishRecords);
+                lv.setAdapter(customAlbumAdapter);
+                customAlbumAdapter.notifyDataSetChanged();
+
+                lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+
+                        // Get the record we are trying to delete.
+                        final ColWishRecord colWishRecord = (ColWishRecord) lv.getItemAtPosition(pos);
+
+                        // Throw a dialog to confirm deletion from wishlist/collection.
+                        new AlertDialog.Builder(ColWishActivity.this)
+                                .setTitle("Confirm deletion")
+                                .setMessage("Do you want to remove " + colWishRecord.getRecordInfo().getTitle() + " from your " + method + ".")
+                                .setIcon(R.drawable.logo)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                                        // Remove the object from the database.
+                                        FirebaseDatabase.getInstance().getReference().child(method).child(colWishRecord.getColWishID()).removeValue();
+                                        lv.deferNotifyDataSetChanged();
+                                    }})
+                                .setNegativeButton(android.R.string.no, null).show();
+                        return true;
+                    }
+                });
+
+                // When the record is clicked the wishlist redirects to the market and the collection
+                // redirects to the saleactivity.
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View arg1,
+                                            int arg2, long arg3) {
+
+                        // Get the object from the listview and use that to continue to search.
+                        ColWishRecord colWishRecord = (ColWishRecord) lv.getItemAtPosition(arg2);
+                        goToSearch(colWishRecord);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        queryRef.addValueEventListener(collectionListener);
+    }
+
+    /**
+     * This function uses the method and a clicked object to continue to the
+     * search variant of either buy or sale activity.
+     */
+    public void goToSearch(ColWishRecord colWishRecord){
+
+        // Check where to go to next.
+        if (method.equals("collection")){
+
+            // Go to the sale activity.
+            Intent goToSale = new Intent(ColWishActivity.this, SaleActivity.class);
+
+            // Put the recordinfo as extra
+            RecordInfo recordInfo = colWishRecord.getRecordInfo();
+            goToSale.putExtra("recordInfo", recordInfo);
+
+            // Start the activity
+            startActivity(goToSale);
+        }
+        if (method.equals("wishlist")){
+
+            // Go to the marketplace and put the title as query in order to search directly.
+            Intent goToBuy = new Intent(ColWishActivity.this, BuySearchActivity.class);
+
+            // Put the title as query into the next activity.
+            goToBuy.putExtra("query", colWishRecord.getRecordInfo().getTitle());
+
+            // Start the activity
+            startActivity(goToBuy);
+        }
     }
 
     /**

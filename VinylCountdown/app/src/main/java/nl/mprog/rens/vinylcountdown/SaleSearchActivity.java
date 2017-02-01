@@ -20,6 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.concurrent.ExecutionException;
 
+import nl.mprog.rens.vinylcountdown.HelperClasses.AsyncMusicSearch;
+import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
+
 public class SaleSearchActivity extends AppCompatActivity {
 
     EditText searchViewED;

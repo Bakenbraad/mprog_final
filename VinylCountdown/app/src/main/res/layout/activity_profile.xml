@@ -88,7 +88,7 @@
 
     </LinearLayout>
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:text="Vinyl Countdown"
         android:gravity="center"
         android:textSize="30dp"
@@ -102,7 +102,7 @@
         android:layout_toEndOf="@+id/menubutton"
         android:layout_above="@+id/current_page" />
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:text="Profile"
         android:gravity="center"
         android:textSize="30dp"

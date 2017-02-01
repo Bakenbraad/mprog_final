@@ -27,6 +27,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import nl.mprog.rens.vinylcountdown.HelperClasses.ApiHelper;
+import nl.mprog.rens.vinylcountdown.HelperClasses.AsyncImgLoad;
+import nl.mprog.rens.vinylcountdown.HelperClasses.AsyncMusicSearch;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.Message;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordSaleInfo;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
+
 /**
  * Rens van der Veldt - 10766162
  * Minor Programmeren
@@ -70,6 +78,10 @@ public class BuyActivity extends AppCompatActivity {
         Bundle recordInfoBundle = intent.getExtras();
         recordSaleInfo = (RecordSaleInfo) recordInfoBundle.getSerializable("recordSaleInfo");
 
+        // Hide the keyboard if its open!
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
         // Get the current user from the firebaseAuth.
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -91,6 +103,82 @@ public class BuyActivity extends AppCompatActivity {
 
         // This section uses similar code to retrieve the selling and buying users profiles needed
         // for the message service.
+        getProfiles();
+
+
+        // Check if this is the users' advertisement, users cannot reply to their own advertisements
+        // thus the button that creates offers is removed from view.
+        if (recordSaleInfo.getUserID().equals(user.getUid())){
+            ImageView buyButton = (ImageView) findViewById(R.id.buyButton);
+            buyButton.setVisibility(View.GONE);
+        }
+
+        // Set the correct display.
+        displayPriceType();
+
+        // Get the rest of the data of this record, the result is set to be the record in this activity.
+        new SingleAsyncRequest(recordSaleInfo.getMbid()).execute();
+
+        // Find all views should be filled with record/sale data.
+        TextView artistTV = (TextView) findViewById(R.id.buyArtist);
+        TextView titleTV = (TextView) findViewById(R.id.buyTitle);
+        ImageView imageView = (ImageView) findViewById(R.id.buyImage);
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.buyRating);
+
+
+        // Put all other data in the corresponding views.
+        artistTV.setText(recordSaleInfo.getArtist());
+        titleTV.setText(recordSaleInfo.getTitle());
+        new AsyncImgLoad(imageView).execute(recordSaleInfo.getImgLink());
+        ratingBar.setRating(recordSaleInfo.getCondition());
+    }
+
+    /**
+     * Displays the right layout appropriate for the records price type. The display is set correctly
+     * corresponding to bidding/trade/price types of sale. E.g. bidding displays the current bid
+     * and allows users to input a new bid.
+     */
+    public void displayPriceType(){
+
+        if (recordSaleInfo.getPriceType().equals(getString(R.string.bidding))){
+
+            // Find all views corresponding to bidding.
+            LinearLayout biddingLayout = (LinearLayout) findViewById(R.id.bid_lin_lay);
+            TextView currentBidTV = (TextView) findViewById(R.id.bidPriceCurrent);
+            TextView originalBidTV = (TextView) findViewById(R.id.bidPriceOriginal);
+
+            // Set the original and current price and make the view visible.
+            currentBidTV.setText(String.valueOf(recordSaleInfo.getCurrentBid()));
+            originalBidTV.setText(String.valueOf(recordSaleInfo.getPrice()));
+            biddingLayout.setVisibility(View.VISIBLE);
+        }
+        else if (recordSaleInfo.getPriceType().equals(getString(R.string.trade))){
+
+            // Find all views corresponding to trading and set the view to visible.
+            LinearLayout biddingLayout = (LinearLayout) findViewById(R.id.trade_lin_lay);
+            biddingLayout.setVisibility(View.VISIBLE);
+        }
+        else if (recordSaleInfo.getPriceType().equals(getString(R.string.price))){
+
+            // Find all views corresponding to set price.
+            LinearLayout biddingLayout = (LinearLayout) findViewById(R.id.price_lin_lay);
+            TextView priceTV = (TextView) findViewById(R.id.buyPrice);
+
+            // Set the value for price and change the button to a buying button.
+            priceTV.setText(String.valueOf(recordSaleInfo.getPrice()));
+            ImageButton buyButton = (ImageButton) findViewById(R.id.buyButton);
+            buyButton.setImageResource(R.drawable.cartin);
+
+            // Make the view visible.
+            biddingLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * This function retrieves the profiles of both users. The seller is used for setting their username
+     * and the buyers is used for sending messages.
+     */
+    public void getProfiles(){
 
         // Sellers profile
         DatabaseReference mSellersReference = FirebaseDatabase.getInstance().getReference().child("users").child(recordSaleInfo.getUserID());
@@ -127,64 +215,6 @@ public class BuyActivity extends AppCompatActivity {
             }
         };
         mBuyersReference.addListenerForSingleValueEvent(buyersListener);
-
-        // Check if this is the users' advertisement, users cannot reply to their own advertisements
-        // thus the button that creates offers is removed from view.
-        if (recordSaleInfo.getUserID().equals(user.getUid())){
-            ImageView buyButton = (ImageView) findViewById(R.id.buyButton);
-            buyButton.setVisibility(View.GONE);
-        }
-
-        // This part makes sure the display is set correctly corresponding to the bidding/trade/price
-        // types of sale. E.g. bidding displays the current bid and allows users to input a new bid.
-        if (recordSaleInfo.getPriceType().equals(getString(R.string.bidding))){
-
-            // Find all views corresponding to bidding.
-            LinearLayout biddingLayout = (LinearLayout) findViewById(R.id.bid_lin_lay);
-            TextView currentBidTV = (TextView) findViewById(R.id.bidPriceCurrent);
-            TextView originalBidTV = (TextView) findViewById(R.id.bidPriceOriginal);
-
-            // Set the original and current price and make the view visible.
-            currentBidTV.setText(String.valueOf(recordSaleInfo.getCurrentBid()));
-            originalBidTV.setText(String.valueOf(recordSaleInfo.getPrice()));
-            biddingLayout.setVisibility(View.VISIBLE);
-        }
-        else if (recordSaleInfo.getPriceType().equals(getString(R.string.trade))){
-
-            // Find all views corresponding to trading and set the view to visible.
-            LinearLayout biddingLayout = (LinearLayout) findViewById(R.id.trade_lin_lay);
-            biddingLayout.setVisibility(View.VISIBLE);
-        }
-        else if (recordSaleInfo.getPriceType().equals(getString(R.string.price))){
-
-            // Find all views corresponding to set price.
-            LinearLayout biddingLayout = (LinearLayout) findViewById(R.id.price_lin_lay);
-            TextView priceTV = (TextView) findViewById(R.id.buyPrice);
-
-            // Set the value for price and change the button to a buying button.
-            priceTV.setText(String.valueOf(recordSaleInfo.getPrice()));
-            ImageButton buyButton = (ImageButton) findViewById(R.id.buyButton);
-            buyButton.setImageResource(R.drawable.cartin);
-
-            // Make the view visible.
-            biddingLayout.setVisibility(View.VISIBLE);
-        }
-
-        // Get the rest of the data of this record, the result is set to be the record in this activity.
-        new SingleAsyncRequest(recordSaleInfo.getMbid()).execute();
-
-        // Find all views should be filled with record/sale data.
-        TextView artistTV = (TextView) findViewById(R.id.buyArtist);
-        TextView titleTV = (TextView) findViewById(R.id.buyTitle);
-        ImageView imageView = (ImageView) findViewById(R.id.buyImage);
-        RatingBar ratingBar = (RatingBar) findViewById(R.id.buyRating);
-
-
-        // Put all other data in the corresponding views.
-        artistTV.setText(recordSaleInfo.getArtist());
-        titleTV.setText(recordSaleInfo.getTitle());
-        new AsyncImgLoad(imageView).execute(recordSaleInfo.getImgLink());
-        ratingBar.setRating(recordSaleInfo.getCondition());
     }
 
    /**
@@ -234,23 +264,8 @@ public class BuyActivity extends AppCompatActivity {
                             if (yourBid > 0 && yourBid > recordSaleInfo.getCurrentBid()) {
                                 if (!recordSaleInfo.getCurrentBidUser().equals(user.getUid())) {
 
-                                    // If the bid is legit update the data and write it to firebase.
-                                    recordSaleInfo.setCurrentBid(yourBid);
-                                    recordSaleInfo.setCurrentBidUser(user.getUid());
-                                    mMarketReference.setValue(recordSaleInfo);
-
-                                    // Send the selling user a message about your offer:
-                                    Message tradeMessage = new Message();
-                                    String tradeMessageID = mMessageReference.push().getKey();
-                                    tradeMessage.messageMarket("offer", recordSaleInfo.getPriceType(), recordSaleInfo.getTitle(), String.valueOf(yourBid),
-                                            recordSaleInfo.getSaleUID(), buyerProfile, user.getUid(), sellerProfile, recordSaleInfo.getUserID(), tradeMessageID);
-                                    mMessageReference.child(tradeMessageID).setValue(tradeMessage);
-
-                                    // Let the user know of their success and send them back!
-                                    Toast.makeText(getApplicationContext(), R.string.success_message, Toast.LENGTH_LONG).show();
-                                    Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
-                                    startActivity(goBackToSearch);
-                                    finish();
+                                    // Write the bid.
+                                    writeBid(yourBid, mMarketReference, mMessageReference);
 
                                 } else {
                                     // This user already responded, let them know.
@@ -276,25 +291,8 @@ public class BuyActivity extends AppCompatActivity {
                                 // Check if user isn't sending multiple messages:
                                 if (!recordSaleInfo.getCurrentBidUser().equals(user.getUid())) {
 
-                                    // Get the selected record.
-                                    String tradeProposal = selectedTV.getText().toString();
-
-                                    // Update the marketplace info:
-                                    recordSaleInfo.setCurrentBidUser(user.getUid());
-                                    mMarketReference.setValue(recordSaleInfo);
-
-                                    // Send the selling user a message about your trade offer:
-                                    Message tradeMessage = new Message();
-                                    String tradeMessageID = mMessageReference.push().getKey();
-                                    tradeMessage.messageMarket("offer", recordSaleInfo.getPriceType(), recordSaleInfo.getTitle(), tradeProposal,
-                                            recordSaleInfo.getSaleUID(), buyerProfile, user.getUid(), sellerProfile, recordSaleInfo.getUserID(), tradeMessageID);
-                                    mMessageReference.child(tradeMessageID).setValue(tradeMessage);
-
-                                    // Let the user know of their succes and send them back!
-                                    Toast.makeText(getApplicationContext(), R.string.success_message, Toast.LENGTH_LONG).show();
-                                    Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
-                                    startActivity(goBackToSearch);
-                                    finish();
+                                    // Write the trade to database.
+                                    writeTrade(selectedTV, mMarketReference, mMessageReference);
 
                                 } else {
                                     Toast.makeText(getApplicationContext(), R.string.double_bid, Toast.LENGTH_LONG).show();
@@ -311,22 +309,8 @@ public class BuyActivity extends AppCompatActivity {
                             // Check if user already responded to this record.
                             if (!recordSaleInfo.getCurrentBidUser().equals(user.getUid())) {
 
-                                // Update the marketplace info:
-                                recordSaleInfo.setCurrentBidUser(user.getUid());
-                                mMarketReference.setValue(recordSaleInfo);
-
-                                // Send the selling user a message about your offer, even asking prices should be able to be denied:
-                                Message tradeMessage = new Message();
-                                String tradeMessageID = mMessageReference.push().getKey();
-                                tradeMessage.messageMarket("offer", recordSaleInfo.getPriceType(), recordSaleInfo.getTitle(), String.valueOf(recordSaleInfo.getPrice()),
-                                        recordSaleInfo.getSaleUID(), buyerProfile, user.getUid(), sellerProfile, recordSaleInfo.getUserID(), tradeMessageID);
-                                mMessageReference.child(tradeMessageID).setValue(tradeMessage);
-
-                                // Let the user know of their succes and send them back!
-                                Toast.makeText(getApplicationContext(), R.string.success_message, Toast.LENGTH_LONG).show();
-                                Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
-                                startActivity(goBackToSearch);
-                                finish();
+                                // Write the offer to database.
+                                writePrice(mMarketReference, mMessageReference);
                             } else {
                                 // Let the user know that they already responded to this offer.
                                 Toast.makeText(getApplicationContext(), R.string.double_bid, Toast.LENGTH_LONG).show();
@@ -403,6 +387,67 @@ public class BuyActivity extends AppCompatActivity {
 
     // This function is the onclick for a cancel button and just finishes the activity.
     public void backToSearch(View view) {
+        finish();
+    }
+
+    public void writeTrade(TextView selectedTV, DatabaseReference mMarketReference, DatabaseReference mMessageReference){
+
+        // Get the selected record.
+        String tradeProposal = selectedTV.getText().toString();
+
+        // Update the marketplace info:
+        recordSaleInfo.setCurrentBidUser(user.getUid());
+        mMarketReference.setValue(recordSaleInfo);
+
+        // Send the selling user a message about your trade offer:
+        Message tradeMessage = new Message();
+        String tradeMessageID = mMessageReference.push().getKey();
+        tradeMessage.messageMarket("offer", recordSaleInfo, tradeProposal, buyerProfile, user.getUid(), sellerProfile, tradeMessageID);
+        mMessageReference.child(tradeMessageID).setValue(tradeMessage);
+
+        // Let the user know of their succes and send them back!
+        Toast.makeText(getApplicationContext(), R.string.success_message, Toast.LENGTH_LONG).show();
+        Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
+        startActivity(goBackToSearch);
+        finish();
+    }
+
+    public void writeBid(float yourBid, DatabaseReference mMarketReference, DatabaseReference mMessageReference){
+
+        // If the bid is legit update the data and write it to firebase.
+        recordSaleInfo.setCurrentBid(yourBid);
+        recordSaleInfo.setCurrentBidUser(user.getUid());
+        mMarketReference.setValue(recordSaleInfo);
+
+        // Send the selling user a message about your offer:
+        Message tradeMessage = new Message();
+        String tradeMessageID = mMessageReference.push().getKey();
+        tradeMessage.messageMarket("offer", recordSaleInfo, String.valueOf(yourBid), buyerProfile, user.getUid(), sellerProfile, tradeMessageID);
+        mMessageReference.child(tradeMessageID).setValue(tradeMessage);
+
+        // Let the user know of their success and send them back!
+        Toast.makeText(getApplicationContext(), R.string.success_message, Toast.LENGTH_LONG).show();
+        Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
+        startActivity(goBackToSearch);
+        finish();
+    }
+
+    public void writePrice(DatabaseReference mMarketReference, DatabaseReference mMessageReference){
+
+        // Update the marketplace info:
+        recordSaleInfo.setCurrentBidUser(user.getUid());
+        mMarketReference.setValue(recordSaleInfo);
+
+        // Send the selling user a message about your offer, even asking prices should be able to be denied:
+        Message tradeMessage = new Message();
+        String tradeMessageID = mMessageReference.push().getKey();
+        tradeMessage.messageMarket("offer", recordSaleInfo, String.valueOf(recordSaleInfo.getPrice()), buyerProfile, user.getUid(), sellerProfile, tradeMessageID);
+        mMessageReference.child(tradeMessageID).setValue(tradeMessage);
+
+        // Let the user know of their succes and send them back!
+        Toast.makeText(getApplicationContext(), R.string.success_message, Toast.LENGTH_LONG).show();
+        Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
+        startActivity(goBackToSearch);
         finish();
     }
 

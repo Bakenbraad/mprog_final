@@ -34,6 +34,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomMarketAdapter;
+import nl.mprog.rens.vinylcountdown.HelperClasses.ApiHelper;
+import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordSaleInfo;
+
 /**
  * Rens van der Veldt - 10766162
  * Minor Programmeren
@@ -167,6 +173,32 @@ public class BuySearchActivity extends AppCompatActivity {
         searchMarket();
     }
 
+    public void setMarketData(final ListView lv, List<RecordSaleInfo> recordSaleInfoList){
+
+        // Set the adapter
+        CustomMarketAdapter customMarketAdapter = new CustomMarketAdapter(getApplicationContext(), R.layout.record_market_item, recordSaleInfoList);
+        lv.setAdapter(customMarketAdapter);
+        customMarketAdapter.notifyDataSetChanged();
+
+        // Set a listener, this is used to send info to the buyactivity.
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int arg2, long arg3) {
+                Intent goToBuy = new Intent(getApplicationContext(), BuyActivity.class);
+                RecordSaleInfo recordSaleInfo = (RecordSaleInfo) lv.getItemAtPosition(arg2);
+
+                // Put the values into the next activity.
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("recordSaleInfo", recordSaleInfo);
+                goToBuy.putExtras(bundle);
+
+                // Start the activity
+                startActivity(goToBuy);
+            }
+        });
+    }
+
     /**
     * This is the asynctask that manages the loading of the marketplace, the Background process runs the
     * api manager in order to get all mbids that match a certain query. Subsequently, the firebase
@@ -264,28 +296,7 @@ public class BuySearchActivity extends AppCompatActivity {
                                 }
                             }
 
-                            // Set the adapter
-                            CustomMarketAdapter customMarketAdapter = new CustomMarketAdapter(getApplicationContext(), R.layout.record_market_item, recordSaleInfoList);
-                            lv.setAdapter(customMarketAdapter);
-                            customMarketAdapter.notifyDataSetChanged();
-
-                            // Set a listener, this is used to send info to the buyactivity.
-                            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> arg0, View arg1,
-                                                        int arg2, long arg3) {
-                                    Intent goToBuy = new Intent(getApplicationContext(), BuyActivity.class);
-                                    RecordSaleInfo recordSaleInfo = (RecordSaleInfo) lv.getItemAtPosition(arg2);
-
-                                    // Put the values into the next activity.
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("recordSaleInfo", recordSaleInfo);
-                                    goToBuy.putExtras(bundle);
-
-                                    // Start the activity
-                                    startActivity(goToBuy);
-                                }
-                            });
+                            setMarketData(lv, recordSaleInfoList);
                         }
 
                         @Override

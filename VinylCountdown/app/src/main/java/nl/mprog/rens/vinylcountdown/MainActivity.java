@@ -20,6 +20,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomNewsAdapter;
+import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.NewsItem;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
+
 /**
  * Rens van der Veldt - 10766162
  * Minor Programmeren
@@ -147,6 +152,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mSettingsReference.addValueEventListener(settingsListener);
+    }
+
+    // Open drawer is called when the button to open the menu is pressed.
+    public void openDrawer(View view) {
+        navigationHelper.openDrawer();
     }
 
     /**

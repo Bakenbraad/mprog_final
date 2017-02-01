@@ -97,7 +97,7 @@
             android:dividerHeight="3dp"/>
     </android.support.v4.widget.DrawerLayout>
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:text="Vinyl Countdown"
         android:gravity="center"
         android:textSize="30dp"
@@ -111,7 +111,7 @@
         android:layout_toEndOf="@+id/menubutton"
         android:layout_above="@+id/current_page" />
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:text="Marketplace"
         android:gravity="center"
         android:textSize="30dp"

@@ -12,6 +12,9 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTrackAdapter;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
+
 public class RecordInfoActivity extends AppCompatActivity {
 
     String artist;

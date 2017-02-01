@@ -9,7 +9,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BuyActivity" />
+        <activity
+            android:name=".BuyActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ColWishActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -26,7 +28,9 @@
             android:name=".RecordInfoActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
         <activity android:name=".SaleSearchActivity" />
-        <activity android:name=".SaleActivity" />
+        <activity
+            android:name=".SaleActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".NewsActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />

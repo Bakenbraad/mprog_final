@@ -7,7 +7,7 @@
     android:background="@drawable/vinylbc"
     tools:context="nl.mprog.rens.vinylcountdown.MainActivity">
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:text="Vinyl Countdown"
         android:gravity="center"
         android:textSize="30dp"

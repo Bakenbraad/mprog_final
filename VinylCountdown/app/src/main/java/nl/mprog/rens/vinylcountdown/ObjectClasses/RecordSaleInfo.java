@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.ObjectClasses;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -12,7 +12,7 @@ public class RecordSaleInfo implements Serializable{
     String mbid;
     String description;
     float price;
-    String priceType;
+    public String priceType;
     float condition;
     String userID;
     String saleUID;
@@ -52,17 +52,17 @@ public class RecordSaleInfo implements Serializable{
 
     public RecordSaleInfo(){}
 
-    public RecordSaleInfo(String mbid, String description, float price, String priceType, float condition, String userID, String imgLink, String artist, String title){
+    public RecordSaleInfo(RecordInfo recordInfo, String description, float price, String priceType, float condition, String userID){
 
-        this.mbid = mbid;
+        this.mbid = recordInfo.getMbid();
         this.description = description;
         this.price = price;
         this.priceType = priceType;
         this.condition = condition;
         this.userID = userID;
-        this.imgLink = imgLink;
-        this.artist = artist;
-        this.title = title;
+        this.imgLink = recordInfo.getImgLinklarge();
+        this.artist = recordInfo.getArtist();
+        this.title = recordInfo.getTitle();
         this.currentBid = 0;
         this.currentBidUser = "None";
         saleUID = userID + mbid + String.valueOf(System.currentTimeMillis());

@@ -23,6 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.mprog.rens.vinylcountdown.HelperClasses.AsyncImgLoad;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordSaleInfo;
+
 public class SaleActivity extends AppCompatActivity {
 
     String artist;
@@ -153,7 +157,7 @@ public class SaleActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
                             // Create the object.
-                            RecordSaleInfo recordSaleInfo = new RecordSaleInfo(mbid, description, price, finalSaleType, condition, user.getUid(), imgLink, artist, title);
+                            RecordSaleInfo recordSaleInfo = new RecordSaleInfo(recordInfo, description, price, finalSaleType, condition, user.getUid());
 
                             // Write it to the Database and the user-offer relation table.
                             DatabaseReference mUsersReference = FirebaseDatabase.getInstance().getReference();

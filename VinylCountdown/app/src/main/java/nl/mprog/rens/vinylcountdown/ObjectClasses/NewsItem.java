@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.ObjectClasses;
 
 /**
  * Created by Rens on 23/01/2017.

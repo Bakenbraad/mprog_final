@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.HelperClasses;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,10 +22,10 @@ import java.io.InputStream;
  */
 
 // This class downloads and sets the images for each row
-class AsyncImgLoad extends AsyncTask<String, Void, Bitmap> {
+public class AsyncImgLoad extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
 
-    AsyncImgLoad(ImageView bmImage) {
+    public AsyncImgLoad(ImageView bmImage) {
         this.bmImage = bmImage;
     }
 

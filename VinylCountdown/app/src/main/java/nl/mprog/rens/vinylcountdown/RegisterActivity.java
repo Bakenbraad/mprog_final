@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import nl.mprog.rens.vinylcountdown.HelperClasses.RegistrationHelper;
+
 public class RegisterActivity extends AppCompatActivity {
 
     // Registeration fields.

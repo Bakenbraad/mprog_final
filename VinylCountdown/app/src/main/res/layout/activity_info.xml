@@ -7,7 +7,7 @@
     android:padding="5dp"
     tools:context="nl.mprog.rens.vinylcountdown.InfoActivity">
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Info"
@@ -27,7 +27,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/textView14" />
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="7dp"
@@ -45,7 +45,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/textView22" />
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:text="Inbox"
         android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
         android:textSize="13dp"
         android:id="@+id/textView24" />
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Profile"
@@ -81,7 +81,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/textView27" />
 
-    <nl.mprog.rens.vinylcountdown.CustomTextView
+    <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Collection and Wishlist"

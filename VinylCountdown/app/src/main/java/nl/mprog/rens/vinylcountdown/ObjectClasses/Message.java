@@ -1,7 +1,6 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.ObjectClasses;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 
 /**
@@ -112,40 +111,36 @@ public class Message implements Serializable{
      * in firebase.
      *
      * @param messageType
-     * @param priceType
-     * @param buyOffer
      * @param sellOffer
-     * @param offerID
      * @param sender
      * @param senderID
      * @param receiver
-     * @param receiverID
      * @param messageID
      */
-    public void messageMarket(String messageType, String priceType, String buyOffer, String sellOffer, String offerID, UserProfile sender, String senderID, UserProfile receiver, String receiverID, String messageID){
+    public void messageMarket(String messageType, RecordSaleInfo recordSaleInfo, String sellOffer, UserProfile sender, String senderID, UserProfile receiver, String messageID){
 
         // Create a message according to the right advertisement priceType.
-        if (priceType.equals("Price")){
+        if (recordSaleInfo.getPriceType().equals("Price")){
 
-            this.messageContent = "Hello, I saw your advertisement for " + buyOffer + " and I would buy it for €" + sellOffer + ".";
+            this.messageContent = "Hello, I saw your advertisement for " + recordSaleInfo.getTitle() + " and I would buy it for €" + sellOffer + ".";
         }
-        else if (priceType.equals("Bidding from")){
+        else if (recordSaleInfo.getPriceType().equals("Bidding from")){
 
-            this.messageContent = "Hello, I saw your advertisement for " + buyOffer + " and I bid €" + sellOffer + ".";
+            this.messageContent = "Hello, I saw your advertisement for " + recordSaleInfo.getTitle() + " and I bid €" + sellOffer + ".";
         }
-        else if (priceType.equals("Trade")){
+        else if (recordSaleInfo.getPriceType().equals("Trade")){
 
-            this.messageContent = "Hello, I saw your advertisement for " + buyOffer + " and I would like to trade you for " + sellOffer + ".";
+            this.messageContent = "Hello, I saw your advertisement for " + recordSaleInfo.getTitle() + " and I would like to trade you for " + sellOffer + ".";
         }
 
         this.senderProfile = sender;
         this.receiverProfile = receiver;
-        this.priceType = priceType;
-        this.buyOffer = buyOffer;
+        this.priceType = recordSaleInfo.getPriceType();
+        this.buyOffer = recordSaleInfo.getTitle();
         this.sellOffer = sellOffer;
-        this.offerID = offerID;
+        this.offerID = recordSaleInfo.getSaleUID();
         this.senderID = senderID;
-        this.receiverID = receiverID;
+        this.receiverID = recordSaleInfo.getUserID();
         this.messageType = messageType;
         this.setRead(false);
         this.messageID = messageID;

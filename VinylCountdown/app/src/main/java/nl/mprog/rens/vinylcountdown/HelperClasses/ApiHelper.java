@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.HelperClasses;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,8 +12,9 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
 
 /**
  * Created by Rens on 16/01/2017.

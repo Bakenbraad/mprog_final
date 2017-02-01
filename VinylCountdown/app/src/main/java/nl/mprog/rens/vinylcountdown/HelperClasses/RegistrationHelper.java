@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.HelperClasses;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,6 +19,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import nl.mprog.rens.vinylcountdown.LoginActivity;
+import nl.mprog.rens.vinylcountdown.R;
+import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
 
 /**
  * Created by Rens on 16/01/2017.
