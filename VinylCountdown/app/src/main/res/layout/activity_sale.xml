@@ -85,7 +85,7 @@
         android:layout_below="@+id/spinner">
 
         <TextView
-            android:text="Price: $"
+            android:text="Price: €"
             android:gravity="center"
             android:textSize="20dp"
             android:layout_width="match_parent"

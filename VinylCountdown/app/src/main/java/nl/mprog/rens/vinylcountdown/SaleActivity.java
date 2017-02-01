@@ -84,11 +84,11 @@ public class SaleActivity extends AppCompatActivity {
                     priceED.setVisibility(View.INVISIBLE);
                 }
                 else if (items[position].equals("Price")){
-                    priceTV.setText("Price: $");
+                    priceTV.setText("Price: €");
                     priceED.setVisibility(View.VISIBLE);
                 }
                 else if (items[position].equals("Bidding")){
-                    priceTV.setText("Asking price: $");
+                    priceTV.setText("Asking price: €");
                     priceED.setVisibility(View.VISIBLE);
                 }
             }

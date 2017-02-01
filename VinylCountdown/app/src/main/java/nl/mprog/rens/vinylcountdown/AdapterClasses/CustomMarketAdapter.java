@@ -104,12 +104,13 @@ public class CustomMarketAdapter extends ArrayAdapter<RecordSaleInfo> {
 
             // Set the appropriate price type.
             if (i.priceType.equals("Trade")){
+                priceTypeTV.setVisibility(View.INVISIBLE);
                 priceTV.setText(R.string.trade);
             }else if(i.priceType.equals("Bidding from")){
                 priceTypeTV.setText(R.string.bidding);
-                priceTV.setText("$ " + i.getPrice());
+                priceTV.setText("€ " + i.getPrice());
             }else{
-                priceTV.setText("$ " + i.getPrice());
+                priceTV.setText("€ " + i.getPrice());
             }
         }
 

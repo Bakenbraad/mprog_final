@@ -85,6 +85,10 @@ public class BuySearchActivity extends AppCompatActivity {
 
                 // Perform a search using the given query.
                 new MarketAsyncTask(wishlistQuery, "Any").execute();
+
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
         }
 
