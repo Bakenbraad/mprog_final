@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5dp"
-    tools:context="nl.mprog.rens.vinylcountdown.InfoActivity">
+    tools:context="nl.mprog.rens.vinylcountdown.Activities.InfoActivity">
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"

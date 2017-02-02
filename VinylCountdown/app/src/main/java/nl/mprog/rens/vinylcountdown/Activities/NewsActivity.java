@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import nl.mprog.rens.vinylcountdown.R;
+
+/**
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * NewsActivity.class
+ *
+ * This activity displays a newsitem object passed by intent.
+ */
 public class NewsActivity extends AppCompatActivity {
 
     @Override
@@ -27,6 +37,10 @@ public class NewsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Closes the activity.
+     * @param view: passed fro the close button.
+     */
     public void closeNews(View view) {
         finish();
     }

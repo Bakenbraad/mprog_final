@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -19,11 +19,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomInboxAdapter;
 import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.Message;
+import nl.mprog.rens.vinylcountdown.R;
 
 /**
  * Rens van der Veldt - 10766162
@@ -38,9 +40,6 @@ import nl.mprog.rens.vinylcountdown.ObjectClasses.Message;
 
 public class InboxActivity extends AppCompatActivity {
 
-    // Authenticator:
-    // The authenticator for firebase.
-    private FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseUser user;
 
@@ -56,7 +55,6 @@ public class InboxActivity extends AppCompatActivity {
         navigationHelper = new NavigationHelper(this);
 
         // Initiate the authentication
-        mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         // Check the login state.
@@ -75,7 +73,10 @@ public class InboxActivity extends AppCompatActivity {
         loadInbox();
     }
 
-    // Open drawer is called when the button to open the menu is pressed.
+    /**
+     * Open drawer is called when the button to open the menu is pressed.
+     * @param view: passed from a button.
+     */
     public void openDrawer(View view) {
         navigationHelper.openDrawer();
     }
@@ -106,7 +107,7 @@ public class InboxActivity extends AppCompatActivity {
 
                 // Get all the users received messages.
                 for (DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
-                    Message message = (Message) chatSnapshot.getValue(Message.class);
+                    Message message = chatSnapshot.getValue(Message.class);
 
                     // Check if this is not the users own sent message and add.
                     if (!message.getSenderID().equals(user.getUid())){
@@ -114,7 +115,8 @@ public class InboxActivity extends AppCompatActivity {
                     }
                 }
 
-                // Set the adapter with the retrieved messages.
+                // Set the adapter with the retrieved messages, invert the list to display new messages on top.
+                Collections.reverse(messageList);
                 CustomInboxAdapter customInboxAdapter = new CustomInboxAdapter(getApplicationContext(), R.layout.inbox_item, messageList);
                 lv.setAdapter(customInboxAdapter);
                 customInboxAdapter.notifyDataSetChanged();
@@ -141,6 +143,15 @@ public class InboxActivity extends AppCompatActivity {
 
             }
         };
-        queryRef.addValueEventListener(refListener);
+        queryRef.addListenerForSingleValueEvent(refListener);
+    }
+
+    /**
+     * When a user restarts this activity (exits a message for example) the mailbox should be refreshed.
+     */
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        loadInbox();
     }
 }

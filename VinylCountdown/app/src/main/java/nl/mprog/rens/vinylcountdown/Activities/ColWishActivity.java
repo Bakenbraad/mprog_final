@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -30,6 +30,7 @@ import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomColWishAdapter;
 import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.ColWishRecord;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
+import nl.mprog.rens.vinylcountdown.R;
 
 /**
  * Rens van der Veldt - 10766162
@@ -291,7 +292,7 @@ public class ColWishActivity extends AppCompatActivity {
 
         // This function leads to the same search activity as for sale but puts a different
         // onclick listener in the results
-        Intent goToAddSearch = new Intent(this, SaleSearchActivity.class);
+        Intent goToAddSearch = new Intent(this, RecordSearchActivity.class);
 
         if (method.equals("collection")){
             goToAddSearch.putExtra("method", "collectionSearch");

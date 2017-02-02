@@ -75,10 +75,10 @@ public class CustomInboxAdapter extends ArrayAdapter<Message> {
                         subjectTV.setText(i.getSellOffer() + " trading for " + i.getBuyOffer());
                         break;
                     case "Bidding from":
-                        subjectTV.setText("A bid of $" + i.getSellOffer() + " for " + i.getBuyOffer());
+                        subjectTV.setText("A bid of €" + i.getSellOffer() + " for " + i.getBuyOffer());
                         break;
                     case "Price":
-                        subjectTV.setText("Buying " + i.getSellOffer() + " for " + i.getBuyOffer());
+                        subjectTV.setText("Buying " + i.getBuyOffer() + " for €" + i.getSellOffer());
                         break;
                 }
 

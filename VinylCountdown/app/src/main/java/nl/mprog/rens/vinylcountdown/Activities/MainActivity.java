@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -24,6 +24,7 @@ import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomNewsAdapter;
 import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.NewsItem;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
+import nl.mprog.rens.vinylcountdown.R;
 
 /**
  * Rens van der Veldt - 10766162
@@ -154,7 +155,10 @@ public class MainActivity extends AppCompatActivity {
         mSettingsReference.addValueEventListener(settingsListener);
     }
 
-    // Open drawer is called when the button to open the menu is pressed.
+    /**
+     * Open drawer is called when the button to open the menu is pressed.
+     * @param view: passed from the button.
+     */
     public void openDrawer(View view) {
         navigationHelper.openDrawer();
     }

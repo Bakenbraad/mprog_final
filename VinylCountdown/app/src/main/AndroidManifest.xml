@@ -10,37 +10,39 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".BuyActivity"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".ColWishActivity" />
-        <activity android:name=".LoginActivity">
+            android:name=".Activities.BuyActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.ColWishActivity" />
+        <activity android:name=".Activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".BuySearchActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".Activities.MainActivity" />
+        <activity android:name=".Activities.BuySearchActivity" />
+        <activity android:name=".Activities.ProfileActivity" />
+        <activity android:name=".Activities.RegisterActivity" />
         <activity
-            android:name=".RecordInfoActivity"
+            android:name=".Activities.RecordInfoActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
-        <activity android:name=".SaleSearchActivity" />
+        <activity android:name=".Activities.RecordSearchActivity" />
         <activity
-            android:name=".SaleActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:name=".Activities.SaleActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".NewsActivity"
+            android:name=".Activities.NewsActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
-        <activity android:name=".InboxActivity" />
-        <activity android:name=".InboxDetailActivity" />
+        <activity android:name=".Activities.InboxActivity" />
+        <activity android:name=".Activities.InboxDetailActivity" />
         <activity
-            android:name=".ProfileEditActivity"
+            android:name=".Activities.ProfileEditActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog" />
         <activity
-            android:name=".InfoActivity"
+            android:name=".Activities.InfoActivity"
             android:theme="@style/Base.V11.Theme.AppCompat.Light.Dialog"/>
     </application>
 

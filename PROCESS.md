@@ -37,4 +37,15 @@ Activity and resource names have been reviewed in order to maintain a clear stru
 ### Thursday
 Perfected messaging with replies and read/unread status. Fixed navigation, created profile/profile updates, implemented wishlist and collections. These can be expanded.
 Cleaned up a load of code. Renamed many classes to create a uniform format.
+## Week 4
+### Monday
+Done loads of commenting, fixed minor layout bugs, smoothend ui. Home screen is now a lot easier on the eyes. Code is being refractored in
+order to pass bettercodehub.
+### Tuesday
+More refractoring, made the app phone accessible. The messagesystem was tweaked to better show read/unread messages. Info screen added to
+main activity for new users. Profile now also shows users sales. You can also navigate from collection to selling and wishlist to market.
+### Wednesday 
+More layout fixes, loads and loads of commenting. Extensive bug testing.
+### Thursday
+Final commenting, last bug fixes and more code cleaning.
 

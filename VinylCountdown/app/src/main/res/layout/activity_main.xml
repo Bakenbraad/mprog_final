@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/vinylbc"
-    tools:context="nl.mprog.rens.vinylcountdown.MainActivity">
+    tools:context="nl.mprog.rens.vinylcountdown.Activities.MainActivity">
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:text="Vinyl Countdown"
@@ -34,6 +34,8 @@
         style="@style/Widget.AppCompat.Button.Small"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+
+
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -72,20 +74,29 @@
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView2"
-                android:layout_below="@+id/textView6"
                 android:layout_centerHorizontal="true" />
 
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toEndOf="@+id/menubutton"
                 android:layout_alignParentStart="true"
                 android:id="@+id/news_list"
                 android:paddingTop="20dp"
                 android:paddingBottom="15dp"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="20.0sp"
-                android:layout_below="@+id/textUser" />
+                android:layout_below="@+id/textUser"
+                android:layout_above="@+id/button7" />
+
+            <Button
+                android:text="Info"
+                android:onClick="goToInfo"
+                android:background="@drawable/button_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button7"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
 
         </RelativeLayout>
         <!-- The navigation drawer -->
@@ -100,15 +111,5 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="3dp"/>
     </android.support.v4.widget.DrawerLayout>
-
-    <Button
-        android:text="Info"
-        android:onClick="goToInfo"
-        android:background="@drawable/button_background"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button7"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

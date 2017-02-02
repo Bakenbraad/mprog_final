@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,6 +39,7 @@ import nl.mprog.rens.vinylcountdown.HelperClasses.ApiHelper;
 import nl.mprog.rens.vinylcountdown.HelperClasses.NavigationHelper;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordSaleInfo;
+import nl.mprog.rens.vinylcountdown.R;
 
 /**
  * Rens van der Veldt - 10766162

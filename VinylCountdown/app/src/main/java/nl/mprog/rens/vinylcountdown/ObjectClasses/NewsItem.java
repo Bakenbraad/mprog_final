@@ -1,14 +1,31 @@
 package nl.mprog.rens.vinylcountdown.ObjectClasses;
 
 /**
- * Created by Rens on 23/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * NewsItem.class
+ *
+ * This is a simple news item with title, content and author. These items are displayed in the main
+ * activity and in a more detailed version when clicked in the newsactivity.
  */
 
 public class NewsItem {
 
-    public void NewsItem(){
+    // Declare properties.
+    private String title;
+    private String content;
+    private String author;
 
+    public void NewsItem(String title, String content, String author){
+
+        // Assign local values.
+        this.title = title;
+        this.author = author;
+        this.content = content;
     }
+
+    // Getters and setters.
     public String getTitle() {
         return title;
     }
@@ -29,13 +46,6 @@ public class NewsItem {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    String title;
-    String content;
-    String author;
 
 
 }

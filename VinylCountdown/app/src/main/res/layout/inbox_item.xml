@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/borderColor"
         android:textSize="10dp"
-        android:text="Click to respond"/>
+        android:text="Click to view"/>
 
 
 </LinearLayout>

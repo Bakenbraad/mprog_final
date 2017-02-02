@@ -25,7 +25,7 @@ import nl.mprog.rens.vinylcountdown.ObjectClasses.ColWishRecord;
 import nl.mprog.rens.vinylcountdown.AdapterClasses.CustomAlbumAdapter;
 import nl.mprog.rens.vinylcountdown.R;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
-import nl.mprog.rens.vinylcountdown.SaleActivity;
+import nl.mprog.rens.vinylcountdown.Activities.SaleActivity;
 
 /**
  * Rens van der Veldt - 10766162
@@ -49,20 +49,26 @@ public class AsyncMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> im
     private String userID;
 
 
-    public AsyncMusicSearch(Activity c, String query, String method, String userID){
+    /**
+     * The main asynctast function, takes in the activity where it is executed, a query to search with
+     * and the method and userid, the userid being used for writing collection and wishlist data.
+     */
+    public AsyncMusicSearch(Activity activity, String query, String method, String userID){
 
         this.query = query;
-        this.activity = c;
+        this.activity = activity;
         this.method = method;
         this.userID = userID;
 
         // Create a progress dialog.
-        dialog = new ProgressDialog(c);
+        dialog = new ProgressDialog(activity);
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+
+        // Throw a dialog that shows the user progress.
         this.dialog.setMessage("Looking for " + query);
         this.dialog.show();
     }
@@ -99,6 +105,7 @@ public class AsyncMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> im
         // If there are results put them in the listview.
         if (searchResults != null){
 
+            // Show the amount of results
             Toast.makeText(activity, "Found " + searchResults.size() + " records!", Toast.LENGTH_SHORT).show();
 
             // Set the empty view
@@ -106,10 +113,12 @@ public class AsyncMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> im
             emptyView.setText(R.string.no_search_results);
             lv.setEmptyView(emptyView);
 
+            // Create the adapter with the search results.
             CustomAlbumAdapter customAlbumAdapter = new CustomAlbumAdapter(activity, R.layout.record_item, searchResults);
             lv.setAdapter(customAlbumAdapter);
             customAlbumAdapter.notifyDataSetChanged();
 
+            // Depending on the method different listeners should be set.
             switch (method) {
                 case "saleSearch":
                     setSaleListener(lv);
@@ -120,20 +129,24 @@ public class AsyncMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> im
                 case "collectionSearch":
                     setCollectionListener(lv);
                     break;
-
                 case "wishlistSearch":
                     setWishlistListener(lv);
                     break;
             }
 
-            // Hide the keyboard
+            // Hide the keyboard after search.
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         }
     }
 
-    public void setWishlistListener(final ListView lv){
+    /**
+     * Sets a listener when the wishlist method is called. This makes it possible for an onclick
+     * to write a colwishrecord object to database after a dialog is confirmed.
+     * @param lv: The listview where a listener should be set.
+     */
+    private void setWishlistListener(final ListView lv){
 
         // Set a listener, this is used to send record info to the selling details.
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -173,7 +186,12 @@ public class AsyncMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> im
         });
     }
 
-    public void setCollectionListener(final ListView lv){
+    /**
+     * Sets a listener when the collection method is called. This makes it possible for an onclick
+     * to write a colwishrecord object to database after a dialog is confirmed.
+     * @param lv: The listview where a listener should be set.
+     */
+    private void setCollectionListener(final ListView lv){
 
         // Set a listener, this is used to send record info to the selling details.
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -214,7 +232,12 @@ public class AsyncMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> im
         });
     }
 
-    public void setTradeListener(final ListView lv){
+    /**
+     * The trade listener is used when a user is searching for a record to trade in the marketplace.
+     * The onclick then hides the results list and shows which record was selected in a textview.
+     * @param lv: The listview where a listener should be set.
+     */
+    private void setTradeListener(final ListView lv){
 
         // Set a listener, this is used to send record info to the selling details.
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -237,7 +260,12 @@ public class AsyncMusicSearch extends AsyncTask<Void, Void, List<RecordInfo>> im
         });
     }
 
-    public void setSaleListener(final ListView lv){
+    /**
+     * The sale listener is called when the salesearch method is called. This listener sends the
+     * user to the sale activity with the clicked recordinfo object to potentially create a sale.
+     * @param lv: The listview where a listener should be set.
+     */
+    private void setSaleListener(final ListView lv){
 
         // Set a listener, this is used to send record info to the selling details.
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

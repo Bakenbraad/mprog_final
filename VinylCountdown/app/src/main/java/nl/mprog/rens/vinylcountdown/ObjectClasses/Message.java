@@ -22,19 +22,19 @@ import java.text.SimpleDateFormat;
 public class Message implements Serializable{
 
     // Declare properties.
-    String buyOffer;
-    String sellOffer;
-    UserProfile senderProfile;
-    UserProfile receiverProfile;
-    String messageContent;
-    String time;
-    String priceType;
-    String messageType;
-    String offerID;
-    String senderID;
-    String receiverID;
-    String messageID;
-    boolean read;
+    private String buyOffer;
+    private String sellOffer;
+    private UserProfile senderProfile;
+    private UserProfile receiverProfile;
+    private String messageContent;
+    private String time;
+    private String priceType;
+    private String messageType;
+    private String offerID;
+    private String senderID;
+    private String receiverID;
+    private String messageID;
+    private boolean read;
 
     /**
      * The constructor is empty, the 2 functions for reply and market messages format the message
@@ -50,11 +50,11 @@ public class Message implements Serializable{
      * they are already present in the message object because profiles can change. Id's dont have to
      * be updated because they stay the same.
      *
-     * @param messageType
-     * @param message
-     * @param sender
-     * @param receiver
-     * @param messageID
+     * @param messageType: the type of message.
+     * @param message: the message replied to.
+     * @param sender: the senders profile.
+     * @param receiver: the receivers profile.
+     * @param messageID: the uid of the message.
      */
     public void messageReply(String messageType, Message message, UserProfile sender, UserProfile receiver, String messageID){
 
@@ -110,27 +110,29 @@ public class Message implements Serializable{
      * Finally the message ID is there to retrieve and edit messages, this is the key for the object
      * in firebase.
      *
-     * @param messageType
-     * @param sellOffer
-     * @param sender
-     * @param senderID
-     * @param receiver
-     * @param messageID
+     * @param messageType: the type of message.
+     * @param sellOffer: what is offerd for (in the market).
+     * @param sender: the senders profile.
+     * @param senderID: the senders id. (Also passed because profiles can be updated.
+     * @param receiver: the receivers profile.
+     * @param messageID: the message uid.
      */
     public void messageMarket(String messageType, RecordSaleInfo recordSaleInfo, String sellOffer, UserProfile sender, String senderID, UserProfile receiver, String messageID){
 
         // Create a message according to the right advertisement priceType.
-        if (recordSaleInfo.getPriceType().equals("Price")){
+        switch (recordSaleInfo.getPriceType()) {
+            case "Price":
 
-            this.messageContent = "Hello, I saw your advertisement for " + recordSaleInfo.getTitle() + " and I would buy it for €" + sellOffer + ".";
-        }
-        else if (recordSaleInfo.getPriceType().equals("Bidding from")){
+                this.messageContent = "Hello, I saw your advertisement for " + recordSaleInfo.getTitle() + " and I would buy it for €" + sellOffer + ".";
+                break;
+            case "Bidding from":
 
-            this.messageContent = "Hello, I saw your advertisement for " + recordSaleInfo.getTitle() + " and I bid €" + sellOffer + ".";
-        }
-        else if (recordSaleInfo.getPriceType().equals("Trade")){
+                this.messageContent = "Hello, I saw your advertisement for " + recordSaleInfo.getTitle() + " and I bid €" + sellOffer + ".";
+                break;
+            case "Trade":
 
-            this.messageContent = "Hello, I saw your advertisement for " + recordSaleInfo.getTitle() + " and I would like to trade you for " + sellOffer + ".";
+                this.messageContent = "Hello, I saw your advertisement for " + recordSaleInfo.getTitle() + " and I would like to trade you for " + sellOffer + ".";
+                break;
         }
 
         this.senderProfile = sender;

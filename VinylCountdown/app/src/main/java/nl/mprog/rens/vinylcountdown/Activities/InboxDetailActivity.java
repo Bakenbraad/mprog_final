@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import nl.mprog.rens.vinylcountdown.ObjectClasses.Message;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
+import nl.mprog.rens.vinylcountdown.R;
 
 /**
  * Rens van der Veldt - 10766162
@@ -62,6 +63,10 @@ public class InboxDetailActivity extends AppCompatActivity {
             // Remove the buttons from view and don't show a text because this is a reply.
             findViewById(R.id.accept_button).setVisibility(View.INVISIBLE);
             findViewById(R.id.reject_button).setVisibility(View.INVISIBLE);
+
+            // Update the read boolean, when a reply message is opened it should be seen as read.
+            message.setRead(true);
+            FirebaseDatabase.getInstance().getReference().child("messages").child(message.getMessageID()).setValue(message);
 
         } else if(message.isRead()){
 

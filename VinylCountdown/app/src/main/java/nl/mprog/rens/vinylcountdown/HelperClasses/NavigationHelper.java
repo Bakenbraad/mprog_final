@@ -13,50 +13,60 @@ import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import nl.mprog.rens.vinylcountdown.BuySearchActivity;
-import nl.mprog.rens.vinylcountdown.ColWishActivity;
-import nl.mprog.rens.vinylcountdown.InboxActivity;
-import nl.mprog.rens.vinylcountdown.LoginActivity;
-import nl.mprog.rens.vinylcountdown.MainActivity;
-import nl.mprog.rens.vinylcountdown.ProfileActivity;
+import nl.mprog.rens.vinylcountdown.Activities.BuySearchActivity;
+import nl.mprog.rens.vinylcountdown.Activities.ColWishActivity;
+import nl.mprog.rens.vinylcountdown.Activities.InboxActivity;
+import nl.mprog.rens.vinylcountdown.Activities.LoginActivity;
+import nl.mprog.rens.vinylcountdown.Activities.MainActivity;
+import nl.mprog.rens.vinylcountdown.Activities.ProfileActivity;
+import nl.mprog.rens.vinylcountdown.Activities.RecordSearchActivity;
 import nl.mprog.rens.vinylcountdown.R;
-import nl.mprog.rens.vinylcountdown.SaleSearchActivity;
 
 /**
- * Created by Rens on 26/01/2017.
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * NavigationHelper.class
+ *
+ * This class manages all the navigation and is a requirement for all classes with a drawer.
+ * The navigationhelper declares and initiates the drawer and all dependant components.
+ * When an item in the drawer is clicked this class redirects the user to that page.
+ * The class also manages the pressing of the menu button and the appearance change.
+ *
+ * Partially constructed from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
  */
 
 public class NavigationHelper {
 
-    Activity activity;
-    FirebaseAuth mAuth;
+    private Activity activity;
+    private FirebaseAuth mAuth;
 
     // Declare drawer modules:
-    DrawerLayout drawerLayout;
-    ListView drawers;
-    String[] navigations;
-    Button menuButton;
+    private DrawerLayout drawerLayout;
+    private ListView drawers;
+    private Button menuButton;
 
     public NavigationHelper(Activity activity){
 
+        // The auth is needed for the navigation to the login activity.
         this.activity = activity;
         mAuth = FirebaseAuth.getInstance();
 
-        // Navigation drawer from: https://developer.android.com/training/implementing-navigation/nav-drawer.html#Init
-        navigations = activity.getResources().getStringArray(R.array.menuOptions);
+        // Get all resources and views.
+        String[] navigations = activity.getResources().getStringArray(R.array.menuOptions);
         drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
         drawers = (ListView) activity.findViewById(R.id.main_drawer);
         menuButton = (Button) activity.findViewById(R.id.menubutton);
 
         // Set the adapter for the list view
-        drawers.setAdapter(new ArrayAdapter<String>(activity,
+        drawers.setAdapter(new ArrayAdapter<>(activity,
                 R.layout.drawer_item, navigations));
 
         // Set the list's click listener
         drawers.setOnItemClickListener(new DrawerItemClickListener());
     }
 
-    public void redirect(int direction){
+    private void redirect(int direction){
         // Get all options that are in the menu.
         String[] menuOptions = activity.getResources().getStringArray(R.array.menuOptions);
         switch (menuOptions[direction]){
@@ -88,7 +98,7 @@ public class NavigationHelper {
     }
 
     // Redirects the user to their profile.
-    public void goToProfile() {
+    private void goToProfile() {
         Intent goToProfile = new Intent(activity, ProfileActivity.class);
         activity.startActivity(goToProfile);
         if (!(activity instanceof MainActivity)){
@@ -97,7 +107,7 @@ public class NavigationHelper {
     }
 
     // Redirects the user to where they can search the marketplace.
-    public void goToMarketSearch() {
+    private void goToMarketSearch() {
         Intent goToMarketSearch = new Intent(activity, BuySearchActivity.class);
         activity.startActivity(goToMarketSearch);
         if (!(activity instanceof MainActivity)){
@@ -106,8 +116,8 @@ public class NavigationHelper {
     }
 
     // Redirects the user to where they can search possible records they can sell.
-    public void goToSaleSearch() {
-        Intent goToSaleSearch = new Intent(activity, SaleSearchActivity.class);
+    private void goToSaleSearch() {
+        Intent goToSaleSearch = new Intent(activity, RecordSearchActivity.class);
         goToSaleSearch.putExtra("method", "saleSearch");
         activity.startActivity(goToSaleSearch);
         if (!(activity instanceof MainActivity)){
@@ -116,7 +126,7 @@ public class NavigationHelper {
     }
 
     // Redirects the user to where they can view their collection.
-    public void goToCollection() {
+    private void goToCollection() {
         Intent goToCollection = new Intent(activity, ColWishActivity.class);
         goToCollection.putExtra("method", "collection");
         activity.startActivity(goToCollection);
@@ -126,7 +136,7 @@ public class NavigationHelper {
     }
 
     // Redirects the user to where they can view their wishlist.
-    public void goToWishlist() {
+    private void goToWishlist() {
         Intent goToWishlist = new Intent(activity, ColWishActivity.class);
         goToWishlist.putExtra("method", "wishlist");
         activity.startActivity(goToWishlist);
@@ -145,7 +155,7 @@ public class NavigationHelper {
     }
 
     // Redirects to the inbox:
-    public void goToInbox() {
+    private void goToInbox() {
         Intent goToInbox = new Intent(activity, InboxActivity.class);
         activity.startActivity(goToInbox);
         if (!(activity instanceof MainActivity)){
@@ -154,7 +164,7 @@ public class NavigationHelper {
     }
 
     // Redirects the user to where they can search possible records they can sell.
-    public void goToMenu() {
+    private void goToMenu() {
         Intent goToMenu = new Intent(activity, MainActivity.class);
         activity.startActivity(goToMenu);
         activity.finish();

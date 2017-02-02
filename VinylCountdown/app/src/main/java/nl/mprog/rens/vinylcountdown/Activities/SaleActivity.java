@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -26,9 +26,22 @@ import java.util.Map;
 import nl.mprog.rens.vinylcountdown.HelperClasses.AsyncImgLoad;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordSaleInfo;
+import nl.mprog.rens.vinylcountdown.R;
 
+/**
+ * Rens van der Veldt - 10766162
+ * Minor Programmeren
+ *
+ * SaleActivity.class
+ *
+ * The saleActivity allows user to create offers on the marketplace. This uses the recordInfo passed
+ * from RecordSearchActivity to generate a recordSaleInfo combined with user input info, such as saletype,
+ * price, etc. This activity also allows for users to view more info about the record using the info
+ * button. This shows the RecordInfoActivity with more record info properies displayed.
+ */
 public class SaleActivity extends AppCompatActivity {
 
+    // Declare values.
     String artist;
     String title;
     String summary;
@@ -39,19 +52,19 @@ public class SaleActivity extends AppCompatActivity {
     EditText priceED;
     RecordInfo recordInfo;
 
-    private DatabaseReference mDatabase;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
 
+        // Get the intent.
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
         // Get basic record info.
         recordInfo = (RecordInfo) bundle.getSerializable("recordInfo");
 
+        assert recordInfo != null;
         artist = recordInfo.getArtist();
         title = recordInfo.getTitle();
         summary = recordInfo.getSummary();
@@ -61,35 +74,40 @@ public class SaleActivity extends AppCompatActivity {
 
         priceED = (EditText) findViewById(R.id.priceED);
 
+        // Find the relevant views.
         TextView artistTV = (TextView) findViewById(R.id.artistDetail);
         TextView titleTV = (TextView) findViewById(R.id.titleDetail);
         final TextView priceTV = (TextView) findViewById(R.id.textView8);
+        ImageView imageView = (ImageView) findViewById(R.id.imageDetail);
 
+        // Set the values for the views.
         artistTV.setText(artist);
         titleTV.setText(title);
-        ImageView imageView = (ImageView) findViewById(R.id.imageDetail);
         new AsyncImgLoad(imageView).execute(imgLink);
 
-        // Set the spinner adapter.
+        // Set the spinner adapter, this is the selector for price type.
         final Spinner dropdown = (Spinner)findViewById(R.id.spinner);
         items = new String[]{"Price", "Bidding", "Trade"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
+        // When an item is selected the ui should be slightly updated to match the users expectations.
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(items[position].equals("Trade")){
-                    priceTV.setText("Trading");
-                    priceED.setVisibility(View.INVISIBLE);
-                }
-                else if (items[position].equals("Price")){
-                    priceTV.setText("Price: €");
-                    priceED.setVisibility(View.VISIBLE);
-                }
-                else if (items[position].equals("Bidding")){
-                    priceTV.setText("Asking price: €");
-                    priceED.setVisibility(View.VISIBLE);
+                switch (items[position]) {
+                    case "Trade":
+                        priceTV.setText(R.string.tradingtext);
+                        priceED.setVisibility(View.INVISIBLE);
+                        break;
+                    case "Price":
+                        priceTV.setText(R.string.pricetext);
+                        priceED.setVisibility(View.VISIBLE);
+                        break;
+                    case "Bidding":
+                        priceTV.setText(R.string.biddingtext);
+                        priceED.setVisibility(View.VISIBLE);
+                        break;
                 }
             }
 
@@ -100,6 +118,11 @@ public class SaleActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Opens the recordInfoActivity showing more info about the record, this passes the recordInfo
+     * object with that info in it.
+     * @param view: passed from a button.
+     */
     public void moreInfo(View view){
 
         Intent goToSaleDetail = new Intent(this, RecordInfoActivity.class);
@@ -110,12 +133,22 @@ public class SaleActivity extends AppCompatActivity {
         startActivity(goToSaleDetail);
     }
 
+    /**
+     * This function creates a recordSaleInfo object and writes it to the marketplace, this is
+     * essentially the offering of a record on the market for other users to view. First, the data
+     * are retrieved from the editTexts and spinner. This data is then used to create a recordSaleInfo
+     * object. Finally the object is written to the market, the user is notified and the activity is
+     * finished.
+     * @param view: passed from button.
+     */
     public void createSale (View view){
 
+        // Find required views.
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         Spinner saleTypeSP = (Spinner) findViewById(R.id.spinner);
         EditText descriptionED = (EditText) findViewById(R.id.descriptionED);
 
+        // Get data from the views.
         final float price;
         final float condition = ratingBar.getRating();
         final String description = descriptionED.getText().toString();
@@ -126,6 +159,7 @@ public class SaleActivity extends AppCompatActivity {
             saleType = "Bidding from";
         }
 
+        // Trade doesn't need a price but you need to assert that other types have valid prices.
         if (!saleType.equals("Trade")){
             try{
                 // Try finding a price in the view.
@@ -133,23 +167,25 @@ public class SaleActivity extends AppCompatActivity {
             }
             catch (NumberFormatException e){
                 // If an invalid price is added toast the error.
-                Toast.makeText(this, "Invalid price!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.inv_price, Toast.LENGTH_LONG).show();
                 return;
             }
 
         }
         else {
+            // Price for trade mustn't be null so initialize it to 0,0 for default.
             price = Float.parseFloat("0.0");
         }
 
+        // Get the user, a market offer requires a users id.
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        // If all is well, create a dialog to confirm addition to the market.
         if (user != null && description.length() != 0 && condition != 0 && !saleType.equals("")){
 
-            // Throw a dialog to confirm the addition.
             final String finalSaleType = saleType;
             new AlertDialog.Builder(this)
-                    .setTitle("Confirm sale")
+                    .setTitle(R.string.confirm_sale)
                     .setIcon(R.drawable.logo)
                     .setMessage("Do you want to sell " + recordInfo.getTitle() + " by " + recordInfo.getArtist() + "?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -164,15 +200,16 @@ public class SaleActivity extends AppCompatActivity {
                             mUsersReference.child("marketplace").child("offers").child(recordSaleInfo.getSaleUID()).setValue(recordSaleInfo);
 
                             // Back to search
-                            Intent goToMain = new Intent(getApplicationContext(), SaleSearchActivity.class);
+                            Intent goToMain = new Intent(getApplicationContext(), RecordSearchActivity.class);
                             goToMain.putExtra("method", "saleSearch");
                             startActivity(goToMain);
-                            Toast.makeText(getApplicationContext(), "Your offer has been created", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.offer_success, Toast.LENGTH_LONG).show();
                             finish();
                         }})
                     .setNegativeButton(android.R.string.no, null).show();
         }
         else {
+            // All is not well, alert the user.
             Toast.makeText(this, "One or more of your fields is not complete", Toast.LENGTH_LONG).show();
         }
 

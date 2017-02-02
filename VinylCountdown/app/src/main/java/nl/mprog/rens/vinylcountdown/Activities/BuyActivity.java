@@ -1,4 +1,4 @@
-package nl.mprog.rens.vinylcountdown;
+package nl.mprog.rens.vinylcountdown.Activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -34,6 +34,7 @@ import nl.mprog.rens.vinylcountdown.ObjectClasses.Message;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordInfo;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.RecordSaleInfo;
 import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
+import nl.mprog.rens.vinylcountdown.R;
 
 /**
  * Rens van der Veldt - 10766162
@@ -52,9 +53,6 @@ import nl.mprog.rens.vinylcountdown.ObjectClasses.UserProfile;
 
 public class BuyActivity extends AppCompatActivity {
 
-    // Authenticator:
-    // The authenticator for firebase.
-    private FirebaseAuth mAuth;
     FirebaseUser user;
     FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -83,7 +81,7 @@ public class BuyActivity extends AppCompatActivity {
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         // Get the current user from the firebaseAuth.
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
         // Check the login state, unauthorized users may not use the market and are sent back to
@@ -101,10 +99,8 @@ public class BuyActivity extends AppCompatActivity {
             }
         };
 
-        // This section uses similar code to retrieve the selling and buying users profiles needed
-        // for the message service.
+        // Call to get the profiles of the users needed for sending messages.
         getProfiles();
-
 
         // Check if this is the users' advertisement, users cannot reply to their own advertisements
         // thus the button that creates offers is removed from view.
@@ -119,12 +115,11 @@ public class BuyActivity extends AppCompatActivity {
         // Get the rest of the data of this record, the result is set to be the record in this activity.
         new SingleAsyncRequest(recordSaleInfo.getMbid()).execute();
 
-        // Find all views should be filled with record/sale data.
+        // Find all views that should be filled with record/sale data.
         TextView artistTV = (TextView) findViewById(R.id.buyArtist);
         TextView titleTV = (TextView) findViewById(R.id.buyTitle);
         ImageView imageView = (ImageView) findViewById(R.id.buyImage);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.buyRating);
-
 
         // Put all other data in the corresponding views.
         artistTV.setText(recordSaleInfo.getArtist());
@@ -327,7 +322,6 @@ public class BuyActivity extends AppCompatActivity {
      * record, retrieved in the oncreate using the singleasyncrequest, to the activity that
      * displays the recordinfo.
      */
-
     public void moreInfo(View view){
 
         // This is checked because the class responisble for getting the recordinfo data is async.
@@ -354,15 +348,14 @@ public class BuyActivity extends AppCompatActivity {
 
     /**
      * This is the function used for searching records for the trade sale type.
-     * A user enters a query and similar to the SaleSearchActivity a list of results
+     * A user enters a query and similar to the RecordSearchActivity a list of results
      * from the api is returned. The method here, tradeSearch is used to notify
      * the listview that onclick of a listview item the item should become the selected,
      * rather than open info about it. Selected means that the listview is replaced with
      * a textview displaying something like: "you selected" + title.
      *
      * In addition to this text another one is set as well with the raw title to simplify retrieval of the title.
-      */
-
+     */
     public void tradeSearch(View view) {
 
         // Make sure the listview is visible.
@@ -385,11 +378,20 @@ public class BuyActivity extends AppCompatActivity {
 
     }
 
-    // This function is the onclick for a cancel button and just finishes the activity.
+    /**
+     * This function is the onclick for a cancel button and just finishes the activity.
+     * @param view: view passed by button.
+     */
     public void backToSearch(View view) {
         finish();
     }
 
+    /**
+     * Writes a message to a user when the saletype is trade. This determines the content of the message.
+     * This also updates the marketplace info in order to let a user respond once.
+     * @param mMarketReference: reference of the market to write to.
+     * @param mMessageReference: message reference to write to.
+     */
     public void writeTrade(TextView selectedTV, DatabaseReference mMarketReference, DatabaseReference mMessageReference){
 
         // Get the selected record.
@@ -412,6 +414,13 @@ public class BuyActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Writes a message to a user when the saletype is bidding. This determines the content of the message.
+     * This also updates the marketplace info and sets the current bid and lets a user not overbid them
+     * selves.
+     * @param mMarketReference: reference of the market to write to.
+     * @param mMessageReference: message reference to write to.
+     */
     public void writeBid(float yourBid, DatabaseReference mMarketReference, DatabaseReference mMessageReference){
 
         // If the bid is legit update the data and write it to firebase.
@@ -432,6 +441,12 @@ public class BuyActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Writes a message to a user when the saletype is price. This determines the content of the message.
+     * This also updates the marketplace info in order to let a user respond once.
+     * @param mMarketReference: reference of the market to write to.
+     * @param mMessageReference: message reference to write to.
+     */
     public void writePrice(DatabaseReference mMarketReference, DatabaseReference mMessageReference){
 
         // Update the marketplace info:
@@ -444,7 +459,7 @@ public class BuyActivity extends AppCompatActivity {
         tradeMessage.messageMarket("offer", recordSaleInfo, String.valueOf(recordSaleInfo.getPrice()), buyerProfile, user.getUid(), sellerProfile, tradeMessageID);
         mMessageReference.child(tradeMessageID).setValue(tradeMessage);
 
-        // Let the user know of their succes and send them back!
+        // Let the user know of their success and send them back!
         Toast.makeText(getApplicationContext(), R.string.success_message, Toast.LENGTH_LONG).show();
         Intent goBackToSearch = new Intent(getApplicationContext(), BuySearchActivity.class);
         startActivity(goBackToSearch);
@@ -461,7 +476,7 @@ public class BuyActivity extends AppCompatActivity {
         RecordInfo searchResult;
         String mbid;
 
-        public SingleAsyncRequest(String mbid){
+        SingleAsyncRequest(String mbid){
             this.mbid = mbid;
         }
         @Override

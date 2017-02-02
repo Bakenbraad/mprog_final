@@ -23,7 +23,8 @@ import java.io.InputStream;
 
 // This class downloads and sets the images for each row
 public class AsyncImgLoad extends AsyncTask<String, Void, Bitmap> {
-    ImageView bmImage;
+
+    private ImageView bmImage;
 
     public AsyncImgLoad(ImageView bmImage) {
         this.bmImage = bmImage;

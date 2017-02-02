@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
 
     android:layout_height="match_parent"
-    tools:context="nl.mprog.rens.vinylcountdown.InboxActivity">
+    tools:context="nl.mprog.rens.vinylcountdown.Activities.InboxActivity">
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:text="Vinyl Countdown"

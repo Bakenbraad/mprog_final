@@ -5,7 +5,7 @@
     android:id="@+id/activity_sale_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nl.mprog.rens.vinylcountdown.SaleSearchActivity">
+    tools:context="nl.mprog.rens.vinylcountdown.Activities.RecordSearchActivity">
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:text="Vinyl Countdown"

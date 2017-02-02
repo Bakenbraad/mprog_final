@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/vinylbc"
-    tools:context="nl.mprog.rens.vinylcountdown.LoginActivity">
+    tools:context="nl.mprog.rens.vinylcountdown.Activities.LoginActivity">
 
     <EditText
         android:layout_width="wrap_content"

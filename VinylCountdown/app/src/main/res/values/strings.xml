@@ -51,4 +51,10 @@
     <string name="reject_text">If you reject the offer, your record will stay in the marketplace and the receiver will be made aware!</string>
     <string name="accept_text">If you accept the offer, your record will be removed from the marketplace and the receiver will be made aware!</string>
     <string name="confirm_message">Confirming message</string>
+    <string name="tradingtext">Trading</string>
+    <string name="pricetext">Price: €</string>
+    <string name="biddingtext">Asking price: €</string>
+    <string name="offer_success">Your offer has been created</string>
+    <string name="confirm_sale">Confirm sale</string>
+    <string name="inv_price">Invalid price!</string>
 </resources>
