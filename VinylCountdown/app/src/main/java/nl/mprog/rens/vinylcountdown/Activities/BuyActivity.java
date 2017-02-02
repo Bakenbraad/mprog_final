@@ -249,7 +249,15 @@ public class BuyActivity extends AppCompatActivity {
                             float yourBid;
 
                             if (yourBidED.getText() != null) {
-                                yourBid = Float.parseFloat(yourBidED.getText().toString());
+                                try{
+                                    // Try finding a price.
+                                    yourBid = Float.parseFloat(yourBidED.getText().toString());
+                                }
+                                catch (NumberFormatException e){
+                                    // If an invalid price is added toast the error.
+                                    Toast.makeText(BuyActivity.this, R.string.inv_price, Toast.LENGTH_LONG).show();
+                                    break;
+                                }
                             } else {
                                 yourBid = 0;
                             }
