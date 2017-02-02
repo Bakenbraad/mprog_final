@@ -1,6 +1,5 @@
 # Vinyl Countdown
-### By Rens van der Veldt
-© 2017 Rens van der Veldt ALL RIGHTS RESERVED
+Â© 2017 Rens van der Veldt ALL RIGHTS RESERVED
 #### Problem
 The biggest problem for many people that collect vinyl records is that they have many records that they want and can't find. Yet they also have double records that they obviously don't 
 need. The solution is buying and selling in a likeminded community! However when you search for vinyl on sites like marktplaats.nl (A large dutch public market place site) you only find 
@@ -13,26 +12,26 @@ and swap records through instinctive interfaces. User data, a wishlist and a col
 #### Solution
 
 The vinyl countdown solves the problem posed. It offers a simple yet instinctive app that allows all functions described above plus a safe messaging service. 
-Users can buy and sell records. They can add records to wishlist and collection. Users can also make deals with other users and thus remove sales from the database.
+Users can buy and sell records the data of which is retrieved by the LASTfm Api. They can add records to wishlist and collection. Users can also make deals with other users and thus remove sales from the database.
 --
 The main menu:
-![Main](https://github.com/Bakenbraad/mprog_final/blob/master/doc/mainmenu.PNG)
+![Main](https://github.com/Bakenbraad/mprog_final/blob/master/doc/mainmenu.png)
 
 Selling:
-![Selling](https://github.com/Bakenbraad/mprog_final/blob/master/doc/selling.PNG)
+![Selling](https://github.com/Bakenbraad/mprog_final/blob/master/doc/selling.png)
 
 Buying:
-![Buying](https://github.com/Bakenbraad/mprog_final/blob/master/doc/buying.PNG)
+![Buying](https://github.com/Bakenbraad/mprog_final/blob/master/doc/buying.png)
 
 Marketplace:
-![Marketplace](https://github.com/Bakenbraad/mprog_final/blob/master/doc/marketplaceApp.PNG)
+![Marketplace](https://github.com/Bakenbraad/mprog_final/blob/master/doc/marketplaceApp.png)
 
 Inbox:
-![Inbox](https://github.com/Bakenbraad/mprog_final/blob/master/doc/inbox.PNG)
+![Inbox](https://github.com/Bakenbraad/mprog_final/blob/master/doc/inbox.png)
 
 Message:
-![Message](https://github.com/Bakenbraad/mprog_final/blob/master/doc/message.PNG)
+![Message](https://github.com/Bakenbraad/mprog_final/blob/master/doc/message.png)
 
 Collection:
-![Collection](https://github.com/Bakenbraad/mprog_final/blob/master/doc/collection.PNG)
+![Collection](https://github.com/Bakenbraad/mprog_final/blob/master/doc/collection.png)
 
