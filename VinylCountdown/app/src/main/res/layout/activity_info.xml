@@ -10,10 +10,9 @@
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Info"
-
+        android:text="@string/info"
         android:paddingBottom="15dp"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:gravity="center"
         android:id="@+id/customTextInfo"/>
 
@@ -23,7 +22,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:layout_below="@+id/customTextInfo"
-        android:textSize="13dp"
+        android:textSize="13sp"
         android:layout_centerHorizontal="true"
         android:id="@+id/textView14" />
 
@@ -31,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="7dp"
-        android:text="Buying and selling"
+        android:text="@string/buying_and_selling"
         android:layout_below="@+id/textView14"
         android:layout_alignParentStart="true"
         android:id="@+id/customTextView" />
@@ -41,13 +40,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/customTextView"
-        android:textSize="13dp"
+        android:textSize="13sp"
         android:layout_centerHorizontal="true"
         android:id="@+id/textView22" />
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
-        android:text="Inbox"
+        android:text="@string/inbox"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView22"
         android:paddingTop="7dp"
@@ -60,13 +59,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/customTextView2"
         android:layout_centerHorizontal="true"
-        android:textSize="13dp"
+        android:textSize="13sp"
         android:id="@+id/textView24" />
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Profile"
+        android:text="@string/profile"
         android:paddingTop="7dp"
         android:layout_below="@+id/textView24"
         android:layout_alignParentStart="true"
@@ -77,14 +76,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/customTextView3"
-        android:textSize="13dp"
+        android:textSize="13sp"
         android:layout_centerHorizontal="true"
         android:id="@+id/textView27" />
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Collection and Wishlist"
+        android:text="@string/collection_and_wishlist"
         android:paddingTop="7dp"
         android:id="@+id/customTextView4"
         android:layout_below="@+id/textView27"
@@ -93,14 +92,14 @@
     <TextView
         android:text="@string/colwish_info_text"
         android:layout_width="wrap_content"
-        android:textSize="13dp"
+        android:textSize="13sp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/customTextView4"
         android:layout_centerHorizontal="true"
         android:id="@+id/textView28" />
 
     <Button
-        android:text="Got it!"
+        android:text="@string/got_it"
         android:background="@drawable/button_background"
         android:onClick="backToMain"
         android:layout_width="wrap_content"

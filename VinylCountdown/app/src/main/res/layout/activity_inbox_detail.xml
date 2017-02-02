@@ -13,15 +13,14 @@
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:background="@color/drawerBc"
         android:textColor="@color/softWhite"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:gravity="center"
         android:layout_marginBottom="10dp"
-
-        android:text="Message"
+        android:text="@string/message"
         android:id="@+id/title_bar"
         />
     <LinearLayout
@@ -39,14 +38,14 @@
             android:layout_marginBottom="5dp">
 
             <TextView
-                android:text="Subject:"
+                android:text="@string/subject"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView25"
                 android:layout_weight="3" />
 
             <TextView
-                android:text="record name"
+                android:text=""
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/message_offer"
@@ -61,14 +60,14 @@
             android:layout_marginBottom="30dp">
 
             <TextView
-                android:text="Sender:"
+                android:text="@string/sender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView23"
                 android:layout_weight="3" />
 
             <TextView
-                android:text="senders email"
+                android:text=""
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/message_sender"
@@ -76,20 +75,20 @@
         </LinearLayout>
 
         <TextView
-            android:text="Content:"
+            android:text="@string/content"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView26" />
 
         <TextView
-            android:text="The message content."
+            android:text=""
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:id="@+id/message_content" />
 
         <TextView
-            android:text="time"
+            android:text=""
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/message_time"
@@ -104,7 +103,7 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:text="Accept"
+                android:text="@string/accept"
                 android:background="@drawable/button_background_accept"
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
@@ -114,7 +113,7 @@
                 android:onClick="confirmMessage"/>
 
             <Button
-                android:text="Reject"
+                android:text="@string/reject"
                 android:layout_margin="10dp"
                 android:background="@drawable/button_background_reject"
                 android:layout_width="wrap_content"
@@ -124,7 +123,7 @@
                 android:onClick="rejectMessage"/>
 
             <TextView
-                android:text="You already replied to this message"
+                android:text="@string/you_already_replied_to_this_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/already_replied_text"
@@ -134,7 +133,7 @@
         </LinearLayout>
 
         <Button
-            android:text="cancel"
+            android:text="@string/cancel"
             android:onClick="cancelMessage"
             android:paddingLeft="50dp"
             android:paddingRight="50dp"

@@ -9,7 +9,7 @@
     android:paddingTop="30dp">
 
     <TextView
-        android:text="Title"
+        android:text=""
         android:textColor="@color/softWhite"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         android:textSize="30sp" />
 
     <TextView
-        android:text="TextView"
+        android:text=""
         android:textColor="@color/softWhite"
         android:gravity="center"
         android:layout_marginBottom="5dp"
@@ -27,11 +27,11 @@
         android:id="@+id/news_author" />
 
     <TextView
-        android:text="more"
+        android:text="@string/more"
         android:textColor="@color/softWhite"
         android:layout_gravity="bottom|right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/more_button"
-        android:textSize="10sp" />
+        android:textSize="12sp" />
 </LinearLayout>

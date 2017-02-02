@@ -9,7 +9,7 @@
     tools:context="nl.mprog.rens.vinylcountdown.Activities.SaleActivity">
 
     <TextView
-        android:text="Title"
+        android:text=""
         android:layout_marginLeft="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:layout_toStartOf="@+id/imageButton" />
 
     <TextView
-        android:text="Sale type:"
+        android:text="@string/sale_type"
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
         android:paddingBottom="30dp"/>
 
     <TextView
-        android:text="Condition"
+        android:text="@string/condition_sale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/ratingBar"
@@ -85,13 +85,11 @@
         android:layout_below="@+id/spinner">
 
         <TextView
-            android:text="Price: €"
+            android:text="@string/price_sale"
             android:gravity="center"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
             android:id="@+id/textView8"
             android:layout_weight="1.39" />
 
@@ -100,12 +98,9 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:hint="0.00"
+            android:hint="@string/_0_00"
             android:paddingLeft="-1dp"
             android:id="@+id/priceED"
-            android:layout_alignBaseline="@+id/textView8"
-            android:layout_alignBottom="@+id/textView8"
-            android:layout_alignParentEnd="true"
             android:layout_weight="1" />
     </LinearLayout>
 
@@ -113,7 +108,7 @@
         android:layout_width="wrap_content"
         android:inputType="textPersonName"
         android:text=""
-        android:hint="About your record (others can read this):"
+        android:hint="@string/about_your_record_others_can_read_this"
         android:maxLines="10"
         android:layout_below="@+id/imageDetail"
         android:ems="10"
@@ -126,7 +121,7 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="Artist"
+        android:text="@string/artist"
         android:layout_marginLeft="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -152,18 +147,13 @@
             android:scaleType="fitCenter"
             android:id="@+id/imageView3"
             android:onClick="createSale"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
             android:layout_weight="1" />
 
         <Button
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
             android:id="@+id/button5"
-            android:layout_toEndOf="@+id/ratingBar"
             android:background="@drawable/button_background"
             android:textSize="12sp"
             android:onClick="backToSearch"

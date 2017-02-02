@@ -11,7 +11,7 @@
     tools:context="nl.mprog.rens.vinylcountdown.Activities.ProfileEditActivity">
 
     <TextView
-        android:text="Edit your username:"
+        android:text="@string/edit_your_username"
         android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         android:id="@+id/textView10" />
 
     <Button
-        android:text="save"
+        android:text="@string/save"
         android:onClick="saveProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
         android:padding="8dp"
         android:layout_margin="8dp"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:text=""
         android:background="@drawable/textview_background"
         android:ems="10"
         android:id="@+id/usernameED"

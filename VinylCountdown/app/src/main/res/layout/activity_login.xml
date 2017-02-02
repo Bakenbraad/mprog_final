@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:hint="E-Mail"
+        android:hint="@string/e_mail"
         android:gravity="center"
         android:textColor="@color/softWhite"
         android:textColorHint="@color/softWhite"
@@ -26,7 +26,7 @@
         android:layout_alignParentEnd="true" />
 
     <Button
-        android:text="Login"
+        android:text="@string/login"
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         android:layout_alignEnd="@+id/login_email_ed" />
 
     <Button
-        android:text="Sign up"
+        android:text="@string/sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat"
@@ -62,7 +62,7 @@
         android:textColorHint="@color/softWhite"
         android:padding="5dp"
         android:background="@color/colorPrimaryDark"
-        android:hint="Password"
+        android:hint="@string/password"
         android:layout_marginTop="5dp"
         android:id="@+id/login_pass_ed"
         android:layout_below="@+id/login_email_ed"
@@ -70,9 +70,9 @@
         android:layout_alignEnd="@+id/login_email_ed" />
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
-        android:text="Vinyl Countdown"
+        android:text="@string/vinyl_countdown"
         android:gravity="center"
-        android:textSize="45dp"
+        android:textSize="45sp"
         android:padding="20dp"
         android:fontFamily=""
         android:alpha="0.9"

@@ -70,9 +70,9 @@ public class Message implements Serializable{
             if (message.priceType.equals("Price") || message.priceType.equals("Bidding")){
 
                 // The difference is that price and bidding have a currency value for buyoffer and need a euro sign in front.
-                this.messageContent = "I would like to accept your offer of €" + buyOffer + " for " + sellOffer + ", please contact me via my email address.";
+                this.messageContent = "I would like to accept your offer of €" + sellOffer + " for " + buyOffer + ", please contact me via my email address.";
             } else {
-                this.messageContent = "I would like to accept your offer of " + buyOffer + " for " + sellOffer + ", please contact me via my email address.";
+                this.messageContent = "I would like to accept your offer of " + sellOffer + " for " + buyOffer + ", please contact me via my email address.";
             }
 
         }
@@ -80,10 +80,10 @@ public class Message implements Serializable{
             if (message.priceType.equals("Price") || message.priceType.equals("Bidding")){
 
                 // The difference is that price and bidding have a currency value for buyoffer and need a euro sign in front.
-                this.messageContent = "I respectfully decline your offer of €" + buyOffer + " for " + sellOffer + ", feel free to make another request!";
+                this.messageContent = "I respectfully decline your offer of €" + sellOffer + " for " + buyOffer + ", feel free to make another request!";
 
             } else {
-                this.messageContent = "I respectfully decline your offer of " + buyOffer + " for " + sellOffer + ", feel free to make another request!";
+                this.messageContent = "I respectfully decline your offer of " + sellOffer + " for " + buyOffer + ", feel free to make another request!";
             }
 
         }

@@ -25,45 +25,37 @@
             android:layout_marginRight="3dp">
 
             <TextView
-                android:text="Album title"
-                android:textSize="18dp"
+                android:text=""
+                android:textSize="18sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/greyText"
-                android:id="@+id/marketTitle"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/marketImage" />
+                android:id="@+id/marketTitle" />
 
             <TextView
-                android:text="Artist"
+                android:text=""
                 android:textColor="@color/greyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/marketTitle"
-                android:layout_toEndOf="@+id/marketImage"
                 android:id="@+id/marketArtist" />
 
             <TextView
-                android:text="Condition"
-                android:textSize="10dp"
+                android:text="@string/condition"
+                android:textSize="12sp"
                 android:textColor="@color/greyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView17"
-                android:layout_above="@+id/marketCondition"
-                android:layout_toEndOf="@+id/marketImage" />
+                android:id="@+id/textView17" />
 
             <RatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/marketCondition"
                 android:max="5"
-                style="@style/Widget.AppCompat.RatingBar.Small"
-                android:layout_alignBottom="@+id/marketImage"
-                android:layout_toEndOf="@+id/marketImage" />
+                style="@style/Widget.AppCompat.RatingBar.Small" />
 
             <TextView
-                android:text="TextView"
+                android:text=""
                 android:textColor="@color/greyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,42 +70,34 @@
             android:gravity="right">
 
             <TextView
-                android:text="Sold by:"
+                android:text="@string/sold_by"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:textColor="@color/greyText"
-                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="40dp"
                 android:id="@+id/soldSale" />
 
             <TextView
-                android:text="username"
+                android:text=""
                 android:textColor="@color/greyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/soldSale"
-                android:layout_alignStart="@+id/soldSale"
                 android:id="@+id/marketUsername" />
 
             <TextView
-                android:text="Price"
+                android:text="@string/price"
                 android:textColor="@color/greyText"
-                android:textSize="10dp"
+                android:textSize="10sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/marketPrice"
-                android:layout_alignStart="@+id/marketPrice"
                 android:id="@+id/marketPriceType" />
 
             <TextView
-                android:text="$20.20"
+                android:text=""
                 android:textColor="@color/greyText"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/marketCondition"
-                android:layout_alignParentEnd="true"
                 android:id="@+id/marketPrice"
                 android:layout_marginEnd="50dp"/>
 

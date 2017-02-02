@@ -41,7 +41,7 @@
 
                     <EditText
                         android:layout_width="match_parent"
-                        android:hint="Search..."
+                        android:hint="@string/search"
                         android:gravity="center"
                         android:layout_height="wrap_content"
                         android:id="@+id/searchSaleED"
@@ -98,7 +98,7 @@
     </android.support.v4.widget.DrawerLayout>
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
-        android:text="Vinyl Countdown"
+        android:text="@string/vinyl_countdown"
         android:gravity="center"
         android:textSize="30dp"
         android:textColor="@color/softWhite"
@@ -112,9 +112,9 @@
         android:layout_above="@+id/current_page" />
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
-        android:text="Marketplace"
+        android:text="@string/marketplace"
         android:gravity="center"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:textColor="@color/softWhite"
         android:background="@color/drawerBc"
         android:alpha="0.8"
@@ -126,7 +126,7 @@
         />
 
     <Button
-        android:text="+"
+        android:text="@string/buttonmain"
         android:textSize="36sp"
         android:textColor="@color/softWhite"
         android:background="@color/drawerBc"

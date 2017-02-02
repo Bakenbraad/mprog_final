@@ -8,9 +8,9 @@
     tools:context="nl.mprog.rens.vinylcountdown.Activities.RecordSearchActivity">
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
-        android:text="Vinyl Countdown"
+        android:text="@string/vinyl_countdown"
         android:gravity="center"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:textColor="@color/softWhite"
         android:background="@color/drawerBc"
         android:layout_width="wrap_content"
@@ -22,9 +22,9 @@
         android:layout_above="@+id/current_page" />
 
     <nl.mprog.rens.vinylcountdown.AdapterClasses.CustomTextView
-        android:text="Selling records"
+        android:text="@string/selling_records"
         android:gravity="center"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:textColor="@color/softWhite"
         android:background="@color/drawerBc"
         android:alpha="0.8"
@@ -36,7 +36,7 @@
         />
 
     <Button
-        android:text="+"
+        android:text="@string/buttonmain"
         android:textSize="36sp"
         android:textColor="@color/softWhite"
         android:background="@color/drawerBc"
@@ -80,7 +80,7 @@
 
                 <EditText
                     android:layout_width="match_parent"
-                    android:hint="Search..."
+                    android:hint="@string/search"
                     android:gravity="center"
                     android:layout_height="wrap_content"
                     android:id="@+id/searchSaleED"
