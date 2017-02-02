@@ -10,10 +10,9 @@ My app is going to create a user friendly vinyl collection, trade and market exp
 and swap records through instinctive interfaces. User data, a wishlist and a collection list, will be kept in firebase.
 
 #### The solution
-
 The vinyl countdown solves the problem posed. It offers a simple yet instinctive app that allows all functions described above plus a safe messaging service. 
 Users can buy and sell records the data of which is retrieved by the LASTfm Api. They can add records to wishlist and collection. Users can also make deals with other users and thus remove sales from the database.
---
+</br>
 The main menu:</br>
 ![Main](https://github.com/Bakenbraad/mprog_final/blob/master/doc/mainmenu.png)
 
